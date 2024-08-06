@@ -1,0 +1,45 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@font-face {
+  font-family: 'Montserrat';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('./assets/fonts/Montserrat-Bold.ttf') format('truetype');
+}
+@font-face {
+  font-family: 'Montserrat';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url('./assets/fonts/Montserrat-Medium.ttf') format('truetype');
+}
+@font-face {
+  font-family: 'Montserrat';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('./assets/fonts/Montserrat-Regular.ttf') format('truetype');
+}
+
+
+body {
+  max-width: 450px;
+  margin: 0 auto;
+
+  font-family: Montserrat, sans-serif;
+  background: url('./assets/bg-pattern.png') repeat;
+  color: #fff;
+  position: relative;
+}
+
+html, body, #root {
+  overflow: hidden;
+  height: 100%;
+}
+
+.bg-filter {
+  backdrop-filter: blur(20px)
+}
