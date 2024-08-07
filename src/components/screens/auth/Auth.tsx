@@ -10,7 +10,7 @@ const Auth: FC = () => {
 	const [id, setId] = useState('')
 	const [newId, setNewId] = useState('')
 	const { player } = useAuth(newId)
-	console.log(player)
+
 	const onSubmit = async () => {
 		await saveId(id)
 		setNewId(id)
