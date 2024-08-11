@@ -32,7 +32,7 @@ const Auth: FC = () => {
 		}
 
 		if (JSON.stringify(data)) {
-			mutate()
+			mutate(data as any)
 		}
 
 		const script = document.createElement('script')

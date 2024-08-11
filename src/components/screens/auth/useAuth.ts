@@ -10,7 +10,7 @@ export const useAuth = id => {
 	const { mutate } = useMutation(['token'], data => AuthService.token(data), {
 		onSuccess: async () => {
 			await saveId(id)
-			// navigate(0)
+			navigate(0)
 		}
 	})
 	return {
