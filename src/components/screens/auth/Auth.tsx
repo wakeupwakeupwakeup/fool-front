@@ -32,11 +32,8 @@ const Auth: FC = () => {
 		}
 
 		if (JSON.stringify(data)) {
-			console.log('data верная')
 			mutate()
 		}
-
-		console.log(data)
 
 		const script = document.createElement('script')
 		script.async = true

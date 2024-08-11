@@ -10,10 +10,11 @@ export const AuthService = {
 		})
 	},
 	async token(data) {
+		console.log('token request: ', data)
 		return request<IPlayer>({
 			url: '/token',
 			method: 'POST',
-			data
+			data: data
 		})
 	}
 }
