@@ -16,18 +16,18 @@ const Auth: FC = () => {
 
 		const id = queryParams.get('id')
 		if (id) setTgId(id)
-		const firstName = queryParams.get('first_name')
+		const first_name = queryParams.get('first_name')
 		const username = queryParams.get('username')
-		const photoUrl = queryParams.get('photo_url')
-		const authDate = queryParams.get('auth_date')
+		const photo_url = queryParams.get('photo_url')
+		const auth_date = queryParams.get('auth_date')
 		const hash = queryParams.get('hash')
 
 		const data = {
 			id,
-			firstName,
+			first_name,
 			username,
-			photoUrl,
-			authDate,
+			photo_url,
+			auth_date,
 			hash
 		}
 
