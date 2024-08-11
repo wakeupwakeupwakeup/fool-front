@@ -3,10 +3,11 @@ import { IPlayer } from '@/shared/types/auth.interface'
 import { request } from '@/services/api/request.api'
 
 export const AuthService = {
-	async getPlayer(tg_id: string) {
+	async token(data) {
 		return request<IPlayer>({
-			url: `/player/${tg_id}`,
-			method: 'GET'
+			url: '/token',
+			method: 'POST',
+			body: data
 		})
 	}
 }

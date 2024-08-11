@@ -1,17 +1,21 @@
-import { FC, useEffect } from 'react'
+import { FC, useEffect, useState } from 'react'
 import { useLocation } from 'react-router-dom'
 
+import { useAuth } from '@/components/screens/auth/useAuth'
 import { Layout } from '@/components/ui'
 
 const Auth: FC = () => {
 	const location = useLocation()
+	const [id, setId] = useState(null)
+	const { mutate } = useAuth(id)
 
 	// https://tonfool.online/menu?id=805868998&first_name=Danil&username=danil_mor&photo_url=https%3A%2F%2Ft.me%2Fi%2Fuserpic%2F320%2FktWdVGZAA3C0h0uyVs4rKxUdJ-0g4Bz0eSSk1DLEElw.jpg&auth_date=1723388640&hash=c783e9787583d6d5874ceb5d5c2de8656cec2523ea4d67cf77f741776ba42d14
 
 	useEffect(() => {
 		const queryParams = new URLSearchParams(location.search)
 
-		const id = queryParams.get('id')
+		const tg_id = queryParams.get('id')
+		if (id) setId(tg_id)
 		const firstName = queryParams.get('first_name')
 		const username = queryParams.get('username')
 		const photoUrl = queryParams.get('photo_url')
@@ -25,6 +29,11 @@ const Auth: FC = () => {
 			photoUrl,
 			authDate,
 			hash
+		}
+
+		if (JSON.stringify(data)) {
+			console.log('data верная')
+			mutate()
 		}
 
 		console.log(data)
