@@ -22,7 +22,7 @@ const Auth: FC = () => {
 		script.src = 'https://telegram.org/js/telegram-widget.js?22'
 		script.setAttribute('data-telegram-login', 'privates_manager_bot')
 		script.setAttribute('data-size', 'large')
-		script.setAttribute('data-auth-url', 'http://fool.0tx.ru/menu')
+		script.setAttribute('data-auth-url', 'https://tonfool.online/menu')
 		script.setAttribute('data-request-access', 'write')
 
 		document.querySelector('.auth')?.appendChild(script)
