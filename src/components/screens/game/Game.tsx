@@ -21,19 +21,19 @@ import { WS_URL } from '@/config/api.config'
 import { getWebSocket } from '@/websocket'
 
 import { Fall, Fan, FlyingCard, Pack, Rivals, Table } from './components'
-import { IRival, TPositionCard } from './game.interface'
-import { addRival, playCard, ready } from './game.utils'
-import { useGame } from './useGame'
+import { IPlayer, TPositionCard } from './game.interface'
+import { addRival, playCard, ready, take } from './game.utils'
 
 const Game: FC = () => {
 	const navigate = useNavigate()
 	const game = getGame()
 	const tg_id = getId()
 	const place = getPlace()
-	const { friends } = useGame()
+	const [friends, setFriends] = useState<IPlayer[]>([])
 	const game_ws = useRef<WebSocket | null>(null)
 
-	const [rivals, setRivals] = useState<IRival[]>([])
+	const [player, setPlayer] = useState<IPlayer>()
+	const [rivals, setRivals] = useState<IPlayer[]>([])
 	const [cardsOnTable, setCardsOnTable] = useState<string[][]>([])
 	const [cards, setCards] = useState<string[]>([])
 
@@ -43,6 +43,8 @@ const Game: FC = () => {
 	const [showModal, setShowModal] = useState(false)
 
 	const [button, setButton] = useState(null)
+	// let defendingPlayer = 0
+	// let attackPlayer = 0
 	const [defendingPlayer, setDefendingPlayer] = useState(0)
 	const [attackPlayer, setAttackPlayer] = useState(0)
 	const [beatDeckLength, setBeatDeckLength] = useState<number | null>(null)
@@ -60,97 +62,148 @@ const Game: FC = () => {
 	const global_ws = getWebSocket()
 
 	useEffect(() => {
-		const initWebSocket = () => {
-			game_ws.current = new WebSocket(
-				`${WS_URL}/ws/game/${game.id}/${tg_id}/${place}`
-			)
+		game_ws.current = new WebSocket(
+			`${WS_URL}/ws/game/${game.id}/${tg_id}/${place}`
+		)
 
-			game_ws.current.onerror = error => {
-				console.error('Game WebSocket error:', error)
-				setIsConnected(false)
-				setInterval(() => {
-					game_ws.current = new WebSocket(
-						`${WS_URL}/ws/game/${game.id}/${tg_id}/${place}`
-					)
-				}, 3000)
-			}
+		game_ws.current.onerror = error => {
+			console.error('Game WebSocket error:', error)
+			setIsConnected(false)
+			setInterval(() => {
+				game_ws.current = new WebSocket(
+					`${WS_URL}/ws/game/${game.id}/${tg_id}/${place}`
+				)
+			}, 3000)
+		}
 
-			game_ws.current.onopen = () => {
-				console.log('Game WebSocket connected')
-				setIsConnected(true)
-			}
+		game_ws.current.onopen = () => {
+			console.log('Game WebSocket connected')
+			setIsConnected(true)
+		}
 
-			game_ws.current.onclose = () => {
-				console.log('Game WebSocket disconnected')
-				setIsConnected(false)
-			}
+		game_ws.current.onclose = () => {
+			console.log('Game WebSocket disconnected')
+			setIsConnected(false)
+		}
 
-			game_ws.current.onmessage = function (event) {
-				const data = JSON.parse(event.data)
-				console.log(data)
-				switch (data.action) {
-					case 'connect': {
-						console.log('connect', data)
+		game_ws.current.onmessage = function (event) {
+			const data = JSON.parse(event.data)
+			console.log(data)
+			switch (data.action) {
+				case 'connect': {
+					console.log('connect', data)
 
-						if (JSON.stringify(data.players) !== JSON.stringify(rivals)) {
-							setRivals(data.players.filter(item => item.tg_id != +tg_id))
-						}
-						return
+					setFriends(data.friends)
+					setRivals(data.players.filter(item => item.tg_id != tg_id))
+					setPlayer(data.players.filter(item => item.tg_id === tg_id)[0])
+					return
+				}
+				case 'ready': {
+					console.log('ready', data)
+					setButton({
+						action: 'ready',
+						text: 'Готов'
+					})
+					return
+				}
+				case 'start': {
+					console.log('start', data)
+					let newRivals
+
+					setTrumpCard(data.trump_card)
+					setButton(null)
+					setBeatDeckLength(data.beat_deck_length)
+					setRemainingDeckLength(data.remaining_deck_length)
+					setAttackPlayer(data.current_player)
+					setDefendingPlayer(data.defending_player)
+					setRivals(prevState => {
+						newRivals = prevState.map(player => ({
+							...player,
+							countCards: data.players_cards[player.tg_id] || 0
+						}))
+						return prevState
+					})
+					setTimeout(() => {
+						spawnCards(data.cards, newRivals)
+					}, 0)
+					return
+				}
+				case 'play_card': {
+					console.log('play_card', data)
+
+					if (data.current_player === tg_id) {
+						setCards(data.cards)
+						setCardsOnTable(Object.entries(data.cards_on_table) as any)
+					} else {
+						rivalAddCard(data.card, data.current_player)
 					}
-					case 'ready': {
-						console.log('ready', data)
+					if (data.defending_player === tg_id) {
 						setButton({
-							action: 'ready',
-							text: 'Готов'
+							action: 'take',
+							text: 'Взять'
 						})
-						return
 					}
-					case 'start': {
-						console.log('start', data)
-						let newRivals
+					setRivals(prevState =>
+						prevState.map(player => ({
+							...player,
+							countCards: data.players_cards[player.tg_id] || 0
+						}))
+					)
+					return
+				}
+				case 'error': {
+					console.log('error', data)
+					return
+				}
+				case 'take_cards': {
+					console.log('take_cards', data)
 
-						setTrumpCard(data.trump_card)
-						setDefendingPlayer(data.defending_player)
-						setAttackPlayer(data.current_player)
-						setButton(null)
-						setBeatDeckLength(data.beat_deck_length)
-						setRemainingDeckLength(data.remaining_deck_length)
-						setRivals(prevState => {
-							newRivals = prevState.map(player => ({
-								...player,
-								countCards: data.players_cards[player.tg_id] || 0
-							}))
-							return prevState
-						})
-						setTimeout(() => {
-							spawnCards(data.cards, newRivals)
-						}, 0)
-						return
-					}
-					case 'play_card': {
-						console.log('play_card', data)
-						return
-					}
-					case 'error': {
-						console.log('error', data)
-						return
-					}
+					if (data.defending_player !== tg_id) rivalTakeCards(defendingPlayer)
+
+					setRivals(prevState =>
+						prevState.map(player => ({
+							...player,
+							countCards: data.players_cards[player.tg_id] || 0
+						}))
+					)
+					return
+				}
+				case 'end_turn': {
+					setAttackPlayer(data.current_player)
+					setDefendingPlayer(data.defending_player)
+					let newRivals
+					setRivals(prevState => {
+						newRivals = prevState.map(player => ({
+							...player,
+							countCards: data.players_cards[player.tg_id] || 0
+						}))
+						return prevState
+					})
+					setTimeout(() => {
+						spawnCards(data.cards, newRivals)
+					}, 0)
+					return
 				}
 			}
 		}
 
-		initWebSocket()
-
 		return () => {
 			setIsConnected(false)
 		}
-	}, [game.id, tg_id, place])
+	}, [game.id, tg_id, place, game_ws])
 
 	const onSubmit = () => {
 		switch (button.action) {
 			case 'ready': {
 				setButton(null)
 				ready(game_ws.current)
+				return
+			}
+			case 'take': {
+				setButton(null)
+				take(game_ws.current)
+				if (defendingPlayer === tg_id) takeCards()
+				return
 			}
 		}
 	}
@@ -162,13 +215,10 @@ const Game: FC = () => {
 
 		/*if (
 			0 < cardsOnTable.length < 6 &&
-			cardsOnTable[cardsOnTable.length - 1].length > 0 &&
-			attackPlayer &&
-			attackPlayer === +tg_id
+			cardsOnTable[cardsOnTable.length - 1]?.length > 0 &&
+			attackPlayer === tg_id
 		) {
-			{
-				setCardsOnTable([...cardsOnTable, []])
-			}
+			setCardsOnTable([...cardsOnTable, []])
 		}*/
 	}, [attackPlayer])
 
@@ -185,12 +235,14 @@ const Game: FC = () => {
 	}
 
 	const addCard = (index: number) => {
-		setCardsOnTable([...cardsOnTable.slice(0, -1), [cards[index]]])
-		setCards([...cards.slice(0, index), ...cards.slice(index + 1)])
+		// setCardsOnTable([...cardsOnTable.slice(0, -1), [cards[index]]])
+		// setCards([...cards.slice(0, index), ...cards.slice(index + 1)])
 		playCard({ game_ws: game_ws.current, card: cards[index] })
 	}
 
-	const rivalAddCard = (card: string, rivalNum: number) => {
+	// Соперник кладет карту (добавление на стол)
+	const rivalAddCard = (card: string, rivalId: number) => {
+		const rivalNum = rivals.findIndex(item => item.tg_id === rivalId) + 1
 		let poses = [-400, -100, 160]
 		spawnCardWithCords(
 			card,
@@ -206,7 +258,9 @@ const Game: FC = () => {
 		}, 600)
 	}
 
-	const rivalBeatCard = (card: string, rivalNum: number, cardPlaceIndex) => {
+	const rivalBeatCard = (card: string, rivalId: number, cardPlaceIndex) => {
+		const rivalNum = rivals.findIndex(item => item.tg_id === rivalId) + 1
+
 		let poses = [-400, -100, 160]
 		spawnCardWithCords(
 			card,
@@ -226,7 +280,9 @@ const Game: FC = () => {
 		}, 600)
 	}
 
-	const rivalTakeCards = (rivalNum: number) => {
+	const rivalTakeCards = (rivalId: number) => {
+		const rivalNum = rivals.findIndex(item => item.tg_id === rivalId) + 1
+
 		let poses = [-400, -100, 160]
 		spawnCardWithCords(
 			'6_of_clubs',
@@ -240,10 +296,9 @@ const Game: FC = () => {
 			takeCards.push(card)
 		})
 		setCardsOnTable([])
-		// rivalsInfo[rivalNum].numberOfCards += takeCards.length
 	}
 
-	const giveCardToRivals = (numCards: number[], newRivals: IRival[]) => {
+	const giveCardToRivals = (numCards: number[], newRivals: IPlayer[]) => {
 		let poses = []
 		let updateRivals = [...newRivals].map(rival => ({
 			...rival,
@@ -425,16 +480,29 @@ const Game: FC = () => {
 		}, 200)
 	}
 
-	const spawnCards = (data: string[], newRivals: IRival[]) => {
-		const newCards = data.filter(card => !cards.includes(card))
+	const spawnCards = (data: string[], newRivals: IPlayer[]) => {
 		const numCards = newRivals.map(rival => rival.countCards || 0)
-		let delay = 0
-		newCards.forEach((card, index) => {
-			delay += index * 200
-			setTimeout(() => {
-				spawnCard(card)
-			}, index * 200)
+		console.log(cards)
+		let currentCards = []
+		setCards(prevState => {
+			console.log(prevState)
+			currentCards = prevState
+			return prevState
 		})
+		setTimeout(() => {
+			let delay = 0
+			console.log(currentCards)
+
+			const newCards = data.filter(card => !currentCards.includes(card))
+			console.log(newCards)
+
+			newCards.forEach((card, index) => {
+				delay += index * 200
+				setTimeout(() => {
+					spawnCard(card)
+				}, index * 200)
+			})
+		}, 0)
 
 		setTimeout(() => {
 			giveCardToRivals(numCards, newRivals)
@@ -519,6 +587,7 @@ const Game: FC = () => {
 				<Table cardsOnTable={cardsOnTable} defendingPlayer={defendingPlayer} />
 				<Fan
 					cards={cards}
+					player={player}
 					onSubmit={onSubmit}
 					buttonText={button?.text}
 					defendingPlayer={defendingPlayer}

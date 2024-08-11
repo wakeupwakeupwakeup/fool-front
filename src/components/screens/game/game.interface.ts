@@ -8,10 +8,10 @@ export interface ITypeCard {
 	value: TValueCard
 }
 
-export interface IRival {
+export interface IPlayer {
 	tg_id: number
 	username: string
-	avatar: string
+	photo_url: string
 	countCards?: number
 }
 

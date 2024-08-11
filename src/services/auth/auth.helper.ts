@@ -1,5 +1,5 @@
 export const getId = () => {
-	return localStorage.getItem('tg_id')
+	return Number(localStorage.getItem('tg_id'))
 }
 
 export const saveId = async (user: any) => {

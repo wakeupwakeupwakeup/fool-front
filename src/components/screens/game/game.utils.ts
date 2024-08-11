@@ -50,6 +50,13 @@ export const ready = game_ws => {
 	game_ws.send(JSON.stringify(data))
 }
 
+export const take = game_ws => {
+	let data = {
+		action: 'take_cards'
+	}
+	game_ws.send(JSON.stringify(data))
+}
+
 export const beat = (game_ws: WebSocket) => {
 	let data = {
 		action: 'beat'

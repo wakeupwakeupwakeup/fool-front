@@ -16,6 +16,15 @@ const Profile: FC<IProps> = ({ user, isLoading }) => {
 
 	return (
 		<div className='flex gap-base-x3'>
+			{/*<div className='relative w-base-x7 h-base-x7 rounded-base-x1 overflow-hidden'>
+				<img src={avatar} alt='' className='w-base-x7 h-base-x7 absolute' />
+				<img
+					src={user.photo_url ? user.photo_url : avatar}
+					alt=''
+					className='w-full relative'
+				/>
+			</div>*/}
+
 			<img
 				src={user.photo_url ? user.photo_url : avatar}
 				alt=''

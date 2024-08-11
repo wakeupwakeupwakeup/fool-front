@@ -7,6 +7,8 @@ import { getId } from '@/services/auth/auth.helper'
 
 import avatar from '@/assets/tapps.png'
 
+import { IPlayer } from '../game.interface'
+
 import DraggableCard from './DraggableCard'
 
 interface IProps {
@@ -14,6 +16,7 @@ interface IProps {
 	onSubmit: () => void
 	buttonText: string
 	defendingPlayer: number
+	player: IPlayer
 	attackPlayer: number
 }
 
@@ -21,10 +24,11 @@ const Fan: FC<IProps> = ({
 	cards,
 	onSubmit,
 	buttonText,
+	player,
 	defendingPlayer,
 	attackPlayer
 }) => {
-	const tg_id = Number(getId())
+	const tg_id = getId()
 	return (
 		<div className='relative w-full'>
 			<div className='relative bottom-[140px] flex justify-between'>
@@ -43,7 +47,7 @@ const Fan: FC<IProps> = ({
 					/>
 				)}
 				<img
-					src={avatar}
+					src={player ? player.photo_url : avatar}
 					alt=''
 					className='w-base-x7 h-base-x7 rounded-base-x1'
 				/>

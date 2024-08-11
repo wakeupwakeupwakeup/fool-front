@@ -1,7 +1,7 @@
 import { FC } from 'react'
 
 import Card from '@/components/screens/game/components/Card'
-import { IRival } from '@/components/screens/game/game.interface'
+import { IPlayer } from '@/components/screens/game/game.interface'
 import { Icon, Typography } from '@/components/ui'
 
 import { getGame } from '@/services/game/game.helper'
@@ -9,7 +9,7 @@ import { getGame } from '@/services/game/game.helper'
 import avatar from '@/assets/tapps.png'
 
 interface IProps {
-	rivals: IRival[]
+	rivals: IPlayer[]
 	handlerShowModal: (place: number) => void
 	defendingPlayer: number
 	attackPlayer: number
@@ -59,7 +59,7 @@ const Rivals: FC<IProps> = ({
 					<Typography variant='text'>{rival.username}</Typography>
 					<div className='relative z-30'>
 						<img
-							src={avatar}
+							src={rival?.photo_url ? rival.photo_url : avatar}
 							alt=''
 							className='w-base-x7 h-base-x7 rounded-base-x1'
 						/>
