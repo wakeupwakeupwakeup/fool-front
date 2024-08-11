@@ -14,7 +14,7 @@ export const AuthService = {
 		return request<IPlayer>({
 			url: '/token',
 			method: 'POST',
-			data: data
+			data: { data }
 		})
 	}
 }
