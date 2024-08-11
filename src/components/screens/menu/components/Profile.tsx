@@ -22,14 +22,11 @@ const Profile: FC<IProps> = ({ user, isLoading }) => {
 				className='w-base-x7 h-base-x7 rounded-base-x1'
 			/>
 			<div className='flex flex-col justify-between w-full'>
-				<div className='flex flex-col'>
+				<div className='flex justify-between'>
 					<Typography variant='text'>{user.username}</Typography>
-					<div className='flex gap-base-x3 items-center'>
-						<Typography variant='text'>ID: {user.tg_id}</Typography>
-						<div className='flex items-center gap-base-x1'>
-							<Typography variant='text'>🏆</Typography>
-							<Typography variant='text'>{user.cups}</Typography>
-						</div>
+					<div className='flex gap-base-x1 items-center'>
+						<Typography variant='text'>🏆</Typography>
+						<Typography variant='text'>{user.cups}</Typography>
 					</div>
 				</div>
 				<div className='flex items-center justify-between'>
