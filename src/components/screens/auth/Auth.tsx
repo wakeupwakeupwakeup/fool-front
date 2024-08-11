@@ -1,4 +1,4 @@
-import { FC, useEffect, useState } from 'react'
+import { FC, useEffect } from 'react'
 import { useLocation } from 'react-router-dom'
 
 import { useAuth } from '@/components/screens/auth/useAuth'
@@ -6,34 +6,22 @@ import { Layout } from '@/components/ui'
 
 const Auth: FC = () => {
 	const location = useLocation()
-	const [tgId, setTgId] = useState(null)
-	const { mutate } = useAuth(tgId)
+	const { mutate } = useAuth()
 
 	useEffect(() => {
 		const queryParams = new URLSearchParams(location.search)
 
-		const id = queryParams.get('id')
-		if (id) setTgId(id)
-		const first_name = queryParams.get('first_name')
-		const last_name = queryParams.get('last_name')
-		const username = queryParams.get('username')
-		const photo_url = queryParams.get('photo_url')
-		const auth_date = queryParams.get('auth_date')
-		const hash = queryParams.get('hash')
-
 		const data = {
-			id,
-			first_name,
-			last_name,
-			username,
-			photo_url,
-			auth_date,
-			hash
+			id: queryParams.get('id'),
+			first_name: queryParams.get('first_name') || '',
+			last_name: queryParams.get('last_name') || '',
+			username: queryParams.get('username') || '',
+			photo_url: queryParams.get('photo_url') || '',
+			auth_date: queryParams.get('auth_date'),
+			hash: queryParams.get('hash')
 		}
 
-		if (JSON.stringify(data)) {
-			mutate(data as any)
-		}
+		if (JSON.stringify(data)) mutate(data as any)
 
 		const script = document.createElement('script')
 		script.async = true
