@@ -9,8 +9,6 @@ const Auth: FC = () => {
 	const [tgId, setTgId] = useState(null)
 	const { mutate } = useAuth(tgId)
 
-	// https://tonfool.online/menu?id=805868998&first_name=Danil&username=danil_mor&photo_url=https%3A%2F%2Ft.me%2Fi%2Fuserpic%2F320%2FktWdVGZAA3C0h0uyVs4rKxUdJ-0g4Bz0eSSk1DLEElw.jpg&auth_date=1723388640&hash=c783e9787583d6d5874ceb5d5c2de8656cec2523ea4d67cf77f741776ba42d14
-
 	useEffect(() => {
 		const queryParams = new URLSearchParams(location.search)
 
