@@ -10,17 +10,24 @@ const Auth: FC = () => {
 
 	useEffect(() => {
 		const queryParams = new URLSearchParams(location.search)
+		const keys = [
+			'id',
+			'first_name',
+			'last_name',
+			'username',
+			'photo_url',
+			'auth_date',
+			'hash'
+		]
+		const data = {}
 
-		const data = {
-			id: queryParams.get('id'),
-			first_name: queryParams.get('first_name') || '',
-			last_name: queryParams.get('last_name') || '',
-			username: queryParams.get('username') || '',
-			photo_url: queryParams.get('photo_url') || '',
-			auth_date: queryParams.get('auth_date'),
-			hash: queryParams.get('hash')
-		}
+		keys.forEach(key => {
+			if (queryParams.has(key)) {
+				data[key] = queryParams.get(key)
+			}
+		})
 
+		console.log(data)
 		if (JSON.stringify(data)) mutate(data as any)
 
 		const script = document.createElement('script')

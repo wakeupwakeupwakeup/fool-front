@@ -22,7 +22,7 @@ const Menu: FC = () => {
 		await deleteId()
 		// @ts-ignore
 		setPlayer(null)
-		navigate('/auth')
+		navigate(0)
 	}
 
 	return (
