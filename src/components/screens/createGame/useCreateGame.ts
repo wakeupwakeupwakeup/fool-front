@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom'
 import { IGameRequest } from '@/shared/types/game.interface'
 
 import { getId } from '@/services/auth/auth.helper'
-import { saveGame } from '@/services/game/game.helper'
+import { deleteGame, deletePlace, saveGame } from '@/services/game/game.helper'
 import { GameService } from '@/services/game/game.service'
 
 export const useCreateGame = () => {
@@ -18,6 +18,8 @@ export const useCreateGame = () => {
 			GameService.createGame({ info: info, tg_id: tg_id }),
 		{
 			onSuccess: data => {
+				deleteGame()
+				deletePlace()
 				saveGame(data)
 				navigate('/game')
 			}

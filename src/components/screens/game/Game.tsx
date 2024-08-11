@@ -12,9 +12,11 @@ import {
 } from '@/components/ui'
 
 import { getId } from '@/services/auth/auth.helper'
-import { deleteGame, getGame, getPlace } from '@/services/game/game.helper'
+import { getGame, getPlace } from '@/services/game/game.helper'
 
 import avatar from '@/assets/tapps.png'
+
+import { WS_URL } from '@/config/api.config'
 
 import { getWebSocket } from '@/websocket'
 
@@ -27,7 +29,7 @@ const Game: FC = () => {
 	const navigate = useNavigate()
 	const game = getGame()
 	const tg_id = getId()
-	const place = getPlace() || 1
+	const place = getPlace()
 	const { friends } = useGame()
 	const game_ws = useRef<WebSocket | null>(null)
 
@@ -60,16 +62,17 @@ const Game: FC = () => {
 	useEffect(() => {
 		const initWebSocket = () => {
 			game_ws.current = new WebSocket(
-				`wss://api.tonfool.online/ws/game/${game.id}/${tg_id}/${place}`
+				`${WS_URL}/ws/game/${game.id}/${tg_id}/${place}`
 			)
 
 			game_ws.current.onerror = error => {
 				console.error('Game WebSocket error:', error)
-				game_ws.current.close()
-				game_ws.current = null
 				setIsConnected(false)
-				deleteGame()
-				navigate('/menu')
+				setInterval(() => {
+					game_ws.current = new WebSocket(
+						`${WS_URL}/ws/game/${game.id}/${tg_id}/${place}`
+					)
+				}, 3000)
 			}
 
 			game_ws.current.onopen = () => {
@@ -80,8 +83,6 @@ const Game: FC = () => {
 			game_ws.current.onclose = () => {
 				console.log('Game WebSocket disconnected')
 				setIsConnected(false)
-				deleteGame()
-				navigate('/menu')
 			}
 
 			game_ws.current.onmessage = function (event) {
@@ -141,11 +142,7 @@ const Game: FC = () => {
 		initWebSocket()
 
 		return () => {
-			if (game_ws.current) {
-				game_ws.current.close()
-				setIsConnected(false)
-				deleteGame()
-			}
+			setIsConnected(false)
 		}
 	}, [game.id, tg_id, place])
 

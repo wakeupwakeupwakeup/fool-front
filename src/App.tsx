@@ -6,7 +6,6 @@ import { Loading } from '@/components/screens'
 
 import Navigation from '@/navigation/Navigation'
 import { ModalProvider } from '@/providers/ModalContext'
-import { getWebSocket, initWebSocket } from '@/websocket'
 
 const queryClient = new QueryClient({
 	defaultOptions: {
@@ -24,9 +23,6 @@ function App() {
 	}
 
 	useEffect(() => {
-		initWebSocket()
-		const socket = getWebSocket()
-
 		if (
 			document.readyState === 'complete' ||
 			document.readyState === 'interactive'
@@ -38,10 +34,6 @@ function App() {
 				window.removeEventListener('load', onContentLoaded)
 			}
 			window.addEventListener('load', onContentLoaded)
-		}
-
-		return () => {
-			socket.close()
 		}
 	}, [])
 

@@ -5,7 +5,12 @@ import { Button, Modal, Typography } from '@/components/ui'
 
 import { IWebSocketResponse } from '@/shared/types/game.interface'
 
-import { saveGame, savePlace } from '@/services/game/game.helper'
+import {
+	deleteGame,
+	deletePlace,
+	saveGame,
+	savePlace
+} from '@/services/game/game.helper'
 
 import avatar from '@/assets/tapps.png'
 
@@ -25,6 +30,8 @@ const ModalProvider: FC<{ children: ReactNode }> = ({ children }) => {
 
 	const onSubmit = () => {
 		setVisible(false)
+		deleteGame()
+		deletePlace()
 		saveGame(info.game)
 		savePlace(info.place)
 		navigate('/game')

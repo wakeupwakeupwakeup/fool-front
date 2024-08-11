@@ -21,21 +21,27 @@ const Layout: FC<PropsWithChildren<ILayout>> = ({
 	footer
 }) => {
 	const { setVisible, setInfo } = useModal()
-	const socket = getWebSocket()
-
-	socket.onmessage = event => {
-		const message: { action: string; data: IWebSocketResponse } = JSON.parse(
-			event.data
-		)
-		if (message.action === 'invite') {
-			setInfo(message.data)
-			setVisible(true)
-		}
-	}
 
 	useEffect(() => {
 		initWebSocket()
-	}, []);
+		const socket = getWebSocket()
+
+		if (socket) {
+			socket.onmessage = event => {
+				const message: { action: string; data: IWebSocketResponse } =
+					JSON.parse(event.data)
+				if (message.action === 'invite') {
+					setInfo(message.data)
+					setVisible(true)
+				}
+			}
+		}
+
+		return () => {
+			socket?.close()
+		}
+	}, [])
+
 	return (
 		<div className='flex flex-col justify-between items-center py-base-x4 px-[10%] h-full'>
 			<div className='flex flex-col items-center gap-base-x4 w-full h-full'>

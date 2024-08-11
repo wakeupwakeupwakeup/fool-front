@@ -1,11 +1,15 @@
 import { getId } from '@/services/auth/auth.helper'
 
+import { WS_URL } from '@/config/api.config'
+
 let socket: WebSocket | null = null
 
 export const initWebSocket = () => {
 	const tg_id = getId()
 
-	socket = new WebSocket(`wss://api.tonfool.online/ws/global/${tg_id}`)
+	if (!tg_id) return
+
+	socket = new WebSocket(`${WS_URL}/ws/global/${tg_id}`)
 
 	socket.onopen = () => {
 		console.log('WebSocket connected')
@@ -13,7 +17,7 @@ export const initWebSocket = () => {
 
 	socket.onclose = () => {
 		console.log('WebSocket disconnected')
-		initWebSocket()
+		// initWebSocket()
 	}
 
 	socket.onerror = error => {
@@ -29,7 +33,7 @@ export const getWebSocket = (): WebSocket => {
 	if (!socket) {
 		initWebSocket()
 
-		throw new Error('WebSocket is not initialized')
+		new Error('WebSocket is not initialized')
 	}
 	return socket
 }

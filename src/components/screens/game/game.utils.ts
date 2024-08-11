@@ -29,12 +29,18 @@ export const playCard = ({
 	game_ws.send(JSON.stringify(data))
 }
 
-export const defendCard = ({ global_ws }) => {
+export const defendCard = ({
+	game_ws,
+	card
+}: {
+	game_ws: WebSocket
+	card: string
+}) => {
 	let data = {
 		action: 'defend_card',
-		card: 'Q_of_diamonds'
+		card: card
 	}
-	global_ws.send(JSON.stringify(data))
+	game_ws.send(JSON.stringify(data))
 }
 
 export const ready = game_ws => {
@@ -44,9 +50,9 @@ export const ready = game_ws => {
 	game_ws.send(JSON.stringify(data))
 }
 
-export const beat = ({ global_ws }) => {
+export const beat = (game_ws: WebSocket) => {
 	let data = {
 		action: 'beat'
 	}
-	global_ws.send(JSON.stringify(data))
+	game_ws.send(JSON.stringify(data))
 }

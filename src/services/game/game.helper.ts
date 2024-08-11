@@ -18,7 +18,7 @@ export const savePlace = (place: number) => {
 }
 
 export const getPlace = () => {
-	return localStorage.getItem('place')
+	return localStorage.getItem('place') || 1
 }
 
 export const deletePlace = () => {
