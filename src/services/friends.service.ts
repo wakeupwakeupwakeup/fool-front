@@ -1,10 +1,10 @@
-import { IPlayer } from '@/shared/types/auth.interface'
-import { TCurrency } from '@/shared/types/game.interface'
+import {IPlayer} from '@/shared/types/auth.interface'
+import {TCurrency} from '@/shared/types/game.interface'
 
-import { request } from '@/services/api/request.api'
+import {request} from '@/services/api/request.api'
 
 export const FriendsService = {
-	async getFriends(tg_id: string) {
+	async getFriends(tg_id: number) {
 		return request<IPlayer[]>({
 			url: `/friends/${tg_id}`,
 			method: 'GET'
