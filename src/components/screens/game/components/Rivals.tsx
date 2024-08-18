@@ -24,7 +24,6 @@ const Rivals: FC<IProps> = ({
 	const game = getGame()
 	const countRivals: number[] = Array(game.num_players - 1).fill(1)
 	const maxRivalCardsAngleDegrees = 30
-
 	return (
 		<div className='flex justify-center w-full'>
 			{countRivals.length > rivals.length &&
@@ -64,7 +63,7 @@ const Rivals: FC<IProps> = ({
 							className='w-base-x7 h-base-x7 rounded-base-x1'
 						/>
 					</div>
-					{rival?.countCards && (
+					{typeof rival?.countCards === 'number' && (
 						<Typography
 							variant='text'
 							className='absolute flex items-center bg-white z-50 justify-center left-[50%] -translate-x-[50%] -bottom-[40px] w-base-x6 h-base-x6 rounded-full text-blue font-bold border-2 border-blue'

@@ -57,7 +57,7 @@ const Table: FC<ITable> = ({ cardsOnTable, defendingPlayer }) => {
 								/>
 							)}
 							{cardPlace[1] && (
-								<Card className='rotate-12' type={cardPlace[0]} />
+								<Card className='rotate-12' type={cardPlace[1]} />
 							)}
 						</div>
 					)}
