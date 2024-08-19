@@ -1,3 +1,3 @@
 export { useTelegram } from './useTelegram'
-export { useFriends } from './useFriends'
+export { useAddFriend } from './useAddFriend'
 export { useProfile } from './useProfile'

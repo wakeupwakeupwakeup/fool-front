@@ -5,13 +5,13 @@ import { Loading } from '@/components/screens'
 
 import { getId, saveFriendId } from '@/services/auth/auth.helper'
 
-import { useFriends } from '@/hooks'
+import { useAddFriend } from '@/hooks'
 
 const Invite: FC = () => {
 	const tg_id = getId()
 	const navigate = useNavigate()
 	const queryParams = new URLSearchParams(location.search)
-	const { addFriend } = useFriends()
+	const { addFriend } = useAddFriend()
 
 	useEffect(() => {
 		if (tg_id) {

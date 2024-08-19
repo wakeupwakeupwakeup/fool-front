@@ -8,7 +8,7 @@ import { getId } from '@/services/auth/auth.helper'
 
 import avatar from '@/assets/tapps.png'
 
-import { useFriends } from '@/hooks'
+import { useFriends } from './useFriends'
 
 const Friends: FC = () => {
 	const { friends, isFriendsLoading } = useFriends()
