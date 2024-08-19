@@ -459,7 +459,11 @@ const Game: FC = () => {
 	}
 
 	useEffect(() => {
-		if (!cardsOnTable.length && cardsOnTable < 6 && attackPlayer === tg_id) {
+		if (
+			!cardsOnTable.length &&
+			cardsOnTable.length < 6 &&
+			attackPlayer === tg_id
+		) {
 			setCardsOnTable([...cardsOnTable, []])
 		}
 	}, [attackPlayer])
