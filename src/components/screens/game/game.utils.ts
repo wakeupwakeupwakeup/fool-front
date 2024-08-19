@@ -53,3 +53,10 @@ export const beat = game_ws => {
 	}
 	game_ws.send(JSON.stringify(data))
 }
+
+export const nextThrow = game_ws => {
+	let data = {
+		action: 'next_throw'
+	}
+	game_ws.send(JSON.stringify(data))
+}

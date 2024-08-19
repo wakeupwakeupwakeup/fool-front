@@ -31,6 +31,7 @@ import {
 	addRival,
 	beat,
 	defendCard,
+	nextThrow,
 	playCard,
 	ready,
 	take,
@@ -67,7 +68,7 @@ const Game: FC = () => {
 	const flyingCardsRef = useRef<HTMLDivElement>(null)
 
 	useEffect(() => {
-		if (!game.id) navigate('/create-game')
+		if (!game) navigate('/menu')
 	}, [])
 
 	const global_ws = getWebSocket()
@@ -110,6 +111,7 @@ const Game: FC = () => {
 				}
 				case 'ready': {
 					console.log('ready', data)
+
 					setButton({
 						action: 'ready',
 						text: 'Готов'
@@ -142,20 +144,27 @@ const Game: FC = () => {
 				case 'play_card': {
 					console.log(data.action, data)
 
-					if (data.current_player === tg_id) {
-						setCards(data.cards)
+					setCards(data.cards)
+					if (data.next_throwing_player === tg_id) {
 						setCardsOnTable(Object.entries(data.cards_on_table) as any)
 					} else {
 						rivalAddCard(
+							data.players_cards,
 							Object.entries(data.cards_on_table) as any,
 							data.card,
-							data.current_player
+							data.next_throwing_player
 						)
 					}
 					if (data.defending_player === tg_id) {
 						setButton({
 							action: 'take',
 							text: 'Взять'
+						})
+					}
+					if (data.next_throwing_player === tg_id && game.num_players > 2) {
+						setButton({
+							text: 'Пас',
+							action: 'next_throw'
 						})
 					}
 					setRivals(prevState =>
@@ -176,9 +185,14 @@ const Game: FC = () => {
 					if (data.defending_player === tg_id) {
 						setCards(data.cards)
 					} else {
-						rivalTakeCards(data.defending_player)
+						rivalTakeCards(data.players_cards, data.defending_player)
 					}
-
+					setRivals(prevState =>
+						prevState.map(player => ({
+							...player,
+							countCards: data.players_cards[player.tg_id] || 0
+						}))
+					)
 					return
 				}
 				case 'end_turn': {
@@ -194,40 +208,33 @@ const Game: FC = () => {
 					setBeatDeckLength(data.beat_deck_length)
 					setRemainingDeckLength(data.remaining_deck_length)
 					setDefendingPlayer(data.defending_player)
-					setRivals(prevState =>
-						prevState.map(player => ({
-							...player,
-							countCards: data.players_cards[player.tg_id] || 0
-						}))
-					)
 					setCards(data.cards)
 
 					// Добавить спавн карт
 
-					/*let oldRival = []
+					let oldRivals = []
 					let newRivals = []
 
 					setRivals(prevState => {
-						oldRival = prevState
+						oldRivals = prevState
 						return prevState
 					})
-
 					setTimeout(() => {
-						oldRival.forEach(item => {
+						oldRivals.forEach(item => {
 							newRivals.push({
 								...item,
 								countCards: data.players_cards[item.tg_id]
 							})
 						})
 
-						spawnCards(data.cards, newRivals, false, oldRival)
-					}, 0)*/
+						spawnCards(data.cards, newRivals, false, oldRivals)
+					}, 600)
 					return
 				}
 				case 'beat': {
 					console.log('beat', data)
 
-					beatCards()
+					spawnCardWithCords('cover', [window.innerHeight / 2, 0], [160, 300])
 
 					return
 				}
@@ -242,12 +249,17 @@ const Game: FC = () => {
 						}))
 					)
 
-					if (data.current_player === tg_id) {
-						setCardsOnTable([
-							...(Object.entries(data.cards_on_table) as any),
-							[]
-						])
-					} else {
+					if (data.defending_player !== tg_id) {
+						rivalBeatCard(
+							data.players_cards,
+							data.card,
+							data.defending_player,
+							Object.entries(data.cards_on_table) as any,
+							data.next_throwing_player
+						)
+					}
+
+					if (data.next_throwing_player !== tg_id) {
 						setCardsOnTable(Object.entries(data.cards_on_table) as any)
 					}
 
@@ -256,11 +268,60 @@ const Game: FC = () => {
 							text: 'Бита',
 							action: 'beat'
 						})
-					} else if (data.defending_player !== tg_id) {
+					}
+					if (data.next_throwing_player === tg_id && game.num_players > 2) {
 						setButton({
 							text: 'Пас',
-							action: 'pass'
+							action: 'next_throw'
 						})
+					}
+
+					return
+				}
+				case 'next_throw': {
+					console.log('next_throw', data)
+
+					setAttackPlayer(data.next_throwing_player)
+					setCardsOnTable(Object.entries(data.cards_on_table) as any)
+
+					if (data.defending_player === tg_id) {
+						setButton({
+							action: 'take',
+							text: 'Взять'
+						})
+					} else {
+						setButton(null)
+					}
+
+					if (
+						data.next_throwing_player === tg_id &&
+						data.next_throwing_player !== data.current_player
+					) {
+						setCardsOnTable([
+							...(Object.entries(data.cards_on_table) as any),
+							[]
+						])
+						setButton({
+							text: 'Пас',
+							action: 'next_throw'
+						})
+					}
+
+					if (
+						data.next_throwing_player === data.current_player &&
+						data.current_player === tg_id
+					) {
+						setCardsOnTable([
+							...(Object.entries(data.cards_on_table) as any),
+							[]
+						])
+
+						if (Object.values(data.cards_on_table).every(Boolean)) {
+							setButton({
+								text: 'Бита',
+								action: 'beat'
+							})
+						}
 					}
 
 					return
@@ -270,7 +331,9 @@ const Game: FC = () => {
 					deletePlace()
 					game_ws.current.close()
 					navigate('/result-game', {
-						players: data.players
+						state: {
+							players: data.players
+						}
 					})
 					return
 				}
@@ -280,7 +343,7 @@ const Game: FC = () => {
 		return () => {
 			setIsConnected(false)
 		}
-	}, [game.id, tg_id, place, game_ws])
+	}, [game?.id, tg_id, place, game_ws])
 
 	const onSubmit = () => {
 		switch (button.action) {
@@ -292,7 +355,13 @@ const Game: FC = () => {
 			case 'take': {
 				setButton(null)
 				take(game_ws.current)
-				if (defendingPlayer === tg_id) takeCards()
+				if (defendingPlayer === tg_id) {
+					spawnCardWithCords(
+						'6_of_clubs',
+						[window.innerHeight / 2, 0],
+						[window.innerHeight + 50, -50]
+					)
+				}
 				return
 			}
 			case 'beat': {
@@ -300,8 +369,9 @@ const Game: FC = () => {
 				beat(game_ws.current)
 				return
 			}
-			case 'pass': {
+			case 'next_throw': {
 				setButton(null)
+				nextThrow(game_ws.current)
 				return
 			}
 		}
@@ -309,17 +379,8 @@ const Game: FC = () => {
 
 	useEffect(() => {
 		if (!cardsOnTable.length && attackPlayer === tg_id) {
-			console.log('set cardsOnTable')
 			setCardsOnTable([...cardsOnTable, []])
 		}
-
-		/*if (
-			0 < cardsOnTable.length < 6 &&
-			cardsOnTable[cardsOnTable.length - 1]?.length > 0 &&
-			attackPlayer === tg_id
-		) {
-			setCardsOnTable([...cardsOnTable, []])
-		}*/
 	}, [attackPlayer])
 
 	// Пригласить игрока
@@ -336,17 +397,27 @@ const Game: FC = () => {
 
 	// Соперник кладет карту (добавление на стол)
 	const rivalAddCard = (
+		players_cards: Object,
 		cards_on_table: string[][],
 		card: string,
 		rivalId: number
 	) => {
-		const rivalNum = rivals.findIndex(item => item.tg_id === rivalId) + 1
-		let poses = [-400, -100, 160]
+		const rivalNum = Object.keys(players_cards).indexOf(String(rivalId))
+
+		let poses = []
+
+		if (game.num_players === 2) {
+			poses = [-100]
+		} else if (game.num_players === 2) {
+			poses = [-400, 200]
+		} else if (game.num_players === 3) {
+			poses = [-400, -100, 200]
+		}
 		spawnCardWithCords(
 			card,
-			[100, poses[rivalNum] + 25],
-			[window.screen.availHeight / 2, -90],
-			110,
+			[100, poses[rivalNum]],
+			[window.innerHeight / 2, -60],
+			100,
 			'top',
 			true
 		)
@@ -356,41 +427,66 @@ const Game: FC = () => {
 		}, 600)
 	}
 
-	const rivalBeatCard = (card: string, rivalId: number, cardPlaceIndex) => {
-		const rivalNum = rivals.findIndex(item => item.tg_id === rivalId) + 1
+	// Соперник отбивает карту
+	const rivalBeatCard = (
+		players_cards: Object,
+		card: string,
+		rivalId: number,
+		cards_on_table,
+		attack_player
+	) => {
+		const rivalNum = Object.keys(players_cards).indexOf(String(rivalId))
+		let poses = []
 
-		let poses = [-400, -100, 160]
+		if (game.num_players === 2) {
+			poses = [-100]
+		} else if (game.num_players === 2) {
+			poses = [-400, 200]
+		} else if (game.num_players === 3) {
+			poses = [-400, -100, 200]
+		}
+
 		spawnCardWithCords(
 			card,
-			[200, poses[rivalNum]],
-			[window.screen.availHeight / 2, -90],
-			110,
+			[100, poses[rivalNum]],
+			[window.innerHeight / 2, -60],
+			100,
 			'top',
 			true
 		)
 
 		setTimeout(() => {
-			setCardsOnTable([
-				...cardsOnTable.slice(0, cardPlaceIndex),
-				[...cardsOnTable[cardPlaceIndex], card],
-				...cardsOnTable.slice(cardPlaceIndex + 1)
-			])
+			if (attack_player === tg_id) {
+				setCardsOnTable([...cards_on_table, []])
+			} else {
+				setCardsOnTable([...cards_on_table])
+			}
 		}, 600)
 	}
 
-	const rivalTakeCards = (rivalId: number) => {
-		const rivalNum = rivals.findIndex(item => item.tg_id === rivalId) + 1
+	// Соперник берет карты
+	const rivalTakeCards = (players_cards: Object, rivalId: number) => {
+		const rivalNum = Object.keys(players_cards).indexOf(String(rivalId))
+		let poses = []
 
-		let poses = [-400, -100, 160]
+		if (game.num_players === 2) {
+			poses = [-100]
+		} else if (game.num_players === 2) {
+			poses = [-400, 200]
+		} else if (game.num_players === 3) {
+			poses = [-400, -100, 200]
+		}
+
 		spawnCardWithCords(
 			'6_of_clubs',
-			[window.screen.availHeight / 2 + 450, 0],
-			[220, poses[rivalNum]],
+			[window.innerHeight / 2, -60],
+			[100, poses[rivalNum]],
 			50,
 			'bottom'
 		)
 	}
 
+	// Раздача карт соперникам
 	const giveCardToRivals = (
 		numCards: number[],
 		newRivals: IPlayer[],
@@ -413,9 +509,9 @@ const Game: FC = () => {
 		if (numCards.length === 1) {
 			poses = [-100]
 		} else if (numCards.length === 2) {
-			poses = [-400, -100]
+			poses = [-400, 200]
 		} else if (numCards.length === 3) {
-			poses = [-400, -100, 160]
+			poses = [-400, -100, 200]
 		}
 
 		let delay = 0
@@ -445,17 +541,17 @@ const Game: FC = () => {
 		// console.log(updateRivals)
 	}
 
+	// Раздача карт
 	const spawnCard = (card: string) => {
 		setCurrentFlyingCards([
 			...currentFlyingCards,
 			<FlyingCard
-				key={Date.now() * Math.floor(Math.random() * 1000)}
-				id={card}
+				key={Date.now()}
 				type={card}
-				onPause={() => {}}
 				from={[160, -300]}
-				to={[window.screen.availHeight + 50, -50]}
+				to={[window.innerHeight + 50, -50]}
 				scale={100}
+				animation={true}
 			/>
 		])
 		setTimeout(() => {
@@ -477,9 +573,7 @@ const Game: FC = () => {
 			...currentFlyingCards,
 			<FlyingCard
 				key={Date.now()}
-				id={card}
 				type={card}
-				onPause={() => {}}
 				from={from}
 				to={to}
 				scale={scale}
@@ -489,57 +583,57 @@ const Game: FC = () => {
 		])
 	}
 
-	const beatCards = () => {
-		spawnCardWithCords('cover', [window.screen.availHeight / 2, 0], [160, 300])
-	}
-
-	const takeCards = () => {
-		spawnCardWithCords(
-			'6_of_clubs',
-			[window.screen.availHeight / 2, 0],
-			[window.screen.availHeight + 50, -50]
-		)
-	}
-
+	// Раздача карт всем игрокам
 	const spawnCards = (
 		data: string[],
 		newRivals: IPlayer[],
 		isStart?: boolean,
-		oldRival?: IPlayer[]
+		oldRivals?: IPlayer[]
 	) => {
+		// Массив новых карт соперников
 		const numCards = isStart
 			? newRivals.map(rival => rival.countCards || 0)
-			: oldRival.map(
+			: oldRivals.map(
 					rival =>
 						newRivals.find(newRival => newRival.tg_id === rival.tg_id)
 							.countCards - rival.countCards
 			  )
-		let currentCards = []
-		console.log(cards)
-		setCards(prevState => {
-			// console.log(prevState)
-			currentCards = prevState
-			return prevState
-		})
-		console.log(currentCards)
-		setTimeout(() => {
-			// console.log(currentCards)
+		let delay = 0
 
+		// Раздача карт в начале игры
+		if (isStart) {
+			data.forEach((card, index) => {
+				setTimeout(() => {
+					spawnCard(card)
+				}, index * 200)
+				delay += index * 100
+			})
+		} else {
+			// Раздача карт
+			/*let currentCards = []
+			setCards(prevState => {
+				prevState.map(item => {
+					currentCards.push(item)
+				})
+				return prevState
+			})
+			console.log(currentCards)
 			const newCards = data.filter(card => !currentCards.includes(card))
-			// console.log(newCards)
 
 			newCards.forEach((card, index) => {
 				setTimeout(() => {
 					spawnCard(card)
 				}, index * 200)
-			})
-		}, 0)
+				delay += index * 200
+			})*/
+		}
 
 		setTimeout(() => {
 			giveCardToRivals(numCards, newRivals, isStart)
-		}, 0)
+		}, delay)
 	}
 
+	// Положить карту на стол
 	function onDragEnd(result: any) {
 		let destinationName = result.destination?.droppableId || ''
 		if (destinationName.startsWith('droppable-table-card')) {
@@ -547,8 +641,17 @@ const Game: FC = () => {
 				'droppable-table-card-',
 				''
 			)
+			console.log(rivals)
+			console.log(defendingPlayer)
 			// подкинуть карту
-			if (!cardsOnTable[destinationIndex].length) {
+			const currentRivalCountCards = rivals.find(
+				rival => rival.tg_id === defendingPlayer
+			)?.countCards
+			console.log(currentRivalCountCards)
+			if (
+				!cardsOnTable[destinationIndex].length &&
+				currentRivalCountCards !== 0
+			) {
 				if (cardsOnTable.length === 1) {
 					playCard(game_ws.current, cards[result.source.index])
 				} else {
@@ -558,7 +661,8 @@ const Game: FC = () => {
 			// побить карту
 			else {
 				if (
-					cardsOnTable[destinationIndex].length === 1 &&
+					cardsOnTable[destinationIndex].filter(item => item !== null)
+						.length === 1 &&
 					defendingPlayer === tg_id
 				) {
 					defendCard(
@@ -577,11 +681,11 @@ const Game: FC = () => {
 		<DragDropContext onDragEnd={onDragEnd}>
 			<Layout
 				noLogo
-				className='flex flex-col items-center justify-berween h-full relative'
+				className='flex select-none flex-col items-center justify-berween h-full relative'
 			>
 				<div
 					ref={flyingCardsRef}
-					className='floating-cards overflow-visible w-0 h-0 relative'
+					className='floating-cards overflow-visible relative z-10 w-0 h-0'
 				>
 					{currentFlyingCards}
 				</div>
@@ -591,7 +695,7 @@ const Game: FC = () => {
 					attackPlayer={attackPlayer}
 					handlerShowModal={handlerShowModal}
 				/>
-				<div className='flex gap-base-x2 mt-base-x7'>
+				<div className='absolute flex gap-base-x2 top-40'>
 					<Icon size={26} icon={game.currency} />
 					<Typography variant='h1'>{game.bet}</Typography>
 				</div>

@@ -1,3 +1,4 @@
+import cn from 'clsx'
 import { FC } from 'react'
 
 import Card from '@/components/screens/game/components/Card'
@@ -22,15 +23,25 @@ const Rivals: FC<IProps> = ({
 	attackPlayer
 }) => {
 	const game = getGame()
-	const countRivals: number[] = Array(game.num_players - 1).fill(1)
+	const countRivals: number[] =
+		rivals.length > 0
+			? Array(game.num_players - 1 - rivals.length).fill(1)
+			: Array(game.num_players - 1).fill(1)
 	const maxRivalCardsAngleDegrees = 30
+	const placeRival =
+		rivals.length > 0 ? Math.max(...rivals.map(obj => obj.place)) + 1 : 2
 	return (
-		<div className='flex justify-center w-full'>
-			{countRivals.length > rivals.length &&
+		<div
+			className={cn(
+				'flex w-full items-end',
+				game.num_players > 2 ? 'justify-between' : 'justify-center'
+			)}
+		>
+			{countRivals.length > 0 &&
 				countRivals.map((item, index) => (
 					<button
 						key={index}
-						onClick={() => handlerShowModal(item + 1)}
+						onClick={() => handlerShowModal(placeRival)}
 						className='w-base-x7 h-base-x7 rounded-base-x1 border border-dashed flex items-center justify-center'
 					>
 						<Icon size={24} icon='plus' color='white' />

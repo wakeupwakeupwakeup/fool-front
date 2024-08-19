@@ -12,6 +12,7 @@ export interface IPlayer {
 	tg_id: number
 	username: string
 	photo_url: string
+	place: number
 	countCards?: number
 }
 

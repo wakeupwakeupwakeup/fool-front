@@ -10,7 +10,8 @@ export default {
 			yellow: '#FFC700',
 			red: '#FF0000',
 			green: '#00EF26',
-			blue: '#1F335C'
+			blue: '#1F335C',
+			black: '#000'
 		},
 		extend: {
 			boxShadow: {
@@ -26,7 +27,8 @@ export default {
 				'base-x7': '64px'
 			},
 			borderRadius: {
-				'base-x1': '6px'
+				'base-x1': '6px',
+				'base-x2': '12px'
 			},
 			fontSize: {
 				'base-x1': '10px',

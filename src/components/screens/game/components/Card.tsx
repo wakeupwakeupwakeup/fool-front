@@ -28,7 +28,7 @@ const Card: FC<IProps> = ({
 			style={{ ...style, borderRadius: cardSizeToDimensions[size].radius }}
 		>
 			<div
-				className='bg-white bg-cover bg-center'
+				className='bg-white bg-cover bg-no-repeat bg-center'
 				style={{
 					width: cardSizeToDimensions[size].width,
 					height: cardSizeToDimensions[size].height,
