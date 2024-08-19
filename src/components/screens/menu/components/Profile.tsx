@@ -12,7 +12,12 @@ interface IProps {
 }
 
 const Profile: FC<IProps> = ({ user, isLoading }) => {
-	if (isLoading) return <Loader />
+	if (isLoading)
+		return (
+			<div className='h-[64px]'>
+				<Loader />
+			</div>
+		)
 
 	return (
 		<div className='flex gap-base-x3'>
