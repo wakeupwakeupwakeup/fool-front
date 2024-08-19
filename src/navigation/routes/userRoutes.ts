@@ -3,6 +3,7 @@ import {
 	CreateGame,
 	Friends,
 	Game,
+	Invite,
 	Menu,
 	Onboarding,
 	ResultGame,
@@ -60,5 +61,9 @@ export const userRoutes: IRoute[] = [
 	{
 		path: '/settings',
 		component: Settings
+	},
+	{
+		path: '/invite',
+		component: Invite
 	}
 ]

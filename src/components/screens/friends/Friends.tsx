@@ -1,23 +1,34 @@
 import cn from 'clsx'
-import { FC } from 'react'
+import { FC, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
 import { Button, Layout, Loader, Typography } from '@/components/ui'
 
+import { getId } from '@/services/auth/auth.helper'
+
 import avatar from '@/assets/tapps.png'
 
-import { useFriends } from './useFriends'
+import { useFriends } from '@/hooks'
 
 const Friends: FC = () => {
 	const { friends, isFriendsLoading } = useFriends()
+	const [isCopy, setIsCopy] = useState(false)
+	const tg_id = getId()
 	const navigate = useNavigate()
+
+	const copyLink = () => {
+		navigator.clipboard.writeText(`https://tonfool.online/invite?id=${tg_id}`)
+		setIsCopy(true)
+	}
 
 	return (
 		<Layout
 			header={{ icon: 'friends', title: 'Друзья' }}
 			footer={
 				<div className='flex w-full gap-base-x2'>
-					<Button>Пригласить</Button>
+					<Button onClick={copyLink} icon={isCopy ? 'checkbox' : 'copy'}>
+						Пригласить
+					</Button>
 					<Button
 						onClick={() => navigate('/menu')}
 						icon='back'

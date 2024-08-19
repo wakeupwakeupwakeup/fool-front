@@ -1,7 +1,6 @@
-import {IPlayer} from '@/shared/types/auth.interface'
-import {TCurrency} from '@/shared/types/game.interface'
+import { IPlayer } from '@/shared/types/auth.interface'
 
-import {request} from '@/services/api/request.api'
+import { request } from '@/services/api/request.api'
 
 export const FriendsService = {
 	async getFriends(tg_id: number) {
@@ -10,10 +9,10 @@ export const FriendsService = {
 			method: 'GET'
 		})
 	},
-	async getFriendsOnline(tg_id: string, bet: number, currency: TCurrency) {
+	async addFriend(tg_id: number, friend_id: number) {
 		return request<IPlayer[]>({
-			url: `/friends/online/${tg_id}?balance=${bet}&currency=${currency}`,
-			method: 'GET'
+			url: `/friends/${tg_id}/${friend_id}`,
+			method: 'POST'
 		})
 	}
 }

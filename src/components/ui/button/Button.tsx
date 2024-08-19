@@ -25,7 +25,7 @@ const Button: FC<PropsWithChildren<IButton>> = ({
 			)}
 			{...props}
 		>
-			{icon && <Icon icon={icon} size={sizeIcon || 25} />}
+			{icon && <Icon icon={icon} color='#fff' size={sizeIcon || 25} />}
 			{children && (
 				<Typography variant={variant || 'button'}>{children}</Typography>
 			)}

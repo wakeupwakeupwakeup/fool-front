@@ -47,7 +47,7 @@ const Fan: FC<IProps> = ({
 					/>
 				)}
 				<img
-					src={player ? player.photo_url : avatar}
+					src={player?.photo_url ? player.photo_url : avatar}
 					alt=''
 					className='w-base-x7 h-base-x7 rounded-base-x1'
 				/>

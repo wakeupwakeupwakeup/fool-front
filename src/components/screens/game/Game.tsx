@@ -105,8 +105,13 @@ const Game: FC = () => {
 					console.log('connect', data)
 
 					setFriends(data.friends)
-					setRivals(data.players.filter(item => item.tg_id != tg_id))
-					setPlayer(data.players.filter(item => item.tg_id === tg_id)[0])
+					const index = data.players.findIndex(item => item.tg_id === tg_id)
+					const newRivals = [
+						...data.players.slice(index + 1),
+						...data.players.slice(0, index)
+					]
+					setRivals(newRivals)
+					setPlayer(data.players.find(item => item.tg_id === tg_id))
 					return
 				}
 				case 'ready': {
@@ -155,7 +160,23 @@ const Game: FC = () => {
 							data.next_throwing_player
 						)
 					}
-					if (data.defending_player === tg_id) {
+					console.log(
+						Object.entries(data.cards_on_table).every(
+							([key, value]) => !!key && !!value
+						)
+					)
+					console.log(
+						!Object.entries(data.cards_on_table).every(
+							([key, value]) => !!key && !!value
+						)
+					)
+					console.log(data.cards_on_table)
+					if (
+						data.defending_player === tg_id &&
+						!Object.entries(data.cards_on_table).every(
+							([key, value]) => !!key && !!value
+						)
+					) {
 						setButton({
 							action: 'take',
 							text: 'Взять'
@@ -263,6 +284,15 @@ const Game: FC = () => {
 						setCardsOnTable(Object.entries(data.cards_on_table) as any)
 					}
 
+					if (
+						data.defending_player === tg_id &&
+						Object.entries(data.cards_on_table).every(
+							([key, value]) => !!key && !!value
+						)
+					) {
+						setButton(null)
+					}
+
 					if (data.current_player === tg_id && game.num_players === 2) {
 						setButton({
 							text: 'Бита',
@@ -270,10 +300,22 @@ const Game: FC = () => {
 						})
 					}
 					if (data.next_throwing_player === tg_id && game.num_players > 2) {
-						setButton({
-							text: 'Пас',
-							action: 'next_throw'
-						})
+						if (
+							Object.entries(data.cards_on_table).length < 6 &&
+							Object.entries(data.players_cards).every(
+								([key, value]) => key === data.defending_player || !!value
+							)
+						) {
+							setButton({
+								text: 'Пас',
+								action: 'next_throw'
+							})
+						} else {
+							setButton({
+								text: 'Бита',
+								action: 'beat'
+							})
+						}
 					}
 
 					return
@@ -284,7 +326,12 @@ const Game: FC = () => {
 					setAttackPlayer(data.next_throwing_player)
 					setCardsOnTable(Object.entries(data.cards_on_table) as any)
 
-					if (data.defending_player === tg_id) {
+					if (
+						data.defending_player === tg_id &&
+						!Object.entries(data.cards_on_table).every(
+							([key, value]) => !!key && !!value
+						)
+					) {
 						setButton({
 							action: 'take',
 							text: 'Взять'
@@ -295,15 +342,48 @@ const Game: FC = () => {
 
 					if (
 						data.next_throwing_player === tg_id &&
-						data.next_throwing_player !== data.current_player
+						data.next_throwing_player !== data.current_player &&
+						data.players_cards[tg_id] &&
+						Object.entries(data.players_cards).every(
+							([key, value]) => key === data.defending_player || !!value
+						)
 					) {
-						setCardsOnTable([
-							...(Object.entries(data.cards_on_table) as any),
-							[]
-						])
+						if (Object.entries(data.cards_on_table).length < 6) {
+							setCardsOnTable([
+								...(Object.entries(data.cards_on_table) as any),
+								[]
+							])
+							setButton({
+								text: 'Пас',
+								action: 'next_throw'
+							})
+						} else {
+							setButton({
+								text: 'Бита',
+								action: 'beat'
+							})
+						}
+					}
+
+					if (
+						data.next_throwing_player === tg_id &&
+						data.next_throwing_player !== data.current_player &&
+						!Object.entries(data.players_cards).every(
+							([key, value]) => key === data.defending_player || !!value
+						)
+					) {
+						if (
+							Object.entries(data.cards_on_table).length < 6 &&
+							data.players_cards[tg_id]
+						) {
+							setCardsOnTable([
+								...(Object.entries(data.cards_on_table) as any),
+								[]
+							])
+						}
 						setButton({
-							text: 'Пас',
-							action: 'next_throw'
+							text: 'Бита',
+							action: 'beat'
 						})
 					}
 
@@ -311,11 +391,12 @@ const Game: FC = () => {
 						data.next_throwing_player === data.current_player &&
 						data.current_player === tg_id
 					) {
-						setCardsOnTable([
-							...(Object.entries(data.cards_on_table) as any),
-							[]
-						])
-
+						if (Object.entries(data.cards_on_table).length < 6) {
+							setCardsOnTable([
+								...(Object.entries(data.cards_on_table) as any),
+								[]
+							])
+						}
 						if (Object.values(data.cards_on_table).every(Boolean)) {
 							setButton({
 								text: 'Бита',
@@ -378,7 +459,7 @@ const Game: FC = () => {
 	}
 
 	useEffect(() => {
-		if (!cardsOnTable.length && attackPlayer === tg_id) {
+		if (!cardsOnTable.length && cardsOnTable < 6 && attackPlayer === tg_id) {
 			setCardsOnTable([...cardsOnTable, []])
 		}
 	}, [attackPlayer])
@@ -456,7 +537,7 @@ const Game: FC = () => {
 		)
 
 		setTimeout(() => {
-			if (attack_player === tg_id) {
+			if (attack_player === tg_id && cards_on_table.length < 6) {
 				setCardsOnTable([...cards_on_table, []])
 			} else {
 				setCardsOnTable([...cards_on_table])
@@ -556,7 +637,7 @@ const Game: FC = () => {
 		])
 		setTimeout(() => {
 			setCards(actual => {
-				return [card, ...actual]
+				return [...actual, card]
 			})
 		}, 200)
 	}

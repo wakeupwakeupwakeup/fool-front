@@ -18,7 +18,7 @@ const CreateGame: FC = () => {
 	const navigate = useNavigate()
 	const { user, isUserLoading } = useProfile()
 	const [info, setInfo] = useState<IGameRequest>({
-		currency: 'foolcoin',
+		currency: 'fool',
 		bet: 7,
 		num_players: 1,
 		type: 'flip_up'

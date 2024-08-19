@@ -1,4 +1,4 @@
-export type TCurrency = 'tether' | 'foolcoin' | 'notcoin' | 'toncoin'
+export type TCurrency = 'tether' | 'fool' | 'notcoin' | 'toncoin'
 export type TTypeGame = 'flip_up' | 'translated'
 
 export interface IGameRequest {

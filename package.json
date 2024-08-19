@@ -3,7 +3,7 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
-  "homepage": "https://danil1101.github.io/fool",
+  "homepage": "https://tonfool.online/",
   "scripts": {
     "dev": "vite --host",
     "build": "tsc && vite build",

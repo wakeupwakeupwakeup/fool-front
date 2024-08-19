@@ -16,16 +16,6 @@ const Currency: FC<IProps> = ({
 	setSelectedCurrency,
 	currency
 }) => {
-	/*const currency: {
-		name: TCurrency
-		count: string
-		soon: boolean
-	}[] = [
-		{ name: 'foolcoin', count: '128', soon: false },
-		{ name: 'toncoin', count: '64', soon: false },
-		{ name: 'notcoin', count: '32 768', soon: true },
-		{ name: 'tether', count: '32 768', soon: true }
-	]*/
 	const isSoon = (name: string) => {
 		return ['tether', 'notcoin'].includes(name)
 	}

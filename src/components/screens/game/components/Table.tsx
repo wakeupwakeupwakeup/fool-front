@@ -52,12 +52,15 @@ const Table: FC<ITable> = ({ cardsOnTable, defendingPlayer }) => {
 							<div id={'floating-card-magnet' + index}></div>
 							{cardPlace[0] && (
 								<Card
-									className={cn('-rotate-6', cardPlace[1] && 'brightness-75')}
+									className={cn(
+										'-rotate-6 rounded-[6px]',
+										cardPlace[1] && 'brightness-75'
+									)}
 									type={cardPlace[0]}
 								/>
 							)}
 							{cardPlace[1] && (
-								<Card className='rotate-12' type={cardPlace[1]} />
+								<Card className='rotate-12 rounded-[6px]' type={cardPlace[1]} />
 							)}
 						</div>
 					)}

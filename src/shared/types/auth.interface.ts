@@ -11,7 +11,7 @@ export interface IPlayer {
 
 export interface ICurrency {
 	tether: number
-	foolcoin: number
+	fool: number
 	notcoin: number
 	toncoin: number
 }

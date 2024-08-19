@@ -1,12 +1,5 @@
 export type TSizeCard = 'big' | 'normal' | 'small'
 export type TPositionCard = 'top' | 'bottom'
-export type TSuitCard = 'spades' | 'hearts' | 'diamonds' | 'clubs'
-export type TValueCard = number | 'king' | 'queen' | 'jack' | 'ace'
-
-export interface ITypeCard {
-	suit: TSuitCard
-	value: TValueCard
-}
 
 export interface IPlayer {
 	tg_id: number
@@ -14,13 +7,6 @@ export interface IPlayer {
 	photo_url: string
 	place: number
 	countCards?: number
-}
-
-export interface IAddRivalProps {
-	global_ws: WebSocket
-	tg_id: number
-	place: number
-	game_id: string
 }
 
 export const cardSizeToDimensions = {

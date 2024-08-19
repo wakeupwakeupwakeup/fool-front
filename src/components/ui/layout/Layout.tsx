@@ -6,6 +6,9 @@ import Logo from '@/components/ui/Logo'
 
 import { IWebSocketResponse } from '@/shared/types/game.interface'
 
+import { deleteFriendId, getFriendId } from '@/services/auth/auth.helper'
+
+import { useFriends } from '@/hooks'
 import { useModal } from '@/providers/ModalContext'
 import { getWebSocket, initWebSocket } from '@/websocket'
 
@@ -21,8 +24,15 @@ const Layout: FC<PropsWithChildren<ILayout>> = ({
 	footer
 }) => {
 	const { setVisible, setInfo } = useModal()
+	const friend_id = getFriendId()
+	const { addFriend } = useFriends()
 
 	useEffect(() => {
+		if (friend_id) {
+			addFriend(friend_id)
+			deleteFriendId()
+		}
+
 		initWebSocket()
 		const socket = getWebSocket()
 

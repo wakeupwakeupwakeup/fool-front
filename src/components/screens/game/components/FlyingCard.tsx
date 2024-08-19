@@ -2,8 +2,9 @@ import { animated, useSpring } from '@react-spring/web'
 import cn from 'clsx'
 import { FC, useState } from 'react'
 
-import Card from '@/components/screens/game/components/Card'
 import { TPositionCard } from '@/components/screens/game/game.interface'
+
+import Card from './Card'
 
 interface IProps {
 	from: number[]

@@ -1,7 +1,7 @@
 import { FC, useEffect } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 
-import { Button, Layout, Typography } from '@/components/ui'
+import { Button, Icon, Layout, Typography } from '@/components/ui'
 
 import avatar from '@/assets/tapps.png'
 
@@ -10,17 +10,10 @@ const ResultGame: FC = () => {
 	const { state } = useLocation()
 
 	useEffect(() => {
-		if (!state.players) navigate('/menu')
+		if (!state?.players) navigate('/menu')
 	}, [])
 
-	const rivals = [
-		{ name: 'tg_username-1', place: 1, selected: true },
-		{ name: 'tg_username-2', place: 2, selected: true },
-		{ name: 'tg_username-3', place: 3, selected: false },
-		{ name: 'tg_username-4', place: 4, selected: false }
-	]
-
-	const Icon = place => {
+	const getIcon = place => {
 		if (state.players.length === 2) {
 			switch (place) {
 				case 1:
@@ -73,12 +66,20 @@ const ResultGame: FC = () => {
 							/>
 							<div className='flex flex-col justify-between'>
 								<Typography variant='text'>{item.username}</Typography>
-								<Typography variant='text'>
-									{item.win.toString()} {item.currency}
+
+								<Typography variant='text' className='uppercase'>
+									{item.win ? (
+										<>
+											+ {item.win} <Icon size={18} icon={item.currency} />{' '}
+											{item.currency}
+										</>
+									) : (
+										'Loooser'
+									)}
 								</Typography>
 							</div>
 						</div>
-						<span className='text-[30px]'>{Icon(item.place)}</span>
+						<span className='text-[30px]'>{getIcon(item.place)}</span>
 					</div>
 				))}
 			</div>
