@@ -96,6 +96,11 @@ const Game: FC = () => {
 		game_ws.current.onclose = () => {
 			console.log('Game WebSocket disconnected')
 			setIsConnected(false)
+			setInterval(() => {
+				game_ws.current = new WebSocket(
+					`${WS_URL}/ws/game/${game.id}/${tg_id}/${place}`
+				)
+			}, 3000)
 		}
 
 		game_ws.current.onmessage = function (event) {
@@ -116,6 +121,8 @@ const Game: FC = () => {
 				}
 				case 'ready': {
 					console.log('ready', data)
+					setCards([])
+					setCardsOnTable([])
 
 					setButton({
 						action: 'ready',
@@ -132,6 +139,7 @@ const Game: FC = () => {
 					setBeatDeckLength(data.beat_deck_length)
 					setRemainingDeckLength(data.remaining_deck_length)
 					setAttackPlayer(data.current_player)
+					setPlayer(data.players.find(item => item.tg_id === tg_id))
 					setDefendingPlayer(data.defending_player)
 					setRivals(prevState => {
 						newRivals = prevState.map(item => ({

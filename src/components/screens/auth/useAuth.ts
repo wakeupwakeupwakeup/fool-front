@@ -10,8 +10,9 @@ export const useAuth = () => {
 	const { mutate } = useMutation(['token'], data => AuthService.token(data), {
 		onSuccess: async () => {
 			const queryParams = new URLSearchParams(location.search)
-			await saveId(queryParams.get('id'))
-			navigate(0)
+			await saveId(queryParams.get('id')).then(() => {
+				navigate(0)
+			})
 		}
 	})
 	return {

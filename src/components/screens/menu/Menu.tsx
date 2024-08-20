@@ -45,9 +45,6 @@ const Menu: FC = () => {
 						{item.title}
 					</Button>
 				))}
-				<Button onClick={logout} sizeIcon={30} variant='h1'>
-					Выйти
-				</Button>
 			</div>
 		</Layout>
 	)

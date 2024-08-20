@@ -63,7 +63,11 @@ const Layout: FC<PropsWithChildren<ILayout>> = ({
 						<Typography variant='h1'>{header.title}</Typography>
 					</div>
 				)}
-				<div className={cn('w-full h-full', className)}>{children}</div>
+				<div
+					className={cn('w-full h-full py-base-x1 overflow-auto', className)}
+				>
+					{children}
+				</div>
 			</div>
 			{footer}
 		</div>

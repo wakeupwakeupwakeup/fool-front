@@ -4,13 +4,15 @@ import { useLocation } from 'react-router-dom'
 import { useAuth } from '@/components/screens/auth/useAuth'
 import { Layout } from '@/components/ui'
 
+import { getFriendId } from '@/services/auth/auth.helper'
+
 const Auth: FC = () => {
 	const location = useLocation()
+	const queryParams = new URLSearchParams(location.search)
 	const { mutate } = useAuth()
+	const friend_id = getFriendId()
 
 	useEffect(() => {
-		const queryParams = new URLSearchParams(location.search)
-
 		const data = {
 			id: queryParams.get('id'),
 			first_name: queryParams.get('first_name'),
@@ -18,7 +20,8 @@ const Auth: FC = () => {
 			username: queryParams.get('username'),
 			photo_url: queryParams.get('photo_url'),
 			auth_date: queryParams.get('auth_date'),
-			hash: queryParams.get('hash')
+			hash: queryParams.get('hash'),
+			referal_id: friend_id || null
 		}
 
 		if (JSON.stringify(data)) mutate(data as any)
@@ -32,7 +35,7 @@ const Auth: FC = () => {
 		script.setAttribute('data-request-access', 'write')
 
 		document.querySelector('.auth')?.appendChild(script)
-	}, [])
+	}, [queryParams])
 
 	return (
 		<Layout className='auth flex flex-col gap-base-x3 items-center justify-center'></Layout>

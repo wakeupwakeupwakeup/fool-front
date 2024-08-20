@@ -17,8 +17,9 @@ const Invite: FC = () => {
 		if (tg_id) {
 			addFriend(Number(queryParams.get('id')))
 		} else {
-			saveFriendId(queryParams.get('id'))
-			navigate('/auth')
+			saveFriendId(queryParams.get('id')).then(() => {
+				navigate('/auth')
+			})
 		}
 	}, [])
 

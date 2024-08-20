@@ -24,11 +24,24 @@
   src: url('./assets/fonts/Montserrat-Regular.ttf') format('truetype');
 }
 
+*::-webkit-scrollbar {
+  background: none;
+  width: 0;
+}
+
+*::-webkit-scrollbar-track {
+  background: none;
+  width: 0;
+}
+
+*::-webkit-scrollbar-thumb {
+  background: none;
+  width: 0;
+}
 
 body {
   max-width: 450px;
   margin: 0 auto;
-
   font-family: Montserrat, sans-serif;
   background: url('./assets/bg-pattern.png') repeat;
   color: #fff;
