@@ -24,7 +24,7 @@ const Auth: FC = () => {
 			referal_id: friend_id || null
 		}
 
-		if (JSON.stringify(data)) mutate(data as any)
+		if (!!data?.id) mutate(data as any)
 
 		const script = document.createElement('script')
 		script.async = true

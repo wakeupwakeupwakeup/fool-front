@@ -9,11 +9,5 @@ export const GameService = {
 			method: 'POST',
 			data: { ...info }
 		})
-	},
-	async deleteGame(id: string) {
-		return request({
-			url: `/game/${id}`,
-			method: 'DELETE'
-		})
 	}
 }

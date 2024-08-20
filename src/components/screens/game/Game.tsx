@@ -116,7 +116,7 @@ const Game: FC = () => {
 						...data.players.slice(0, index)
 					]
 					setRivals(newRivals)
-					setPlayer(data.players.find(item => item.tg_id === tg_id))
+					setPlayer(data.players.find(item => item.tg_id == tg_id))
 					return
 				}
 				case 'ready': {
@@ -139,7 +139,7 @@ const Game: FC = () => {
 					setBeatDeckLength(data.beat_deck_length)
 					setRemainingDeckLength(data.remaining_deck_length)
 					setAttackPlayer(data.current_player)
-					setPlayer(data.players.find(item => item.tg_id === tg_id))
+					setPlayer(data.players.find(item => item.tg_id == tg_id))
 					setDefendingPlayer(data.defending_player)
 					setRivals(prevState => {
 						newRivals = prevState.map(item => ({
