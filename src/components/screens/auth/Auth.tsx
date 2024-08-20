@@ -35,7 +35,7 @@ const Auth: FC = () => {
 		script.setAttribute('data-request-access', 'write')
 
 		document.querySelector('.auth')?.appendChild(script)
-	}, [queryParams])
+	}, [])
 
 	return (
 		<Layout className='auth flex flex-col gap-base-x3 items-center justify-center'></Layout>
