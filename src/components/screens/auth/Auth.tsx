@@ -7,8 +7,8 @@ import { Layout } from '@/components/ui'
 import { getFriendId } from '@/services/auth/auth.helper'
 
 const Auth: FC = () => {
-	const location = useLocation()
-	const queryParams = new URLSearchParams(location.search)
+	const { search } = useLocation()
+	const queryParams = new URLSearchParams(search)
 	const { mutate } = useAuth()
 	const friend_id = getFriendId()
 

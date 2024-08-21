@@ -110,7 +110,7 @@ const Game: FC = () => {
 					console.log('connect', data)
 
 					setFriends(data.friends)
-					const index = data.players.findIndex(item => item.tg_id === tg_id)
+					const index = data.players.findIndex(item => item.tg_id == tg_id)
 					const newRivals = [
 						...data.players.slice(index + 1),
 						...data.players.slice(0, index)
