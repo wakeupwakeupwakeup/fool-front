@@ -505,9 +505,9 @@ const Game: FC = () => {
 
 		if (game.num_players === 2) {
 			poses = [-100]
-		} else if (game.num_players === 2) {
-			poses = [-400, 200]
 		} else if (game.num_players === 3) {
+			poses = [-400, 200]
+		} else if (game.num_players === 4) {
 			poses = [-400, -100, 200]
 		}
 		spawnCardWithCords(
@@ -537,9 +537,9 @@ const Game: FC = () => {
 
 		if (game.num_players === 2) {
 			poses = [-100]
-		} else if (game.num_players === 2) {
-			poses = [-400, 200]
 		} else if (game.num_players === 3) {
+			poses = [-400, 200]
+		} else if (game.num_players === 4) {
 			poses = [-400, -100, 200]
 		}
 
@@ -568,9 +568,9 @@ const Game: FC = () => {
 
 		if (game.num_players === 2) {
 			poses = [-100]
-		} else if (game.num_players === 2) {
-			poses = [-400, 200]
 		} else if (game.num_players === 3) {
+			poses = [-400, 200]
+		} else if (game.num_players === 4) {
 			poses = [-400, -100, 200]
 		}
 
