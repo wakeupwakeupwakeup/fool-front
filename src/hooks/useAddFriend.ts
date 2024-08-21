@@ -1,7 +1,7 @@
 import { useMutation } from '@tanstack/react-query'
 import { useNavigate } from 'react-router-dom'
 
-import { getId } from '@/services/auth/auth.helper'
+import { deleteFriendId, getId } from '@/services/auth/auth.helper'
 import { FriendsService } from '@/services/friends.service'
 
 export const useAddFriend = () => {
@@ -12,7 +12,8 @@ export const useAddFriend = () => {
 		['addFriend'],
 		(friend_id: string) => FriendsService.addFriend(tg_id, friend_id),
 		{
-			onSuccess: () => {
+			onSuccess: async () => {
+				await deleteFriendId()
 				navigate('/friends')
 			}
 		}
