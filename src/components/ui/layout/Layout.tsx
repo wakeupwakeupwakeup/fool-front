@@ -1,5 +1,6 @@
 import cn from 'clsx'
 import { FC, PropsWithChildren, useEffect } from 'react'
+import { useLocation } from 'react-router-dom'
 
 import { Typography } from '@/components/ui'
 import Logo from '@/components/ui/Logo'
@@ -24,6 +25,7 @@ const Layout: FC<PropsWithChildren<ILayout>> = ({
 	footer
 }) => {
 	const { setVisible, setInfo } = useModal()
+	const { pathname } = useLocation()
 	const friend_id = getFriendId()
 	const tg_id = getId()
 	const { addFriend } = useAddFriend()
@@ -63,7 +65,11 @@ const Layout: FC<PropsWithChildren<ILayout>> = ({
 					</div>
 				)}
 				<div
-					className={cn('w-full h-full py-base-x1 overflow-auto', className)}
+					className={cn(
+						'w-full h-full py-base-x1',
+						pathname !== '/game' && 'overflow-auto',
+						className
+					)}
 				>
 					{children}
 				</div>
