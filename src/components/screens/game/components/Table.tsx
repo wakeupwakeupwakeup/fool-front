@@ -8,11 +8,11 @@ import Card from './Card'
 
 interface ITable {
 	cardsOnTable: string[][]
-	defendingPlayer: number
+	defendingPlayer: string
 }
 
 const Table: FC<ITable> = ({ cardsOnTable, defendingPlayer }) => {
-	const tg_id = Number(getId())
+	const tg_id = String(getId())
 	// TODO: подкидывать карту только отбивабщему
 	return (
 		<div className='flex flex-wrap items-center p-0 gap-base-[3px] gap-4 gap-x-6 justify-center my-auto scale-[77%]'>

@@ -1,5 +1,5 @@
 export const getId = () => {
-	return Number(localStorage.getItem('tg_id'))
+	return String(localStorage.getItem('tg_id'))
 }
 
 export const saveId = async tg_id => {
@@ -11,7 +11,7 @@ export const deleteId = async () => {
 }
 
 export const getFriendId = () => {
-	return Number(localStorage.getItem('friend_id'))
+	return localStorage.getItem('friend_id')
 }
 
 export const saveFriendId = async tg_id => {

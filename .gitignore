@@ -1,6 +1,7 @@
 # Logs
 logs
 *.log
+yarn.lock
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
@@ -24,3 +25,4 @@ dist-ssr
 *.sln
 .env
 *.sw?
+/.env

@@ -10,11 +10,11 @@ const Navigation = () => {
 	const tg_id = getId()
 
 	const throwUrl = useMemo(() => {
-		return tg_id && typeof tg_id === 'number' ? '/menu' : '/auth'
+		return tg_id && typeof tg_id === 'string' ? '/menu' : '/auth'
 	}, [tg_id])
 
 	const routes = useMemo(() => {
-		return tg_id && typeof tg_id === 'number' ? userRoutes : unauthorizedRoutes
+		return tg_id && typeof tg_id === 'string' ? userRoutes : unauthorizedRoutes
 	}, [tg_id])
 
 	return (

@@ -31,7 +31,7 @@ const Layout: FC<PropsWithChildren<ILayout>> = ({
 	useEffect(() => {
 		if (friend_id && tg_id) {
 			addFriend(friend_id)
-			deleteFriendId()
+			deleteFriendId().then(() => {})
 		}
 
 		initWebSocket()

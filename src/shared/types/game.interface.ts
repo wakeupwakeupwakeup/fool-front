@@ -10,6 +10,7 @@ export interface IGameRequest {
 
 export interface IGame {
 	id: string
+	host: string
 	bet: number
 	currency: TCurrency
 	type: TTypeGame

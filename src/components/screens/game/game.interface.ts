@@ -2,7 +2,7 @@ export type TSizeCard = 'big' | 'normal' | 'small'
 export type TPositionCard = 'top' | 'bottom'
 
 export interface IPlayer {
-	tg_id: number
+	tg_id: string
 	username: string
 	photo_url: string
 	place: number

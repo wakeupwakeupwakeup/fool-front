@@ -15,9 +15,9 @@ interface IProps {
 	cards: string[]
 	onSubmit: () => void
 	buttonText: string
-	defendingPlayer: number
+	defendingPlayer: string
 	player: IPlayer
-	attackPlayer: number
+	attackPlayer: string
 }
 
 const Fan: FC<IProps> = ({

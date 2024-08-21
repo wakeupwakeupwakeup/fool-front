@@ -2,7 +2,7 @@ export interface IPlayer {
 	username: string
 	photo_url: string
 	last_claim: string
-	tg_id: number
+	tg_id: string
 	is_online: boolean
 	currency: ICurrency
 	cups: number

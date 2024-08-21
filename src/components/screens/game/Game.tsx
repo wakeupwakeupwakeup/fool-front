@@ -57,8 +57,8 @@ const Game: FC = () => {
 	const [showModal, setShowModal] = useState(false)
 
 	const [button, setButton] = useState(null)
-	const [defendingPlayer, setDefendingPlayer] = useState(0)
-	const [attackPlayer, setAttackPlayer] = useState(0)
+	const [defendingPlayer, setDefendingPlayer] = useState<string | null>(null)
+	const [attackPlayer, setAttackPlayer] = useState<string | null>(null)
 	const [beatDeckLength, setBeatDeckLength] = useState<number | null>(null)
 	const [remainingDeckLength, setRemainingDeckLength] = useState<number | null>(
 		null
@@ -477,15 +477,18 @@ const Game: FC = () => {
 	}, [attackPlayer])
 
 	// Пригласить игрока
-	const handlerAddRival = (tg_id: number) => {
+	const handlerAddRival = (tg_id: string) => {
 		addRival(global_ws, tg_id, game.id, placeRival)
 		setShowModal(false)
 	}
 
 	// Добавлять место приглашенного игрока
 	const handlerShowModal = (place: number) => {
-		setPlaceRival(place)
-		setShowModal(true)
+		// console.log(place)
+		if (tg_id === game.host) {
+			setPlaceRival(place)
+			setShowModal(true)
+		}
 	}
 
 	// Соперник кладет карту (добавление на стол)
@@ -493,7 +496,7 @@ const Game: FC = () => {
 		players_cards: Object,
 		cards_on_table: string[][],
 		card: string,
-		rivalId: number
+		rivalId: string
 	) => {
 		const rivalNum = Object.keys(players_cards).indexOf(String(rivalId))
 
@@ -524,7 +527,7 @@ const Game: FC = () => {
 	const rivalBeatCard = (
 		players_cards: Object,
 		card: string,
-		rivalId: number,
+		rivalId: string,
 		cards_on_table,
 		attack_player
 	) => {
@@ -558,7 +561,7 @@ const Game: FC = () => {
 	}
 
 	// Соперник берет карты
-	const rivalTakeCards = (players_cards: Object, rivalId: number) => {
+	const rivalTakeCards = (players_cards: Object, rivalId: string) => {
 		const rivalNum = Object.keys(players_cards).indexOf(String(rivalId))
 		let poses = []
 
@@ -704,21 +707,21 @@ const Game: FC = () => {
 		} else {
 			// Раздача карт
 			/*let currentCards = []
-			setCards(prevState => {
-				prevState.map(item => {
-					currentCards.push(item)
-				})
-				return prevState
-			})
-			console.log(currentCards)
-			const newCards = data.filter(card => !currentCards.includes(card))
+            setCards(prevState => {
+                prevState.map(item => {
+                    currentCards.push(item)
+                })
+                return prevState
+            })
+            console.log(currentCards)
+            const newCards = data.filter(card => !currentCards.includes(card))
 
-			newCards.forEach((card, index) => {
-				setTimeout(() => {
-					spawnCard(card)
-				}, index * 200)
-				delay += index * 200
-			})*/
+            newCards.forEach((card, index) => {
+                setTimeout(() => {
+                    spawnCard(card)
+                }, index * 200)
+                delay += index * 200
+            })*/
 		}
 
 		setTimeout(() => {

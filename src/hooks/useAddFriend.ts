@@ -10,7 +10,7 @@ export const useAddFriend = () => {
 
 	const { mutate: addFriend } = useMutation(
 		['addFriend'],
-		(friend_id: number) => FriendsService.addFriend(tg_id, friend_id),
+		(friend_id: string) => FriendsService.addFriend(tg_id, friend_id),
 		{
 			onSuccess: () => {
 				navigate('/friends')

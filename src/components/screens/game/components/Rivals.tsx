@@ -12,8 +12,8 @@ import avatar from '@/assets/tapps.png'
 interface IProps {
 	rivals: IPlayer[]
 	handlerShowModal: (place: number) => void
-	defendingPlayer: number
-	attackPlayer: number
+	defendingPlayer: string
+	attackPlayer: string
 }
 
 const Rivals: FC<IProps> = ({
@@ -41,7 +41,7 @@ const Rivals: FC<IProps> = ({
 				countRivals.map((item, index) => (
 					<button
 						key={index}
-						onClick={() => handlerShowModal(placeRival)}
+						onClick={() => handlerShowModal(index + 2)}
 						className='w-base-x7 h-base-x7 rounded-base-x1 border border-dashed flex items-center justify-center'
 					>
 						<Icon size={24} icon='plus' color='white' />
