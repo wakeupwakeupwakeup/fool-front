@@ -55,7 +55,10 @@ const Layout: FC<PropsWithChildren<ILayout>> = ({
 	}, [])
 
 	return (
-		<div className='flex flex-col justify-between items-center py-base-x4 px-[10%] h-full'>
+		<div className='flex flex-col justify-between items-center py-base-x4 px-[10%] relative h-full'>
+			<Typography variant='text' className='absolute right-5 text-yellow'>
+				Beta версия
+			</Typography>
 			<div className='flex flex-col items-center gap-base-x4 w-full h-full'>
 				{!noLogo && <Logo />}
 				{header && (

@@ -134,6 +134,7 @@ const Game: FC = () => {
 					console.log('start', data)
 					let newRivals
 
+					setCardsOnTable(Object.entries(data.cards_on_table) as any)
 					setTrumpCard(data.trump_card)
 					setButton(null)
 					setBeatDeckLength(data.beat_deck_length)
