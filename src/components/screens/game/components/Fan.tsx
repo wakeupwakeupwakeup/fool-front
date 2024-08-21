@@ -1,5 +1,5 @@
 import { Draggable, Droppable } from '@hello-pangea/dnd'
-import { FC } from 'react'
+import { FC, useEffect, useState } from 'react'
 
 import { Button, Icon } from '@/components/ui'
 
@@ -29,9 +29,35 @@ const Fan: FC<IProps> = ({
 	attackPlayer
 }) => {
 	const tg_id = getId()
+	const [draggableCard, setDraggableCard] = useState<string>()
+	const [newCards, setNewCards] = useState<string[]>(cards)
+	const calculatorCardsLength = (isDragging, card) => {
+		if (isDragging && draggableCard !== card) {
+			setDraggableCard(card)
+			setNewCards(cards.filter(item => item !== card))
+		} else {
+			setDraggableCard('')
+			setNewCards(cards)
+		}
+	}
+
+	const calc = index => {
+		return draggableCard
+			? cards.findIndex(card => card === draggableCard) + 1 === cards.length
+				? index
+				: cards.findIndex(card => card === draggableCard) === 0
+				? index - 1
+				: cards.findIndex(card => card === draggableCard) > index
+				? index
+				: index - 1
+			: index
+	}
+	useEffect(() => {
+		setNewCards(cards)
+	}, [cards])
 	return (
 		<div className='relative w-full'>
-			<div className='relative bottom-[140px] flex justify-between'>
+			<div className='relative w-full bottom-[90px] flex justify-between'>
 				{defendingPlayer === tg_id && (
 					<Icon
 						size={25}
@@ -53,7 +79,7 @@ const Fan: FC<IProps> = ({
 				/>
 				{!!buttonText && (
 					<Button
-						className='rounded-full border border-white'
+						className='ml-auto rounded-full border border-white'
 						style={{
 							width: 64,
 							height: 64
@@ -64,28 +90,35 @@ const Fan: FC<IProps> = ({
 					</Button>
 				)}
 			</div>
-			<div className='absolute bottom-[100px] left-[50%] flex flex-row items-center justify-center'>
+			<div className='absolute bottom-[70px] left-[50%] flex flex-row items-center justify-center'>
 				{cards.map((card, index) => (
-					<Droppable key={index} droppableId={`droppable-card-${index}`}>
+					<Droppable
+						direction='horizontal'
+						key={index}
+						droppableId={`droppable-card-${index}`}
+					>
 						{(provided, _) => (
 							<div
+								className='absolute ease-linear transition-all'
 								style={{
-									position: 'absolute',
 									zIndex: index + 1,
 									left: `${
-										(index - cards.length / 2) * ((40 * 6) / cards.length)
-									}px `
+										(calc(index) - newCards.length / 2) *
+										(240 / newCards.length)
+									}px`
 								}}
 							>
 								<div ref={provided.innerRef} {...provided.droppableProps}>
 									{provided.placeholder}
 									<Draggable index={index} draggableId={'draggable-' + index}>
-										{(provided, snapshot) => (
+										{(DraggableProvided, DraggableSnapshot) => (
 											<DraggableCard
 												type={card}
 												num={index}
-												provided={provided}
-												snapshot={snapshot}
+												calculatorCardsLength={calculatorCardsLength}
+												provided={DraggableProvided}
+												draggableCard={draggableCard}
+												snapshot={DraggableSnapshot}
 												total={cards.length}
 											/>
 										)}

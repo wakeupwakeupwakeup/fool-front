@@ -13,9 +13,9 @@ interface ITable {
 
 const Table: FC<ITable> = ({ cardsOnTable, defendingPlayer }) => {
 	const tg_id = String(getId())
-	// TODO: подкидывать карту только отбивабщему
+
 	return (
-		<div className='flex flex-wrap items-center p-0 gap-base-[3px] gap-4 gap-x-6 justify-center my-auto scale-[77%]'>
+		<div className='flex flex-wrap items-center p-0 gap-y-6 gap-x-3 justify-center my-auto'>
 			{cardsOnTable.map((cardPlace, index) => (
 				<Droppable key={index} droppableId={`droppable-table-card-${index}`}>
 					{(provided, snapshot) => (
@@ -23,7 +23,7 @@ const Table: FC<ITable> = ({ cardsOnTable, defendingPlayer }) => {
 							{...provided.droppableProps}
 							ref={provided.innerRef}
 							className={cn(
-								'flex items-center justify-center w-[100px] h-[140px] origin-bottom-left'
+								'flex justify-center flex-[25%] items-center w-[120px] h-[165px] origin-bottom-left scale-[78%] translate-x-[10%]'
 							)}
 						>
 							<div
@@ -40,7 +40,7 @@ const Table: FC<ITable> = ({ cardsOnTable, defendingPlayer }) => {
 										: 'transparent'
 								}}
 								className={cn(
-									'border border-dashed transition-colors w-[95px] h-[135px] rounded-base-x1 absolute z-[-1]',
+									'border border-dashed transition-colors w-[120px] h-[165px] rounded-base-x1 absolute z-[-1]',
 									cardPlace[0]
 										? defendingPlayer === tg_id
 											? 'rotate-12'
@@ -56,11 +56,16 @@ const Table: FC<ITable> = ({ cardsOnTable, defendingPlayer }) => {
 										'-rotate-6 rounded-[6px]',
 										cardPlace[1] && 'brightness-75'
 									)}
+									size='big'
 									type={cardPlace[0]}
 								/>
 							)}
 							{cardPlace[1] && (
-								<Card className='rotate-12 rounded-[6px]' type={cardPlace[1]} />
+								<Card
+									className='rotate-12 rounded-[6px]'
+									type={cardPlace[1]}
+									size='big'
+								/>
 							)}
 						</div>
 					)}

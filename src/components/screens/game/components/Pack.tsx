@@ -21,10 +21,10 @@ const Pack: FC<IProps> = ({ trumpCard, remainingDeckLength }) => {
 			</div>
 		)
 	return (
-		<div className='absolute transform top-[140px] rotate-[40deg] -left-[140px]'>
+		<div className='absolute transform top-[140px] rotate-[20deg] -left-[90px]'>
 			<Typography
 				variant='text'
-				className='absolute flex items-center bg-white z-20 -rotate-[40deg] justify-center right-base-x1 top-base-x1 w-base-x6 h-base-x6 rounded-full text-blue font-bold border-2 border-blue'
+				className='absolute flex items-center bg-white z-20 -rotate-[20deg] justify-center right-base-x1 top-base-x1 w-base-x6 h-base-x6 rounded-full text-blue font-bold border-2 border-blue'
 			>
 				{remainingDeckLength}
 			</Typography>

@@ -1,6 +1,7 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+@tailwind variants;
 
 @font-face {
   font-family: 'Montserrat';
@@ -55,4 +56,14 @@ html, body, #root {
 
 .bg-filter {
   backdrop-filter: blur(20px)
+}
+
+.animated-div {
+  @media (hover: hover) {
+    color: #000;
+   &:hover {
+     @apply hover:!translate-y-[-65px] hover:!translate-x-[-55px];
+   }
+
+  }
 }

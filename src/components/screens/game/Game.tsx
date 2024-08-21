@@ -81,6 +81,7 @@ const Game: FC = () => {
 		game_ws.current.onerror = error => {
 			console.error('Game WebSocket error:', error)
 			setIsConnected(false)
+			navigate(0)
 			setInterval(() => {
 				game_ws.current = new WebSocket(
 					`${WS_URL}/ws/game/${game.id}/${tg_id}/${place}`
@@ -96,6 +97,7 @@ const Game: FC = () => {
 		game_ws.current.onclose = () => {
 			console.log('Game WebSocket disconnected')
 			setIsConnected(false)
+			navigate(0)
 			setInterval(() => {
 				game_ws.current = new WebSocket(
 					`${WS_URL}/ws/game/${game.id}/${tg_id}/${place}`
@@ -158,6 +160,7 @@ const Game: FC = () => {
 				case 'play_card': {
 					console.log(data.action, data)
 
+					setButton(null)
 					setCards(data.cards)
 					if (data.next_throwing_player === tg_id) {
 						setCardsOnTable(Object.entries(data.cards_on_table) as any)
@@ -169,17 +172,6 @@ const Game: FC = () => {
 							data.next_throwing_player
 						)
 					}
-					console.log(
-						Object.entries(data.cards_on_table).every(
-							([key, value]) => !!key && !!value
-						)
-					)
-					console.log(
-						!Object.entries(data.cards_on_table).every(
-							([key, value]) => !!key && !!value
-						)
-					)
-					console.log(data.cards_on_table)
 					if (
 						data.defending_player === tg_id &&
 						!Object.entries(data.cards_on_table).every(
@@ -192,10 +184,21 @@ const Game: FC = () => {
 						})
 					}
 					if (data.next_throwing_player === tg_id && game.num_players > 2) {
-						setButton({
-							text: 'Пас',
-							action: 'next_throw'
-						})
+						if (
+							Object.entries(data.players_cards).every(
+								([key, value]) => key === data.defending_player || !!value
+							)
+						) {
+							setButton({
+								text: 'Пас',
+								action: 'next_throw'
+							})
+						} else {
+							setButton({
+								text: 'Бита',
+								action: 'beat'
+							})
+						}
 					}
 					setRivals(prevState =>
 						prevState.map(item => ({
@@ -264,7 +267,13 @@ const Game: FC = () => {
 				case 'beat': {
 					console.log('beat', data)
 
-					spawnCardWithCords('cover', [window.innerHeight / 2, 0], [160, 300])
+					spawnCardWithCords(
+						'cover',
+						[window.innerHeight / 2, 0],
+						[160, 300],
+						78,
+						'bottom'
+					)
 
 					return
 				}
@@ -447,7 +456,7 @@ const Game: FC = () => {
 				take(game_ws.current)
 				if (defendingPlayer === tg_id) {
 					spawnCardWithCords(
-						'6_of_clubs',
+						'cover',
 						[window.innerHeight / 2, 0],
 						[window.innerHeight + 50, -50]
 					)

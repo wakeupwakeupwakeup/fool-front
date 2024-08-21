@@ -10,7 +10,7 @@ export interface IPlayer {
 }
 
 export const cardSizeToDimensions = {
-	big: { width: '95px', height: '135px', radius: '12px' },
+	big: { width: '120px', height: '165px', radius: '12px' },
 	normal: { width: '95px', height: '135px', radius: '12px' },
 	small: { width: '57px', height: '81px', radius: '7.2px' }
 }
