@@ -17,7 +17,9 @@ export const initWebSocket = () => {
 
 	socket.onclose = () => {
 		console.log('WebSocket disconnected')
-		// initWebSocket()
+		setInterval(() => {
+			socket = new WebSocket(`${WS_URL}/ws/global/${tg_id}`)
+		}, 3000)
 	}
 
 	socket.onerror = error => {

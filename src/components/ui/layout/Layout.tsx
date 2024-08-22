@@ -31,7 +31,7 @@ const Layout: FC<PropsWithChildren<ILayout>> = ({
 	const { addFriend } = useAddFriend()
 
 	useEffect(() => {
-		if (friend_id && tg_id) {
+		if (friend_id && tg_id && friend_id !== tg_id) {
 			addFriend(friend_id)
 		}
 

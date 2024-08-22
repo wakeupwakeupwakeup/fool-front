@@ -15,7 +15,11 @@ const Invite: FC = () => {
 
 	useEffect(() => {
 		if (tg_id) {
-			addFriend(String(queryParams.get('id')))
+			if (tg_id == String(queryParams.get('id'))) {
+				navigate('/menu')
+			} else {
+				addFriend(String(queryParams.get('id')))
+			}
 		} else {
 			saveFriendId(queryParams.get('id')).then(() => {
 				navigate('/auth')

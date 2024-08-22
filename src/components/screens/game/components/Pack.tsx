@@ -11,7 +11,7 @@ const Pack: FC<IProps> = ({ trumpCard, remainingDeckLength }) => {
 
 	if (!remainingDeckLength)
 		return (
-			<div className='absolute top-[140px] -left-[40px]'>
+			<div className='absolute top-[140px] left-0'>
 				<div
 					className='w-[30px] h-[30px] bg-contain bg-no-repeat relative z-10'
 					style={{
