@@ -13,7 +13,7 @@ const Navigation = () => {
 	}, [id])
 
 	const throwUrl = useMemo(() => {
-		return id ? '/picks' : '/welcome'
+		return id ? '/menu' : '/auth'
 	}, [id])
 
 	return (
