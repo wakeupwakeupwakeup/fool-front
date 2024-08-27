@@ -1,21 +1,20 @@
 import { useMemo } from 'react'
 import { Navigate, Route, Routes } from 'react-router-dom'
 
-import { getId } from '@/services/auth/auth.helper'
-
 import { unauthorizedRoutes } from '@/navigation/routes/unauthorizedRoutes'
 import { userRoutes } from '@/navigation/routes/userRoutes'
+import { useAuth } from '@/providers/AuthContext'
 
 const Navigation = () => {
-	const tg_id = getId()
-
-	const throwUrl = useMemo(() => {
-		return tg_id && typeof tg_id === 'string' ? '/menu' : '/auth'
-	}, [tg_id])
+	const { id } = useAuth()
 
 	const routes = useMemo(() => {
-		return tg_id && typeof tg_id === 'string' ? userRoutes : unauthorizedRoutes
-	}, [tg_id])
+		return id ? userRoutes : unauthorizedRoutes
+	}, [id])
+
+	const throwUrl = useMemo(() => {
+		return id ? '/picks' : '/welcome'
+	}, [id])
 
 	return (
 		<Routes>

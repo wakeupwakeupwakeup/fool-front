@@ -5,6 +5,7 @@ import { BrowserRouter } from 'react-router-dom'
 import { Loading } from '@/components/screens'
 
 import Navigation from '@/navigation/Navigation'
+import { AuthProvider } from '@/providers/AuthContext'
 import { ModalProvider } from '@/providers/ModalContext'
 
 const queryClient = new QueryClient({
@@ -42,9 +43,11 @@ function App() {
 	return (
 		<QueryClientProvider client={queryClient}>
 			<BrowserRouter>
-				<ModalProvider>
-					<Navigation />
-				</ModalProvider>
+				<AuthProvider>
+					<ModalProvider>
+						<Navigation />
+					</ModalProvider>
+				</AuthProvider>
 			</BrowserRouter>
 		</QueryClientProvider>
 	)
