@@ -10,7 +10,8 @@ import { useTelegram } from '@/hooks'
 const Auth: FC = () => {
 	const { mutate } = useAuth()
 	const { tg } = useTelegram()
-	const queryParams = new URLSearchParams(decodeURIComponent(tg.initData))
+	console.log(tg)
+	const queryParams = new URLSearchParams(decodeURIComponent(tg?.initData))
 	const friend_id = getFriendId()
 
 	useEffect(() => {
