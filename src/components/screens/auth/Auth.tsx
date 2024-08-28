@@ -9,21 +9,25 @@ import { useTelegram } from '@/hooks'
 
 const Auth: FC = () => {
 	const { mutate } = useAuth()
-	const { tg, user } = useTelegram()
+	const { tg } = useTelegram()
 	const decodeURI = decodeURIComponent(tg.initData)
 	const queryParams = new URLSearchParams(decodeURI)
 	const friend_id = getFriendId()
 
-	console.log(queryParams)
+	console.log(tg.initData)
 	useEffect(() => {
 		const data = {
-			user: JSON.parse(queryParams.get('user')),
+			value: tg.initData,
+			referal_id: friend_id || null
+
+			/*user: JSON.parse(queryParams.get('user')),
 			referal_id: friend_id || null,
 			chat_instance: queryParams.get('chat_instance'),
 			chat_type: queryParams.get('chat_type'),
 			auth_date: queryParams.get('auth_date'),
 			hash: queryParams.get('hash'),
-			query_id: queryParams.get('query_id')
+			query_id: queryParams.get('query_id')*/
+
 			/*user: JSON.parse(queryParams.get('user')),
 			id: JSON.parse(queryParams.get('user')).id.toString(),
 			first_name: JSON.parse(queryParams.get('user')).first_name || null,
@@ -37,7 +41,7 @@ const Auth: FC = () => {
 
 		console.log(data)
 
-		if (!!data?.hash) mutate(data as any)
+		if (!!data?.value) mutate(data as any)
 	}, [])
 
 	return (
