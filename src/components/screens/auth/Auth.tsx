@@ -10,8 +10,8 @@ import { useTelegram } from '@/hooks'
 const Auth: FC = () => {
 	const { mutate } = useAuth()
 	const { tg } = useTelegram()
-	const decodeURI = decodeURIComponent(tg.initDataUnsafe)
-	const queryParams = new URLSearchParams(decodeURI)
+	// const decodeURI = decodeURIComponent(tg.initDataUnsafe)
+	// const queryParams = new URLSearchParams(decodeURI)
 	const friend_id = getFriendId()
 
 	console.log(tg.initDataUnsafe)
