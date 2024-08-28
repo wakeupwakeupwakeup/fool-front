@@ -58,14 +58,14 @@ const Fan: FC<IProps> = ({
 	return (
 		<div className='relative w-full'>
 			<div className='relative w-full bottom-[90px] flex justify-between'>
-				{defendingPlayer === tg_id && (
+				{Number(defendingPlayer) === Number(tg_id) && (
 					<Icon
 						size={25}
 						icon='defending'
 						className='absolute -top-base-x2 -left-base-x2 z-40'
 					/>
 				)}
-				{attackPlayer === tg_id && (
+				{Number(attackPlayer) === Number(tg_id) && (
 					<Icon
 						size={25}
 						icon='attack'

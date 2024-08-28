@@ -25,7 +25,9 @@ const DraggableCard: FC<IProps> = ({
 	useEffect(() => {
 		calculatorCardsLength(snapshot.isDragging, type)
 	}, [snapshot.isDragging])
-
+	useEffect(() => {
+		console.log(snapshot)
+	}, [snapshot])
 	useEffect(() => {
 		if (snapshot.isDropAnimating && draggableCard) {
 			calculatorCardsLength(!!snapshot.dropAnimation, type)

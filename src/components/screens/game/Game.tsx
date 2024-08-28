@@ -49,7 +49,9 @@ const Game: FC = () => {
 	const [player, setPlayer] = useState<IPlayer>()
 	const [rivals, setRivals] = useState<IPlayer[]>([])
 	const [cardsOnTable, setCardsOnTable] = useState<string[][]>([])
+	const [oldCardsOnTable, setOldCardsOnTable] = useState<string[][]>([])
 	const [cards, setCards] = useState<string[]>([])
+	const [oldCards, setOldCards] = useState<string[]>([])
 
 	const [placeRival, setPlaceRival] = useState<number>()
 	const [isConnected, setIsConnected] = useState(false)
@@ -112,19 +114,27 @@ const Game: FC = () => {
 					console.log('connect', data)
 
 					setFriends(data.friends)
-					const index = data.players.findIndex(item => item.tg_id == tg_id)
+					if (data.players.length === 1) {
+					}
+
+					setPlayer(
+						data.players.find(item => Number(item.tg_id) === Number(tg_id))
+					)
+					const index = data.players.findIndex(
+						item => Number(item.tg_id) === Number(tg_id)
+					)
 					const newRivals = [
 						...data.players.slice(index + 1),
 						...data.players.slice(0, index)
 					]
 					setRivals(newRivals)
-					setPlayer(data.players.find(item => item.tg_id == tg_id))
 					return
 				}
 				case 'start': {
 					console.log('start', data)
 					let newRivals
 
+					setCards([])
 					setCardsOnTable(Object.entries(data.cards_on_table) as any)
 					setTrumpCard(data.trump_card)
 					setButton(null)
@@ -199,6 +209,18 @@ const Game: FC = () => {
 				}
 				case 'error': {
 					console.log('error', data)
+					setTimeout(() => {
+						setOldCards(prevState => {
+							setCards(prevState)
+
+							return prevState
+						})
+						setOldCardsOnTable(prevState => {
+							setCardsOnTable(prevState)
+
+							return prevState
+						})
+					}, 200)
 					return
 				}
 				case 'take_cards': {
@@ -483,8 +505,7 @@ const Game: FC = () => {
 
 	// Добавлять место приглашенного игрока
 	const handlerShowModal = (place: number) => {
-		// console.log(place)
-		if (tg_id === game.host) {
+		if (Number(tg_id) === Number(game.host)) {
 			setPlaceRival(place)
 			setShowModal(true)
 		}
@@ -749,8 +770,29 @@ const Game: FC = () => {
 			) {
 				if (cardsOnTable.length === 1) {
 					playCard(game_ws.current, cards[result.source.index])
+					console.log(cardsOnTable)
+					setOldCardsOnTable(cardsOnTable)
+					setOldCards(cards)
+					setCardsOnTable([
+						...cardsOnTable.slice(0, -1),
+						[cards[result.source.index]]
+					])
+					setCards([
+						...cards.slice(0, result.source.index),
+						...cards.slice(result.source.index + 1)
+					])
 				} else {
+					setOldCardsOnTable(cardsOnTable)
+					setOldCards(cards)
 					throwInCard(game_ws.current, cards[result.source.index])
+					setCardsOnTable([
+						...cardsOnTable.slice(0, -1),
+						[cards[result.source.index]]
+					])
+					setCards([
+						...cards.slice(0, result.source.index),
+						...cards.slice(result.source.index + 1)
+					])
 				}
 			}
 			// побить карту
@@ -760,6 +802,17 @@ const Game: FC = () => {
 						.length === 1 &&
 					defendingPlayer === tg_id
 				) {
+					setOldCardsOnTable(cardsOnTable)
+					setOldCards(cards)
+					setCardsOnTable([
+						...cardsOnTable.slice(0, destinationIndex),
+						[...cardsOnTable[destinationIndex], cards[result.source.index]],
+						...cardsOnTable.slice(destinationIndex + 1)
+					])
+					setCards([
+						...cards.slice(0, result.source.index),
+						...cards.slice(result.source.index + 1)
+					])
 					defendCard(
 						game_ws.current,
 						cards[result.source.index],
