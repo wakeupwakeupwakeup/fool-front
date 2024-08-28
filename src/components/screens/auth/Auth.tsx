@@ -14,22 +14,30 @@ const Auth: FC = () => {
 	const queryParams = new URLSearchParams(decodeURI)
 	const friend_id = getFriendId()
 
-	console.log(queryParams.get('hash'))
+	console.log(queryParams)
 	useEffect(() => {
 		const data = {
+			user: JSON.parse(queryParams.get('user')),
+			referal_id: friend_id || null,
+			chat_instance: queryParams.get('chat_instance'),
+			chat_type: queryParams.get('chat_type'),
+			auth_date: queryParams.get('auth_date'),
+			hash: queryParams.get('hash'),
+			query_id: queryParams.get('query_id')
+			/*user: JSON.parse(queryParams.get('user')),
 			id: JSON.parse(queryParams.get('user')).id.toString(),
 			first_name: JSON.parse(queryParams.get('user')).first_name || null,
 			last_name: JSON.parse(queryParams.get('user'))?.last_name || null,
 			username: JSON.parse(queryParams.get('user'))?.username || null,
-			photo_url: user?.photo_url || null,
+			photo_url: JSON.parse(queryParams.get('user'))?.photo_url || null,
 			referal_id: friend_id || null,
 			auth_date: queryParams.get('auth_date'),
-			hash: queryParams.get('hash')
+			hash: queryParams.get('hash')*/
 		}
 
 		console.log(data)
 
-		if (!!data?.id) mutate(data as any)
+		if (!!data?.hash) mutate(data as any)
 	}, [])
 
 	return (
