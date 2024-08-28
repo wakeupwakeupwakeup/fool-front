@@ -17,11 +17,11 @@ const Auth: FC = () => {
 	console.log(queryParams.get('hash'))
 	useEffect(() => {
 		const data = {
-			id: user.id.toString(),
+			id: JSON.parse(queryParams.get('user')).id.toString(),
 			first_name: JSON.parse(queryParams.get('user')).first_name || null,
 			last_name: JSON.parse(queryParams.get('user'))?.last_name || null,
 			username: JSON.parse(queryParams.get('user'))?.username || null,
-			photo_url: JSON.parse(queryParams.get('user'))?.photo_url || null,
+			photo_url: user?.photo_url || null,
 			referal_id: friend_id || null,
 			auth_date: queryParams.get('auth_date'),
 			hash: queryParams.get('hash')
