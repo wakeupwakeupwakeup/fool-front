@@ -16,7 +16,7 @@ const Auth: FC = () => {
 
 	useEffect(() => {
 		const data = {
-			id: user.id,
+			id: user.id.toString(),
 			first_name: JSON.parse(queryParams.get('user')).first_name || null,
 			last_name: JSON.parse(queryParams.get('user'))?.last_name || null,
 			username: JSON.parse(queryParams.get('user'))?.username || null,

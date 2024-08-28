@@ -121,17 +121,6 @@ const Game: FC = () => {
 					setPlayer(data.players.find(item => item.tg_id == tg_id))
 					return
 				}
-				case 'ready': {
-					console.log('ready', data)
-					setCards([])
-					setCardsOnTable([])
-
-					setButton({
-						action: 'ready',
-						text: 'Готов'
-					})
-					return
-				}
 				case 'start': {
 					console.log('start', data)
 					let newRivals
