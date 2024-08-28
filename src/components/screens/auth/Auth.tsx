@@ -14,6 +14,7 @@ const Auth: FC = () => {
 	const queryParams = new URLSearchParams(decodeURI)
 	const friend_id = getFriendId()
 
+	console.log(queryParams.get('hash'))
 	useEffect(() => {
 		const data = {
 			id: user.id.toString(),
@@ -25,6 +26,8 @@ const Auth: FC = () => {
 			auth_date: queryParams.get('auth_date'),
 			hash: queryParams.get('hash')
 		}
+
+		console.log(data)
 
 		if (!!data?.id) mutate(data as any)
 	}, [])
