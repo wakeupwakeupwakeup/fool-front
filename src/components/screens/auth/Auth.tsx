@@ -16,18 +16,17 @@ const Auth: FC = () => {
 
 	useEffect(() => {
 		const data = {
-			user: {
-				...JSON.parse(queryParams.get('user')),
-				id: user.id
-			},
+			id: user.id,
+			first_name: JSON.parse(queryParams.get('user')).first_name || null,
+			last_name: JSON.parse(queryParams.get('user'))?.last_name || null,
+			username: JSON.parse(queryParams.get('user'))?.username || null,
+			photo_url: JSON.parse(queryParams.get('user'))?.photo_url || null,
 			referal_id: friend_id || null,
-			chat_instance: queryParams.get('chat_instance'),
-			chat_type: queryParams.get('chat_type'),
 			auth_date: queryParams.get('auth_date'),
 			hash: queryParams.get('hash')
 		}
 
-		if (!!data?.hash) mutate(data as any)
+		if (!!data?.id) mutate(data as any)
 	}, [])
 
 	return (
