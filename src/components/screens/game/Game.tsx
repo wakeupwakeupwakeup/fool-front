@@ -755,14 +755,6 @@ const Game: FC = () => {
 		isStart?: boolean,
 		oldRivals?: IPlayer[]
 	) => {
-		// Массив новых карт соперников
-		const numCards = isStart
-			? newRivals.map(rival => rival.countCards || 0)
-			: oldRivals?.map(
-					rival =>
-						newRivals.find(newRival => newRival.tg_id === rival.tg_id)
-							.countCards - rival.countCards
-			  )
 		let delay = 0
 
 		// Раздача карт в начале игры
@@ -792,6 +784,17 @@ const Game: FC = () => {
                 delay += index * 200
             })*/
 		}
+
+		// Массив новых карт соперников
+		const numCards = isStart
+			? newRivals.map(rival => rival.countCards || 0)
+			: oldRivals
+			? oldRivals?.map(
+					rival =>
+						newRivals.find(newRival => newRival.tg_id === rival.tg_id)
+							.countCards - rival.countCards
+			  )
+			: []
 
 		setTimeout(() => {
 			giveCardToRivals(numCards, newRivals, isStart)
