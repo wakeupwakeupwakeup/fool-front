@@ -789,9 +789,6 @@ const Game: FC = () => {
             })*/
 		}
 
-		console.log('newRivals', newRivals)
-		console.log('oldRivals', oldRivals)
-		console.log('isStart', isStart)
 		// Массив новых карт соперников
 		const numCards = isStart
 			? newRivals.map(rival => rival.countCards || 0)
@@ -802,7 +799,6 @@ const Game: FC = () => {
 							.countCards - rival.countCards
 			  )
 			: []
-		console.log('numCards', numCards)
 
 		setTimeout(() => {
 			giveCardToRivals(numCards, newRivals, isStart)
