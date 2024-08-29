@@ -33,7 +33,7 @@ const Layout: FC<PropsWithChildren<ILayout>> = ({
 	const { addFriend } = useAddFriend()
 
 	useEffect(() => {
-		if (pathname === '/menu') {
+		if (['/menu', '/auth'].includes(pathname)) {
 			tg.BackButton.hide()
 		} else {
 			tg.BackButton.show()

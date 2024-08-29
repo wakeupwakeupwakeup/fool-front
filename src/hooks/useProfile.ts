@@ -2,20 +2,21 @@ import { useQuery } from '@tanstack/react-query'
 import { useAtom } from 'jotai'
 import { useMemo } from 'react'
 
+import { useTelegram } from '@/hooks/useTelegram'
+
 import { IPlayer } from '@/shared/types/auth.interface'
 
-import { getId } from '@/services/auth/auth.helper'
 import { AuthService } from '@/services/auth/auth.service'
 
 import { playerAtom } from '@/store'
 
 export const useProfile = () => {
-	const tg_id = getId()
+	const { user } = useTelegram()
 	const [_, setPlayer] = useAtom(playerAtom)
 
-	const { data: user, isLoading: isUserLoading } = useQuery(
+	const { data, isLoading: isUserLoading } = useQuery(
 		['getPlayer'],
-		() => AuthService.getPlayer(tg_id),
+		() => AuthService.getPlayer(user.id),
 		{
 			onSuccess: (data: IPlayer) => {
 				// @ts-ignore
@@ -26,7 +27,7 @@ export const useProfile = () => {
 
 	return useMemo(
 		() => ({
-			user,
+			user: data,
 			isUserLoading
 		}),
 		[isUserLoading]
