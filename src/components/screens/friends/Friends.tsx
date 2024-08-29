@@ -17,7 +17,9 @@ const Friends: FC = () => {
 	const navigate = useNavigate()
 
 	const copyLink = () => {
-		navigator.clipboard.writeText(`https://tonfool.online/invite?id=${tg_id}`)
+		navigator.clipboard.writeText(
+			`https://t.me/share/url?url=https://t.me/ton_fool_bot?start=invite_${tg_id}`
+		)
 		setIsCopy(true)
 	}
 

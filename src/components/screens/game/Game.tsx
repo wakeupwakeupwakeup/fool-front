@@ -135,9 +135,59 @@ const Game: FC = () => {
 					let newRivals
 
 					setCards([])
-					setCardsOnTable(Object.entries(data.cards_on_table) as any)
-					setTrumpCard(data.trump_card)
 					setButton(null)
+
+					if (
+						data.next_throwing_player === tg_id &&
+						Object.entries(data.cards_on_table).every(
+							([key, value]) => !!key && !!value
+						)
+					) {
+						setCardsOnTable([
+							...(Object.entries(data.cards_on_table) as any),
+							[]
+						])
+					} else {
+						setCardsOnTable(Object.entries(data.cards_on_table) as any)
+					}
+
+					if (
+						data.defending_player === tg_id &&
+						!Object.entries(data.cards_on_table).every(
+							([key, value]) => !!key && !!value
+						)
+					) {
+						setButton({
+							action: 'take',
+							text: 'Взять'
+						})
+					}
+
+					if (
+						data.next_throwing_player === tg_id &&
+						Object.entries(data.cards_on_table).every(
+							([key, value]) => !!key && !!value
+						)
+					) {
+						if (
+							game.num_players === 2 ||
+							!Object.entries(data.players_cards).every(
+								([key, value]) => key === data.defending_player || !!value
+							)
+						) {
+							setButton({
+								text: 'Бита',
+								action: 'beat'
+							})
+						} else {
+							setButton({
+								text: 'Пас',
+								action: 'next_throw'
+							})
+						}
+					}
+
+					setTrumpCard(data.trump_card)
 					setBeatDeckLength(data.beat_deck_length)
 					setRemainingDeckLength(data.remaining_deck_length)
 					setAttackPlayer(data.current_player)
@@ -757,13 +807,11 @@ const Game: FC = () => {
 				'droppable-table-card-',
 				''
 			)
-			console.log(rivals)
-			console.log(defendingPlayer)
+
 			// подкинуть карту
 			const currentRivalCountCards = rivals.find(
 				rival => rival.tg_id === defendingPlayer
 			)?.countCards
-			console.log(currentRivalCountCards)
 			if (
 				!cardsOnTable[destinationIndex].length &&
 				currentRivalCountCards !== 0
