@@ -203,7 +203,7 @@ const Game: FC = () => {
 
 						spawnCards(data.cards, newRivals, true)
 
-						return newRivals
+						return prevState
 					})
 					return
 				}

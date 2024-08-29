@@ -7,8 +7,6 @@ let socket: WebSocket | null = null
 export const initWebSocket = () => {
 	const tg_id = getId()
 
-	if (!tg_id) return
-
 	socket = new WebSocket(`${WS_URL}/ws/global/${tg_id}`)
 
 	socket.onopen = () => {
@@ -17,9 +15,7 @@ export const initWebSocket = () => {
 
 	socket.onclose = () => {
 		console.log('WebSocket disconnected')
-		setInterval(() => {
-			socket = new WebSocket(`${WS_URL}/ws/global/${tg_id}`)
-		}, 3000)
+		window.location.reload()
 	}
 
 	socket.onerror = error => {

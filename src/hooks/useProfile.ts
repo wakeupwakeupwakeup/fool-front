@@ -7,7 +7,7 @@ import { useTelegram } from '@/hooks/useTelegram'
 
 import { IPlayer } from '@/shared/types/auth.interface'
 
-import { deleteId, getId } from '@/services/auth/auth.helper'
+import { deleteId } from '@/services/auth/auth.helper'
 import { AuthService } from '@/services/auth/auth.service'
 
 import { playerAtom } from '@/store'
@@ -19,7 +19,7 @@ export const useProfile = () => {
 
 	const { data, isLoading: isUserLoading } = useQuery(
 		['getPlayer'],
-		() => AuthService.getPlayer(getId().toString()),
+		() => AuthService.getPlayer(user.id.toString()),
 		{
 			onSuccess: async (data: IPlayer) => {
 				if (!data) {
