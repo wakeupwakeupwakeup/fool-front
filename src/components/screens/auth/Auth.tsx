@@ -14,7 +14,7 @@ const Auth: FC = () => {
 
 	useEffect(() => {
 		const data = {
-			value: tg.initDataUnsafe,
+			value: tg.initData,
 			referal_id: friend_id || null
 		}
 
