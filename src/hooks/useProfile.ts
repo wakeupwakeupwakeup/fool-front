@@ -16,7 +16,7 @@ export const useProfile = () => {
 
 	const { data, isLoading: isUserLoading } = useQuery(
 		['getPlayer'],
-		() => AuthService.getPlayer(user.id),
+		() => AuthService.getPlayer(user.id.toString()),
 		{
 			onSuccess: (data: IPlayer) => {
 				// @ts-ignore
