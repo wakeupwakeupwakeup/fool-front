@@ -114,12 +114,10 @@ const Game: FC = () => {
 					console.log('connect', data)
 
 					setFriends(data.friends)
-					if (data.players.length === 1) {
-					}
-
 					setPlayer(
 						data.players.find(item => Number(item.tg_id) === Number(tg_id))
 					)
+
 					const index = data.players.findIndex(
 						item => Number(item.tg_id) === Number(tg_id)
 					)
@@ -165,6 +163,7 @@ const Game: FC = () => {
 
 					if (
 						data.next_throwing_player === tg_id &&
+						Object.entries(data.cards_on_table).length &&
 						Object.entries(data.cards_on_table).every(
 							([key, value]) => !!key && !!value
 						)
