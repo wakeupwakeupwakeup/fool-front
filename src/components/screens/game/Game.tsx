@@ -195,17 +195,16 @@ const Game: FC = () => {
 					setAttackPlayer(data.current_player)
 					setPlayer(data.players.find(item => item.tg_id == tg_id))
 					setDefendingPlayer(data.defending_player)
-					let newRivals
 					setRivals(prevState => {
-						newRivals = prevState.map(item => ({
+						const newRivals = prevState.map(item => ({
 							...item,
 							countCards: data.players_cards[item.tg_id] || 0
 						}))
-						return prevState
-					})
-					setTimeout(() => {
+
 						spawnCards(data.cards, newRivals, true)
-					}, 0)
+
+						return newRivals
+					})
 					return
 				}
 				case 'throw_in_card':
@@ -794,33 +793,15 @@ const Game: FC = () => {
 		console.log('oldRivals', oldRivals)
 		console.log('isStart', isStart)
 		// Массив новых карт соперников
-		const numCards = (() => {
-			// Проверяем, что newRivals и oldRivals определены и являются массивами
-			const validNewRivals: IPlayer[] = Array.isArray(newRivals)
-				? newRivals
-				: []
-			const validOldRivals: IPlayer[] = Array.isArray(oldRivals)
-				? oldRivals
-				: []
-
-			if (isStart) {
-				return validNewRivals.map(rival => rival.countCards || 0)
-			} else if (validOldRivals.length > 0) {
-				return validOldRivals.map(rival => {
-					const newRival = validNewRivals.find(
-						newRival => newRival.tg_id === rival.tg_id
-					)
-					// Проверяем, найден ли новый соперник
-					if (newRival) {
-						return (newRival.countCards || 0) - (rival.countCards || 0)
-					}
-					// Если новый соперник не найден, возвращаем 0 или другое значение по умолчанию
-					return 0
-				})
-			} else {
-				return []
-			}
-		})()
+		const numCards = isStart
+			? newRivals.map(rival => rival.countCards || 0)
+			: !!oldRivals?.length
+			? oldRivals?.map(
+					rival =>
+						newRivals.find(newRival => newRival.tg_id === rival.tg_id)
+							.countCards - rival.countCards
+			  )
+			: []
 		console.log('numCards', numCards)
 
 		setTimeout(() => {
