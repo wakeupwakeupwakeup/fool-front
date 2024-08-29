@@ -71,6 +71,10 @@ const Game: FC = () => {
 
 	useEffect(() => {
 		if (!game) navigate('/menu')
+
+		return () => {
+			game_ws.current.close()
+		}
 	}, [])
 
 	const global_ws = getWebSocket()
@@ -130,7 +134,6 @@ const Game: FC = () => {
 				}
 				case 'start': {
 					console.log('start', data)
-					let newRivals
 
 					setCards([])
 					setButton(null)
@@ -192,6 +195,7 @@ const Game: FC = () => {
 					setAttackPlayer(data.current_player)
 					setPlayer(data.players.find(item => item.tg_id == tg_id))
 					setDefendingPlayer(data.defending_player)
+					let newRivals
 					setRivals(prevState => {
 						newRivals = prevState.map(item => ({
 							...item,
@@ -501,6 +505,7 @@ const Game: FC = () => {
 
 		return () => {
 			setIsConnected(false)
+			game_ws.current.close()
 		}
 	}, [game?.id, tg_id, place, game_ws])
 
@@ -789,15 +794,33 @@ const Game: FC = () => {
 		console.log('oldRivals', oldRivals)
 		console.log('isStart', isStart)
 		// Массив новых карт соперников
-		const numCards = isStart
-			? newRivals.map(rival => rival.countCards || 0)
-			: !!oldRivals?.length
-			? oldRivals?.map(
-					rival =>
-						newRivals.find(newRival => newRival.tg_id === rival.tg_id)
-							.countCards - rival.countCards
-			  )
-			: []
+		const numCards = (() => {
+			// Проверяем, что newRivals и oldRivals определены и являются массивами
+			const validNewRivals: IPlayer[] = Array.isArray(newRivals)
+				? newRivals
+				: []
+			const validOldRivals: IPlayer[] = Array.isArray(oldRivals)
+				? oldRivals
+				: []
+
+			if (isStart) {
+				return validNewRivals.map(rival => rival.countCards || 0)
+			} else if (validOldRivals.length > 0) {
+				return validOldRivals.map(rival => {
+					const newRival = validNewRivals.find(
+						newRival => newRival.tg_id === rival.tg_id
+					)
+					// Проверяем, найден ли новый соперник
+					if (newRival) {
+						return (newRival.countCards || 0) - (rival.countCards || 0)
+					}
+					// Если новый соперник не найден, возвращаем 0 или другое значение по умолчанию
+					return 0
+				})
+			} else {
+				return []
+			}
+		})()
 		console.log('numCards', numCards)
 
 		setTimeout(() => {
