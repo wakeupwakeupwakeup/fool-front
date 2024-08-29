@@ -758,7 +758,7 @@ const Game: FC = () => {
 		// Массив новых карт соперников
 		const numCards = isStart
 			? newRivals.map(rival => rival.countCards || 0)
-			: oldRivals.map(
+			: oldRivals?.map(
 					rival =>
 						newRivals.find(newRival => newRival.tg_id === rival.tg_id)
 							.countCards - rival.countCards
