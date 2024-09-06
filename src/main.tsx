@@ -1,7 +1,7 @@
 import ReactDOM from 'react-dom/client'
 
-import App from './App'
-import './index.scss'
+import './app/styles/index.scss'
+import { App } from '@/app/App'
 
 const tg = window?.Telegram?.WebApp
 
