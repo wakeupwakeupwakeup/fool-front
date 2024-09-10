@@ -14,18 +14,16 @@ import { GameService } from '@/entities/game/api/game.service'
 
 export const useCreateGame = () => {
 	const navigate = useNavigate()
-	const tg_id = getId()
 
 	const { mutate: createGame, isLoading: isCreateGameLoading } = useMutation(
 		['createGame'],
-		(info: IGameRequest) =>
-			GameService.createGame({ info: info, tg_id: tg_id }),
+		(info: IGameRequest) => GameService.createGame(info),
 		{
 			onSuccess: data => {
 				deleteGame()
 				deletePlace()
 				saveGame(data)
-				navigate('/game')
+				navigate('/home')
 			},
 		},
 	)

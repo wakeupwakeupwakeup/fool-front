@@ -1,7 +1,8 @@
 import { ComponentType } from 'react'
-import InvitePage from '@/pages/invite/ui/invite-page'
 import { HomePage } from '@/pages/home'
-import { FriendsPage } from '@/pages/friends'
+import { ReferralPage } from 'src/pages/referrals'
+import { BalancePage } from '@/pages/balance'
+import CreateGamePage from '@/pages/createGame/ui/create-game-page'
 
 export interface IRoute {
 	path: string
@@ -27,18 +28,18 @@ export const userRoutes: IRoute[] = [
 	// 	component: ResultGame,
 	// },
 	//
-	// {
-	// 	path: '/create-game',
-	// 	component: CreateGame,
-	// },
+	{
+		path: '/create-game',
+		component: CreateGamePage,
+	},
 	{
 		path: '/referrals',
-		component: FriendsPage,
+		component: ReferralPage,
 	},
-	// {
-	// 	path: '/balance',
-	// 	component: Balance,
-	// },
+	{
+		path: '/balance',
+		component: BalancePage,
+	},
 	// {
 	// 	path: '/statistics',
 	// 	component: Statistics,

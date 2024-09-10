@@ -26,8 +26,8 @@ export function BalancePage(): ReactElement {
 			className='flex flex-col items-center gap-[50px]'
 		>
 			<div className='flex flex-col items-center justify-center w-full gap-base-x5'>
-				{user?.currency &&
-					Object.entries(user.currency).map((item, index) => (
+				{user?.balance &&
+					Object.entries(user.balance).map((item, index) => (
 						<div
 							key={index}
 							className='grid grid-rows-1 grid-cols-[1fr_0.5fr_1fr] w-full items-center gap-base-x2'
@@ -72,5 +72,3 @@ export function BalancePage(): ReactElement {
 		</Layout>
 	)
 }
-
-export default BalancePage

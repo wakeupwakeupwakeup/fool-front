@@ -1,4 +1,4 @@
 import { atom } from 'jotai'
-import { IPlayer } from '@/entities/auth'
+import { IUser } from '@/entities/auth'
 
-export const playerAtom = atom<IPlayer | null>(null)
+export const playerAtom = atom<IUser | null>(null)

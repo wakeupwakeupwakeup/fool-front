@@ -1,11 +1,12 @@
 import axios, { AxiosRequestConfig, AxiosResponse } from 'axios'
 import { API_URL } from '@/shared/api/api.config'
 import { getInitData } from '@/entities/auth'
+import { retrieveLaunchParams } from '@telegram-apps/sdk-react'
 
 const instance = axios.create({
 	baseURL: API_URL,
 })
-const initData = getInitData()
+const { initDataRaw } = retrieveLaunchParams()
 
 export async function request<T>(config: AxiosRequestConfig) {
 	const onSuccess = (response: AxiosResponse<T>) => response.data
@@ -16,7 +17,8 @@ export async function request<T>(config: AxiosRequestConfig) {
 	}
 	instance.interceptors.request.use(config => {
 		console.log('DEV | INTERCEPTOR TRIGGERED')
-		if (config.url !== '/login') config.headers.Authorization = initData
+		console.log('DEV | INTERCEPTOR TOKEN', initDataRaw)
+		if (config.url !== '/login') config.headers.Authorization = initDataRaw
 		return config
 	})
 	return instance(config).then(onSuccess).catch(onError)

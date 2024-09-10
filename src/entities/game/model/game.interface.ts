@@ -1,11 +1,11 @@
-export type TCurrency = 'tether' | 'fool' | 'notcoin' | 'toncoin'
+export type TCurrency = 'Usdt' | 'Fool' | 'Notcoin' | 'Ton'
 export type TTypeGame = 'flip_up' | 'translated'
 
 export interface IGameRequest {
 	bet: number
 	currency: TCurrency
 	type: TTypeGame
-	num_players: number
+	player_count: number
 }
 
 export interface IGame {

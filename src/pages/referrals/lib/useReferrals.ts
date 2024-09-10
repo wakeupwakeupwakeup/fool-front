@@ -1,12 +1,12 @@
 import { useQuery } from '@tanstack/react-query'
 import { useMemo } from 'react'
-import { FriendsService } from '@/entities/friend/api/friends.service'
+import { ReferralService } from '@/entities/referral/api/referral.service'
 
-export const useFriends = () => {
+export const useReferrals = () => {
 	const { data: friends, isLoading: isFriendsLoading } = useQuery(
 		['getReferrals'],
 		() => {
-			return FriendsService.getReferrals()
+			return ReferralService.getReferrals()
 		},
 	)
 
@@ -15,6 +15,6 @@ export const useFriends = () => {
 			friends,
 			isFriendsLoading,
 		}),
-		[isFriendsLoading],
+		[friends, isFriendsLoading],
 	)
 }

@@ -1,7 +1,6 @@
 import cn from 'clsx'
 import { FC } from 'react'
-
-import { Typography } from '@/components/ui'
+import { Typography } from '@/shared/ui/typography'
 
 interface IProps {
 	selectedCountRivals: number
@@ -10,7 +9,7 @@ interface IProps {
 
 const Rivals: FC<IProps> = ({
 	selectedCountRivals,
-	setSelectedCountRivals
+	setSelectedCountRivals,
 }) => {
 	const countRivals = [1, 2, 3]
 
@@ -27,7 +26,7 @@ const Rivals: FC<IProps> = ({
 								'w-full rounded-base-x1 py-base-x1 px-base-x3 border border-white relative',
 								selectedCountRivals === item
 									? 'border-solid bg-radial-gradient bg-gradient'
-									: 'border-dashed'
+									: 'border-dashed',
 							)}
 						>
 							<Typography variant='text'>{item}</Typography>

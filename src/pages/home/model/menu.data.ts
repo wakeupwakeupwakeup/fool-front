@@ -15,7 +15,7 @@ export const menu: IMenuItem[] = [
 	{
 		icon: 'friends',
 		path: '/referrals',
-		title: 'Друзья',
+		title: 'Рефералы',
 		soon: false,
 	},
 	{
@@ -40,7 +40,7 @@ export const menu: IMenuItem[] = [
 		icon: 'subscription',
 		path: '/subscription',
 		title: 'Подписки',
-		soon: false,
+		soon: true,
 	},
 	{
 		icon: 'settings',

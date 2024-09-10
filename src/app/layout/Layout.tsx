@@ -4,11 +4,12 @@ import { useLocation, useNavigate } from 'react-router-dom'
 import Logo from '@/shared/ui/logo/Logo'
 import Icon from '@/shared/ui/icon/Icon'
 import { getFriendId, getId } from '@/entities/auth'
-import { useAddFriend } from '@/entities/friend'
+import { useAddFriend } from 'src/entities/referral'
 // import { getWebSocket, initWebSocket } from '@/shared/api'
 // import { IWebSocketResponse } from '@/entities/game'
 // import { ModalContext } from '@/app'
 import { Typography } from '@/shared/ui/typography'
+import { initBackButton, useMiniApp } from '@telegram-apps/sdk-react'
 
 interface ILayout {
 	children: ReactNode
@@ -30,19 +31,20 @@ export function Layout({
 }: ILayout): ReactElement {
 	// const modalContext = useContext(ModalContext)
 	// const { setInfo, setVisible } = modalContext
-	// const navigate = useNavigate()
+	const navigate = useNavigate()
+	const [backButton] = initBackButton()
 	const { pathname } = useLocation()
 	// const friend_id = getFriendId()
 	// const tg_id = getId()
 	// const { addFriend } = useAddFriend()
 
 	useEffect(() => {
-		// if (['/menu', '/auth'].includes(pathname)) {
-		// 	tg.BackButton.hide()
-		// } else {
-		// 	tg.BackButton.show()
-		// }
-		// tg.BackButton.onClick(() => navigate('/menu'))
+		if (['/home', '/auth'].includes(pathname)) {
+			backButton.hide()
+		} else {
+			backButton.show()
+		}
+		backButton.on('click', () => navigate('/menu'))
 		// if (friend_id && tg_id && friend_id !== tg_id) {
 		// 	addFriend(friend_id)
 		// }
@@ -62,7 +64,7 @@ export function Layout({
 		// return () => {
 		// 	socketInstance.then(socketInstance => socketInstance.close())
 		// }
-	}, [])
+	}, [pathname])
 
 	return (
 		<div

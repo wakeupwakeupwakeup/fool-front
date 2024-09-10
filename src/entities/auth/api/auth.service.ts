@@ -1,17 +1,14 @@
-import { request } from '@/shared/api/axios'
-import { IPlayer } from '@/entities/auth'
+import { IUser } from '@/entities/auth'
+import { request } from '@/shared/api'
 
 export const AuthService = {
-	async getPlayer(tgId: string) {
-		return request<IPlayer>({
-			url: `/player/${tgId}`,
-			method: 'GET',
-		})
-	},
-	async token(data) {
-		return request<IPlayer>({
+	async login(data) {
+		return request<IUser>({
 			url: '/login',
 			method: 'GET',
+			params: data.referralId
+				? { ref_id: data.referralId.split('_')[1] }
+				: null,
 			headers: {
 				'Content-Type': 'application/json',
 				Authorization: data.value,

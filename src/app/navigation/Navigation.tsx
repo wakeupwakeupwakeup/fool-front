@@ -7,6 +7,7 @@ import { guestRoutes } from '@/app/navigation/routes/guestRoutes'
 export function Navigation() {
 	const { id } = useContext(AuthContext)
 
+	console.log('DEV | CURRENT USER ID: ', id)
 	const routes = useMemo(() => {
 		return id ? userRoutes : guestRoutes
 	}, [id])

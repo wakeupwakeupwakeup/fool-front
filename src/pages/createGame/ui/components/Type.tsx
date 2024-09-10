@@ -1,9 +1,8 @@
 import cn from 'clsx'
 import { FC } from 'react'
 
-import { Typography } from '@/components/ui'
-
 import { TTypeGame } from '@/entities/game/model/game.interface'
+import { Typography } from '@/shared/ui/typography'
 
 interface IProps {
 	selectedType: TTypeGame

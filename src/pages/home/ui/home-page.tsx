@@ -1,5 +1,5 @@
 // import { useAtom } from 'jotai'
-import { ReactElement } from 'react'
+import { ReactElement, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 // import { deleteId } from '@/entities/auth/lib/auth.helper'
 import { menu } from '../model/menu.data'
@@ -10,10 +10,10 @@ import Profile from '@/widgets/profile/ui/Profile'
 
 export function HomePage(): ReactElement {
 	const navigate = useNavigate()
+
 	// const { user, isUserLoading } = useProfile()
 
 	// const [ setPlayer] = useAtom(playerAtom)
-
 	// const logout = async () => {
 	// 	await deleteId()
 	// 	setPlayer(null)
@@ -22,7 +22,7 @@ export function HomePage(): ReactElement {
 
 	return (
 		<Layout className='flex flex-col gap-base-x6 '>
-			{/*<Profile user={user} isLoading={isUserLoading} />*/}
+			<Profile />
 			<div className='flex flex-col gap-5 w-full'>
 				{menu.map(item => (
 					<Button

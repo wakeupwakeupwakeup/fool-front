@@ -9,4 +9,4 @@ export {
 	saveInitData,
 } from './lib/auth.helper'
 export { AuthService } from './api/auth.service'
-export type { IPlayer, ICurrency } from './model/auth.interface'
+export type { IUser, ICurrency } from '../user/model/types'

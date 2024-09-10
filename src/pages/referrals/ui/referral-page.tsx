@@ -1,26 +1,19 @@
-import cn from 'clsx'
-import { ReactElement, useState } from 'react'
+import { ReactElement } from 'react'
 import { useNavigate } from 'react-router-dom'
 import avatar from '@/shared/assets/tapps.png'
-import { useFriends } from '../lib/useFriends'
+import { useReferrals } from '../lib/useReferrals'
 import { getId } from '@/entities/auth'
 import Layout from '@/app/layout/Layout'
 import Button from '@/shared/ui/button/ui/Button'
 import Loader from '@/shared/ui/loader/Loader'
 import { Typography } from '@/shared/ui/typography'
+import { useUtils } from '@telegram-apps/sdk-react'
 
-export function FriendsPage(): ReactElement {
-	const { friends, isFriendsLoading } = useFriends()
-	const [isCopy, setIsCopy] = useState(false)
+export function ReferralPage(): ReactElement {
+	const { friends, isFriendsLoading } = useReferrals()
 	const tgId = getId()
 	const navigate = useNavigate()
-
-	const copyLink = () => {
-		window.open(
-			`https://t.me/share/url?url=https://t.me/ton_fool_bot?start=invite_${tgId}`,
-		)
-		setIsCopy(true)
-	}
+	const tgUtils = useUtils()
 
 	return (
 		<Layout
@@ -28,8 +21,12 @@ export function FriendsPage(): ReactElement {
 			footer={
 				<div className='flex w-full gap-base-x2'>
 					<Button
-						onClick={copyLink}
-						icon={isCopy ? 'checkbox' : 'copy'}
+						onClick={() =>
+							tgUtils.openTelegramLink(
+								`https://t.me/share/url?url=https://t.me/tonfool_dev_bot/app?start=invite_${tgId}`,
+							)
+						}
+						icon='copy'
 					>
 						Пригласить
 					</Button>
@@ -60,16 +57,6 @@ export function FriendsPage(): ReactElement {
 									<Typography variant='text'>
 										{item.username}
 									</Typography>
-									<Typography
-										variant='text'
-										className={cn(
-											item.is_online
-												? 'text-green'
-												: 'text-red',
-										)}
-									>
-										{item.is_online ? 'online' : 'offline'}
-									</Typography>
 								</div>
 								<Typography
 									variant='text'
@@ -90,4 +77,4 @@ export function FriendsPage(): ReactElement {
 	)
 }
 
-export default FriendsPage
+export default ReferralPage

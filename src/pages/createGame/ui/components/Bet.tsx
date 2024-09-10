@@ -1,9 +1,8 @@
 import cn from 'clsx'
-import { FC, useEffect, useState } from 'react'
-
-import { Typography } from '@/components/ui'
+import { ReactElement, useEffect, useState } from 'react'
 
 import { TCurrency } from '@/entities/game/model/game.interface'
+import { Typography } from '@/shared/ui/typography'
 
 interface IProps {
 	selectedBet: number
@@ -12,12 +11,12 @@ interface IProps {
 	setSelectedBet: (value: number) => void
 }
 
-const Bet: FC<IProps> = ({
+export function Bet({
 	setSelectedBet,
 	selectedBet,
 	selectedCurrency,
 	currentBalance,
-}) => {
+}: IProps): ReactElement {
 	const [error, setError] = useState(false)
 	const [bet, setBet] = useState(7)
 	const [multiplierRate, setMultiplierRate] = useState('')

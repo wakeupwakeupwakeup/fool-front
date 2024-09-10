@@ -1,10 +1,12 @@
-export interface IPlayer {
+export interface IUser {
 	username: string
 	photo_url: string
 	last_claim: string
 	chat_id: string
-	is_online: boolean
-	currency: ICurrency
+	balance_fool: number
+	balance_ton: number
+	balance_usdt: number
+	balance_notcoin: number
 	cups: number
 	is_free: true
 }
