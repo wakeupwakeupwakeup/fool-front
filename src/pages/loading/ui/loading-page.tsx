@@ -1,6 +1,6 @@
 import { ReactElement, useEffect, useState } from 'react'
-import Typography from '@/shared/ui/typography/Typography'
 import Icon from '@/shared/ui/icon/Icon'
+import { Typography } from '@/shared/ui/typography'
 
 export function LoadingPage(): ReactElement {
 	const [percent, setPercent] = useState(0)

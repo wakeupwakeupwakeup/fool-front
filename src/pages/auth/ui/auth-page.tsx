@@ -1,26 +1,29 @@
 import { ReactElement, useEffect } from 'react'
-import { getFriendId } from '@/entities/auth/lib/auth.helper'
+import { getFriendId, saveInitData } from '@/entities/auth/lib/auth.helper'
 import { useAuth } from '@/entities/auth/lib/hooks/useAuth'
-import { useTelegram } from '@/shared/hooks/useTelegram'
 import Layout from '@/app/layout/Layout'
 import Loader from '@/shared/ui/loader/Loader'
+import { retrieveLaunchParams } from '@telegram-apps/sdk-react'
 
 export function AuthPage(): ReactElement {
 	const { mutate } = useAuth()
-	const { tg } = useTelegram()
-	const friend_id = getFriendId()
+	const { initDataRaw } = retrieveLaunchParams()
+	const friendId = getFriendId()
 
 	useEffect(() => {
 		const data = {
-			value: tg.initData,
-			referal_id: friend_id || null,
+			value: initDataRaw,
+			referralId: friendId || null,
 		}
 
-		if (data?.value) mutate(data as any)
+		if (data?.value && initDataRaw) {
+			saveInitData(initDataRaw)
+			mutate(data)
+		}
 	}, [])
 
 	return (
-		<Layout className='auth flex flex-col gap-base-x3 items-center justify-center'>
+		<Layout className='flex flex-col gap-base-x3 items-center justify-center'>
 			<Loader />
 		</Layout>
 	)

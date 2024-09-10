@@ -6,10 +6,10 @@ import tsconfigPaths from 'vite-tsconfig-paths'
 export default defineConfig({
 	plugins: [react(), tsconfigPaths()],
 	build: {
-		outDir: './docs'
+		outDir: './docs',
 	},
 	server: {
-		port: 80
+		port: 3000,
 	},
-	base: '/'
+	base: '/',
 })

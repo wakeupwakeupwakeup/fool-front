@@ -1,4 +1,4 @@
-import { FC, ReactNode, createContext, useContext, useState } from 'react'
+import { createContext, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import avatar from '@/shared/assets/tapps.png'
 import {
@@ -10,18 +10,23 @@ import {
 } from '@/entities/game'
 import Modal from '@/shared/ui/modal/ui/Modal'
 import Button from '@/shared/ui/button/ui/Button'
-import Typography from '@/shared/ui/typography/Typography'
+import { Typography } from '@/shared/ui/typography'
 
 interface ModalContextProps {
 	visible: boolean
 	setVisible: (value: boolean) => void
-	info: IWebSocketResponse
+	info: IWebSocketResponse | null
 	setInfo: (value: IWebSocketResponse) => void
 }
 
-const ModalContext = createContext<ModalContextProps | undefined>(undefined)
+export const ModalContext = createContext<ModalContextProps>({
+	visible: false,
+	setVisible: () => {},
+	info: null,
+	setInfo: () => {},
+})
 
-const ModalProvider: FC<{ children: ReactNode }> = ({ children }) => {
+export function ModalProvider({ children }) {
 	const [visible, setVisible] = useState<boolean>(false)
 	const navigate = useNavigate()
 	const [info, setInfo] = useState<IWebSocketResponse | null>(null)
@@ -30,8 +35,10 @@ const ModalProvider: FC<{ children: ReactNode }> = ({ children }) => {
 		setVisible(false)
 		deleteGame()
 		deletePlace()
-		saveGame(info.game)
-		savePlace(info.place)
+		if (info) {
+			saveGame(info.game)
+			savePlace(info.place)
+		}
 		navigate('/game')
 	}
 
@@ -93,13 +100,3 @@ const ModalProvider: FC<{ children: ReactNode }> = ({ children }) => {
 		</ModalContext.Provider>
 	)
 }
-
-const useModal = () => {
-	const context = useContext(ModalContext)
-	if (!context) {
-		throw new Error('useModal must be used within a ModalProvider')
-	}
-	return context
-}
-
-export { ModalProvider, useModal }

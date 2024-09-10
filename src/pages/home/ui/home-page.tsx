@@ -10,7 +10,7 @@ import Profile from '@/widgets/profile/ui/Profile'
 
 export function HomePage(): ReactElement {
 	const navigate = useNavigate()
-	const { user, isUserLoading } = useProfile()
+	// const { user, isUserLoading } = useProfile()
 
 	// const [ setPlayer] = useAtom(playerAtom)
 
@@ -22,7 +22,7 @@ export function HomePage(): ReactElement {
 
 	return (
 		<Layout className='flex flex-col gap-base-x6 '>
-			<Profile user={user} isLoading={isUserLoading} />
+			{/*<Profile user={user} isLoading={isUserLoading} />*/}
 			<div className='flex flex-col gap-5 w-full'>
 				{menu.map(item => (
 					<Button

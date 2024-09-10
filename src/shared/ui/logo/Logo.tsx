@@ -2,11 +2,11 @@ import { FC } from 'react'
 
 const Logo: FC = () => {
 	return (
-		<div className='flex flex-col mx-auto select-none'>
-			<span className='text-base-x3 font-bold leading-none tracking-[.5em]'>
+		<div className='flex flex-col text-center mx-auto select-none'>
+			<span className='uppercase text-3xl font-bold leading-none tracking-widest'>
 				Fool
 			</span>
-			<span className='text-base-x2 leading-none'>card game</span>
+			<span className='text-lg leading-none'>card game</span>
 		</div>
 	)
 }

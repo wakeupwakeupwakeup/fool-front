@@ -5,6 +5,8 @@ export {
 	getFriendId,
 	saveFriendId,
 	deleteFriendId,
+	getInitData,
+	saveInitData,
 } from './lib/auth.helper'
-
+export { AuthService } from './api/auth.service'
 export type { IPlayer, ICurrency } from './model/auth.interface'

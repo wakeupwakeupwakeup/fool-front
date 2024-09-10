@@ -1,11 +1,10 @@
 import cn from 'clsx'
-import { FC, PropsWithChildren } from 'react'
 import Icon from '@/shared/ui/icon/Icon'
 import * as config from '../model/button.config'
 import { IButton } from '../model/button.interface'
-import Typography from '@/shared/ui/typography/Typography'
+import { Typography } from '@/shared/ui/typography'
 
-const Button: FC<PropsWithChildren<IButton>> = ({
+export function Button({
 	children,
 	icon,
 	variant,
@@ -13,12 +12,12 @@ const Button: FC<PropsWithChildren<IButton>> = ({
 	size = 'default',
 	sizeIcon,
 	...props
-}) => {
+}: IButton) {
 	return (
 		<button
 			className={cn(
 				className,
-				'flex items-center relative justify-center w-full gap-base-x2 rounded-base-x1 bg-radial-gradient bg-gradient',
+				'flex items-center relative justify-center w-full gap-base-x2 rounded-base-x1 bg-gradient',
 				[config.classes[size]],
 			)}
 			{...props}

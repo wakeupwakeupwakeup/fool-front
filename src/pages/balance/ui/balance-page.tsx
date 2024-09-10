@@ -3,8 +3,8 @@ import { useNavigate } from 'react-router-dom'
 import { useProfile } from '@/entities/user'
 import Layout from '@/app/layout/Layout'
 import Button from '@/shared/ui/button/ui/Button'
-import Typography from '@/shared/ui/typography/Typography'
 import Icon from '@/shared/ui/icon/Icon'
+import { Typography } from '@/shared/ui/typography'
 
 export function BalancePage(): ReactElement {
 	const navigate = useNavigate()
@@ -27,9 +27,9 @@ export function BalancePage(): ReactElement {
 		>
 			<div className='flex flex-col items-center justify-center w-full gap-base-x5'>
 				{user?.currency &&
-					Object.entries(user.currency).map(item => (
+					Object.entries(user.currency).map((item, index) => (
 						<div
-							key={item[0]}
+							key={index}
 							className='grid grid-rows-1 grid-cols-[1fr_0.5fr_1fr] w-full items-center gap-base-x2'
 						>
 							<Typography

@@ -2,15 +2,6 @@ import { DragDropContext } from '@hello-pangea/dnd'
 import { FC, ReactNode, useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
-import {
-	Button,
-	Icon,
-	Layout,
-	Loader,
-	Modal,
-	Typography,
-} from '@/components/ui'
-
 import { getId } from '@/entities/auth/lib/auth.helper'
 import {
 	deleteGame,
@@ -37,6 +28,12 @@ import {
 	take,
 	throwInCard,
 } from './game.utils'
+import Layout from '@/app/layout/Layout'
+import Loader from '@/shared/ui/loader/Loader'
+import Icon from '@/shared/ui/icon/Icon'
+import { Typography } from '@/shared/ui/typography'
+import Modal from '@/shared/ui/modal/ui/Modal'
+import { Button } from '@/shared/ui/button'
 
 const Game: FC = () => {
 	const navigate = useNavigate()
@@ -75,9 +72,9 @@ const Game: FC = () => {
 		if (!game) navigate('/menu')
 
 		return () => {
-			game_ws.current.close()
+			if (game_ws !== null) game_ws.current.close()
 		}
-	}, [])
+	}, [game, navigate])
 
 	const global_ws = getWebSocket()
 

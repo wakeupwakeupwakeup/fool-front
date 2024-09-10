@@ -1,9 +1,9 @@
 import { ReactElement } from 'react'
 import avatar from '@/shared/assets/tapps.png'
 import Loader from '@/shared/ui/loader/Loader'
-import Typography from '@/shared/ui/typography/Typography'
 import Icon from '@/shared/ui/icon/Icon'
 import { IPlayer } from '@/entities/auth'
+import { Typography } from '@/shared/ui/typography'
 
 interface IProps {
 	user: IPlayer

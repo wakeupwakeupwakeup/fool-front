@@ -1,41 +1,42 @@
 import { useQuery } from '@tanstack/react-query'
 import { useAtom } from 'jotai'
-import { useMemo } from 'react'
+import { useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-
-import { useTelegram } from '@/shared/hooks/useTelegram'
-
-import { IPlayer } from '@/entities/auth/model/auth.interface'
-
-import { deleteId } from '@/entities/auth/lib/auth.helper'
-import { AuthService } from '@/entities/auth/api/auth.service'
 import { playerAtom } from '@/entities/user'
+import { AuthService, deleteId } from '@/entities/auth'
+import { useInitData } from '@telegram-apps/sdk-react'
 
-export const useProfile = () => {
-	const { user } = useTelegram()
+interface IProfile {
+	user: WebAppUser
+	isUserLoading: boolean
+}
+
+export function useProfile(): IProfile {
+	const initData = useInitData()
 	const navigate = useNavigate()
-	const [setPlayer] = useAtom(playerAtom)
+	const [, setPlayer] = useAtom(playerAtom)
 
 	const { data, isLoading: isUserLoading } = useQuery(
 		['getPlayer'],
-		() => AuthService.getPlayer(user.id.toString()),
-		{
-			onSuccess: async (data: IPlayer) => {
-				if (!data) {
-					await deleteId()
-					navigate(0)
-				} else {
-					setPlayer(data)
-				}
-			},
+		async () => {
+			if (initData && initData.user) {
+				await AuthService.getPlayer(initData.user.id.toString())
+			}
 		},
 	)
 
-	return useMemo(
-		() => ({
+	useEffect(() => {
+		if (!data) {
+			deleteId()
+			navigate(0)
+		} else {
+			setPlayer(data)
+		}
+	}, [data, navigate, setPlayer])
+
+	if (data)
+		return {
 			user: data,
 			isUserLoading,
-		}),
-		[isUserLoading],
-	)
+		}
 }

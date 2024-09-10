@@ -1,3 +1,3 @@
-export { AuthProvider, useAuthContext } from './providers/AuthContext'
-export { ModalProvider } from './providers/ModalContext'
+export { AuthProvider, AuthContext } from './providers/AuthContext'
+export { ModalProvider, ModalContext } from './providers/ModalContext'
 export { App } from './App'

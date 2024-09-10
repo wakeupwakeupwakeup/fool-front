@@ -1,22 +1,18 @@
-import React, {
-	FC,
-	PropsWithChildren,
-	createContext,
-	useContext,
-	useEffect,
-	useState,
-} from 'react'
+import React, { createContext, useEffect, useState } from 'react'
 import { getId, saveId } from '@/entities/auth'
 
 interface AuthContextType {
-	id: string | undefined
+	id: string | undefined | null
 	setId: React.Dispatch<React.SetStateAction<string | undefined>>
 }
 
-const AuthContext = createContext<AuthContextType | undefined>(undefined)
+export const AuthContext = createContext<AuthContextType>({
+	id: null,
+	setId: () => {},
+})
 
-export const AuthProvider: FC<PropsWithChildren> = ({ children }) => {
-	const [id, setId] = useState<string | undefined>(getId())
+export function AuthProvider({ children }) {
+	const [id, setId] = useState<string | undefined | null>(getId())
 
 	useEffect(() => {
 		if (id) saveId(id)
@@ -28,4 +24,3 @@ export const AuthProvider: FC<PropsWithChildren> = ({ children }) => {
 		</AuthContext.Provider>
 	)
 }
-export const useAuthContext = () => useContext(AuthContext)

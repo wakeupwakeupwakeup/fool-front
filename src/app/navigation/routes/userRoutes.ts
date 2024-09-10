@@ -1,6 +1,7 @@
 import { ComponentType } from 'react'
 import InvitePage from '@/pages/invite/ui/invite-page'
 import { HomePage } from '@/pages/home'
+import { FriendsPage } from '@/pages/friends'
 
 export interface IRoute {
 	path: string
@@ -30,10 +31,10 @@ export const userRoutes: IRoute[] = [
 	// 	path: '/create-game',
 	// 	component: CreateGame,
 	// },
-	// {
-	// 	path: '/friends',
-	// 	component: Friends,
-	// },
+	{
+		path: '/referrals',
+		component: FriendsPage,
+	},
 	// {
 	// 	path: '/balance',
 	// 	component: Balance,

@@ -10,9 +10,12 @@ export const AuthService = {
 	},
 	async token(data) {
 		return request<IPlayer>({
-			url: '/token',
-			method: 'POST',
-			data,
+			url: '/login',
+			method: 'GET',
+			headers: {
+				'Content-Type': 'application/json',
+				Authorization: data.value,
+			},
 		})
 	},
 }

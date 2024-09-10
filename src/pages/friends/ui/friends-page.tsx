@@ -7,7 +7,7 @@ import { getId } from '@/entities/auth'
 import Layout from '@/app/layout/Layout'
 import Button from '@/shared/ui/button/ui/Button'
 import Loader from '@/shared/ui/loader/Loader'
-import Typography from '@/shared/ui/typography/Typography'
+import { Typography } from '@/shared/ui/typography'
 
 export function FriendsPage(): ReactElement {
 	const { friends, isFriendsLoading } = useFriends()
@@ -48,7 +48,7 @@ export function FriendsPage(): ReactElement {
 					friends.map(item => (
 						<div
 							className='flex items-center gap-base-x5 pr-base-x2 w-full rounded-base-x1 bg-[linear-gradient(90deg,rgba(255,255,255,0)_0%,rgba(255,255,255,0.29)_100%)]'
-							key={item.tg_id}
+							key={item.chat_id}
 						>
 							<img
 								src={item.photo_url ? item.photo_url : avatar}

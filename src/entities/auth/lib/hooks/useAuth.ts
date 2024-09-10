@@ -1,20 +1,23 @@
 import { useMutation } from '@tanstack/react-query'
 import { useNavigate } from 'react-router-dom'
-
+import { AuthContext } from '@/app'
 import { AuthService } from '@/entities/auth/api/auth.service'
-
-import { useTelegram } from '@/shared/hooks/useTelegram'
-import { useAuthContext } from '@/app'
+import { useContext } from 'react'
 
 export const useAuth = () => {
 	const navigate = useNavigate()
-	const { user } = useTelegram()
-	const { setId } = useAuthContext()
+	const authContext = useContext(AuthContext)
+	if (!authContext) {
+		throw new Error('AuthContext must be used within an AuthProvider')
+	}
+	const { setId } = authContext
 
 	const { mutate } = useMutation(['token'], data => AuthService.token(data), {
-		onSuccess: () => {
-			setId(user.id.toString())
-			navigate('/menu')
+		onSuccess: userData => {
+			if (userData) {
+				setId(userData.chat_id.toString())
+				navigate('/menu')
+			}
 		},
 	})
 	return {

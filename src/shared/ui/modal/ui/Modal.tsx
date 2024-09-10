@@ -2,7 +2,7 @@ import { FC, PropsWithChildren } from 'react'
 
 import Icon from '@/shared/ui/icon/Icon'
 import { IModal } from '../model/modal.interface'
-import Typography from '@/shared/ui/typography/Typography'
+import { Typography } from '@/shared/ui/typography'
 
 const Modal: FC<PropsWithChildren<IModal>> = ({
 	show,

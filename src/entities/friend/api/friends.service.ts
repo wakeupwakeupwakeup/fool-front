@@ -3,9 +3,9 @@ import { IPlayer } from '@/entities/auth/model/auth.interface'
 import { request } from '@/shared/api/axios/request.api'
 
 export const FriendsService = {
-	async getFriends(tg_id: string) {
+	async getReferrals() {
 		return request<IPlayer[]>({
-			url: `/friends/${tg_id}`,
+			url: '/referrals',
 			method: 'GET',
 		})
 	},
