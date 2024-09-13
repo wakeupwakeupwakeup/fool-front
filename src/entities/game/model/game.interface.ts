@@ -14,7 +14,7 @@ export interface IGame {
 	bet: number
 	currency: TCurrency
 	type: TTypeGame
-	num_players: number
+	playersNumber: number
 }
 
 export interface IWebSocketResponse {

@@ -48,7 +48,7 @@ export function ReferralPage(): ReactElement {
 							key={item.chat_id}
 						>
 							<img
-								src={item.photo_url ? item.photo_url : avatar}
+								src={item.photo_path ? item.photo_path : avatar}
 								alt=''
 								className='w-base-x7 h-base-x7 rounded-base-x1'
 							/>

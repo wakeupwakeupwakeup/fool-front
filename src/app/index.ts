@@ -1,3 +1,6 @@
 export { AuthProvider, AuthContext } from './providers/AuthContext'
 export { ModalProvider, ModalContext } from './providers/ModalContext'
 export { App } from './App'
+export { Layout } from './layout/Layout'
+export { store } from './store/root'
+export type { RootState } from './store/root'

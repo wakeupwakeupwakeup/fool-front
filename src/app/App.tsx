@@ -7,6 +7,8 @@ import { ModalProvider } from '@/app/providers/ModalContext'
 import { Navigation } from '@/app/navigation'
 import { SDKProvider } from '@telegram-apps/sdk-react'
 import { MiniAppProvider } from '@/app/providers/miniapp-provider'
+import { Provider } from 'react-redux'
+import { store } from '@/app'
 
 const queryClient = new QueryClient({
 	defaultOptions: {
@@ -41,18 +43,20 @@ export function App() {
 	// if (isLoading) return <LoadingPage />
 
 	return (
-		<SDKProvider debug>
-			<MiniAppProvider>
-				<QueryClientProvider client={queryClient}>
-					<BrowserRouter>
-						<AuthProvider>
-							<ModalProvider>
-								<Navigation />
-							</ModalProvider>
-						</AuthProvider>
-					</BrowserRouter>
-				</QueryClientProvider>
-			</MiniAppProvider>
-		</SDKProvider>
+		<Provider store={store}>
+			<SDKProvider debug>
+				<MiniAppProvider>
+					<QueryClientProvider client={queryClient}>
+						<BrowserRouter>
+							<AuthProvider>
+								<ModalProvider>
+									<Navigation />
+								</ModalProvider>
+							</AuthProvider>
+						</BrowserRouter>
+					</QueryClientProvider>
+				</MiniAppProvider>
+			</SDKProvider>
+		</Provider>
 	)
 }

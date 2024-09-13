@@ -1,13 +1,14 @@
 import cn from 'clsx'
 import { FC } from 'react'
 
-import Card from '@/pages/game/components/Card'
-import { ICurrentPlayer } from '@/pages/game/game.interface'
-import { Icon, Typography } from '@/components/ui'
+import Card from '@/pages/game/ui/components/Card'
+import { ICurrentPlayer } from '@/pages/game/model/game.interface'
 
 import { getGame } from '@/entities/game/lib/game.helper'
 
 import avatar from '@/shared/assets/tapps.png'
+import Icon from '@/shared/ui/icon/Icon'
+import { Typography } from '@/shared/ui/typography'
 
 interface IProps {
 	rivals: ICurrentPlayer[]
@@ -25,8 +26,8 @@ const Rivals: FC<IProps> = ({
 	const game = getGame()
 	const countRivals: number[] =
 		rivals.length > 0
-			? Array(game.num_players - 1 - rivals.length).fill(1)
-			: Array(game.num_players - 1).fill(1)
+			? Array(game.playersNumber - 1 - rivals.length).fill(1)
+			: Array(game.playersNumber - 1).fill(1)
 	const maxRivalCardsAngleDegrees = 30
 	const placeRival =
 		rivals.length > 0 ? Math.max(...rivals.map(obj => obj.place)) + 1 : 2
@@ -34,7 +35,7 @@ const Rivals: FC<IProps> = ({
 		<div
 			className={cn(
 				'flex w-full items-end',
-				game.num_players > 2 ? 'justify-between' : 'justify-center',
+				game.playersNumber > 2 ? 'justify-between' : 'justify-center',
 			)}
 		>
 			{countRivals.length > 0 &&
@@ -42,14 +43,14 @@ const Rivals: FC<IProps> = ({
 					<button
 						key={index}
 						onClick={() => handlerShowModal(index + 2)}
-						className='w-base-x7 h-base-x7 rounded-base-x1 border border-dashed flex items-center justify-center'
+						className='flex h-base-x7 w-base-x7 items-center justify-center rounded-base-x1 border border-dashed'
 					>
 						<Icon size={24} icon='plus' color='white' />
 					</button>
 				))}
 			{rivals.map((rival, rivalIndex) => (
 				<div
-					className='flex flex-col items-center gap-base-x1 relative'
+					className='relative flex flex-col items-center gap-base-x1'
 					key={rival.username}
 				>
 					{defendingPlayer === rival.tg_id && (
@@ -71,20 +72,20 @@ const Rivals: FC<IProps> = ({
 						<img
 							src={rival?.photo_url ? rival.photo_url : avatar}
 							alt=''
-							className='w-base-x7 h-base-x7 rounded-base-x1'
+							className='h-base-x7 w-base-x7 rounded-base-x1'
 						/>
 					</div>
 					{typeof rival?.countCards === 'number' && (
 						<Typography
 							variant='text'
-							className='absolute flex items-center bg-white z-50 justify-center left-[50%] -translate-x-[50%] -bottom-[40px] w-base-x6 h-base-x6 rounded-full text-blue font-bold border-2 border-blue'
+							className='absolute -bottom-[40px] left-[50%] z-50 flex h-base-x6 w-base-x6 -translate-x-[50%] items-center justify-center rounded-full border-2 border-blue bg-white font-bold text-blue'
 						>
 							{rival.countCards}
 						</Typography>
 					)}
 					<div
 						id={'Cards' + rivalIndex}
-						className='w-full absolute top-[60px] left-[10px] z-20'
+						className='absolute left-[10px] top-[60px] z-20 w-full'
 					>
 						{rival.countCards ? (
 							rival.countCards === 1 ? (

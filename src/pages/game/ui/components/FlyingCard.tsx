@@ -2,7 +2,7 @@ import { animated, useSpring } from '@react-spring/web'
 import cn from 'clsx'
 import { FC, useState } from 'react'
 
-import { TPositionCard } from '@/pages/game/game.interface'
+import { TPositionCard } from '../../model/game.interface'
 
 import Card from './Card'
 

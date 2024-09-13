@@ -1,15 +1,15 @@
 import { Draggable, Droppable } from '@hello-pangea/dnd'
 import { FC, useEffect, useState } from 'react'
 
-import { Button, Icon } from '@/components/ui'
-
 import { getId } from '@/entities/auth/lib/auth.helper'
 
 import avatar from '@/shared/assets/tapps.png'
 
-import { ICurrentPlayer } from '../game.interface'
+import { ICurrentPlayer } from '../../model/game.interface'
 
 import DraggableCard from './DraggableCard'
+import Icon from '@/shared/ui/icon/Icon'
+import { Button } from '@/shared/ui/button'
 
 interface IProps {
 	cards: string[]
@@ -44,13 +44,13 @@ const Fan: FC<IProps> = ({
 	const calc = index => {
 		return draggableCard
 			? cards.findIndex(card => card === draggableCard) + 1 ===
-				cards.length
+			  cards.length
 				? index
 				: cards.findIndex(card => card === draggableCard) === 0
-					? index - 1
-					: cards.findIndex(card => card === draggableCard) > index
-						? index
-						: index - 1
+				? index - 1
+				: cards.findIndex(card => card === draggableCard) > index
+				? index
+				: index - 1
 			: index
 	}
 	useEffect(() => {

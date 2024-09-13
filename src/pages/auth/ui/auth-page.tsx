@@ -6,14 +6,15 @@ import { useNavigate } from 'react-router-dom'
 
 export function AuthPage(): ReactElement {
 	const navigate = useNavigate()
-	const { isSuccess } = useAuth()
+	const { isSuccess, user } = useAuth()
 
 	useEffect(() => {
-		navigate('/home')
-	}, [isSuccess])
+		console.log('DEV | SUCCESS LOGIN')
+		if (isSuccess && user) navigate('/home')
+	}, [isSuccess, navigate, user])
 
 	return (
-		<Layout className='flex flex-col gap-base-x3 items-center justify-center'>
+		<Layout className='flex flex-col items-center justify-center gap-base-x3'>
 			<Loader />
 		</Layout>
 	)

@@ -1,8 +1,8 @@
 import { useContext, useMemo } from 'react'
 import { Navigate, Route, Routes } from 'react-router-dom'
 import { AuthContext } from '@/app'
-import { userRoutes } from '@/app/navigation/routes/userRoutes'
-import { guestRoutes } from '@/app/navigation/routes/guestRoutes'
+import { userRoutes } from './routes/userRoutes'
+import { guestRoutes } from './routes/guestRoutes'
 
 export function Navigation() {
 	const { id } = useContext(AuthContext)

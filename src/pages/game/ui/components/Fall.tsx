@@ -1,6 +1,5 @@
 import { FC } from 'react'
-
-import { Typography } from '@/components/ui'
+import { Typography } from '@/shared/ui/typography'
 
 interface IProps {
 	beatDeckLength: number | null
@@ -18,7 +17,7 @@ const Fall: FC<IProps> = ({ beatDeckLength }) => {
 			<div
 				className='w-[90px] h-[125px] bg-white text-[#000] rounded-base-x1'
 				style={{
-					backgroundImage: `url(/cards/cover.svg)`
+					backgroundImage: `url(/cards/cover.svg)`,
 				}}
 			/>
 		</div>

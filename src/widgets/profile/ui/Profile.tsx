@@ -4,6 +4,7 @@ import Loader from '@/shared/ui/loader/Loader'
 import Icon from '@/shared/ui/icon/Icon'
 import { Typography } from '@/shared/ui/typography'
 import { useProfile } from '@/entities/user'
+import { API_URL } from '@/shared/api/api.config'
 
 export function Profile(): ReactNode {
 	const { user, isUserLoading } = useProfile()
@@ -18,7 +19,11 @@ export function Profile(): ReactNode {
 		user && (
 			<div className='flex gap-base-x3'>
 				<img
-					src={user.photo_url ? user.photo_url : avatar}
+					src={
+						user.photo_path
+							? API_URL + 'files/' + user.photo_path
+							: avatar
+					}
 					alt=''
 					className='w-base-x7 h-base-x7 rounded-base-x1'
 				/>

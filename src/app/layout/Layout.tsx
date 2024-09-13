@@ -1,10 +1,10 @@
 import cn from 'clsx'
-import { ReactElement, ReactNode, useContext, useEffect } from 'react'
+import { Fragment, ReactElement, ReactNode, useContext, useEffect } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import Logo from '@/shared/ui/logo/Logo'
 import Icon from '@/shared/ui/icon/Icon'
-import { getFriendId, getId } from '@/entities/auth'
-import { useAddFriend } from 'src/entities/referral'
+// import { getFriendId, getId } from '@/entities/auth'
+// import { useAddFriend } from 'src/entities/referral'
 // import { getWebSocket, initWebSocket } from '@/shared/api'
 // import { IWebSocketResponse } from '@/entities/game'
 // import { ModalContext } from '@/app'
@@ -37,14 +37,14 @@ export function Layout({
 	// const friend_id = getFriendId()
 	// const tg_id = getId()
 	// const { addFriend } = useAddFriend()
+	backButton.on('click', () => navigate('/menu'))
 
 	useEffect(() => {
-		if (['/home', '/auth'].includes(pathname)) {
-			backButton.hide()
-		} else {
-			backButton.show()
-		}
-		backButton.on('click', () => navigate('/menu'))
+		// if (['/home', '/auth'].includes(pathname)) {
+		// 	backButton.hide()
+		// } else {
+		// 	backButton.show()
+		// }
 		// if (friend_id && tg_id && friend_id !== tg_id) {
 		// 	addFriend(friend_id)
 		// }
@@ -64,15 +64,15 @@ export function Layout({
 		// return () => {
 		// 	socketInstance.then(socketInstance => socketInstance.close())
 		// }
-	}, [pathname])
+	}, [navigate, pathname])
 
 	return (
 		<div
 			className={cn(
-				'flex flex-col justify-between items-center relative h-full min-h-full gap-base-x3',
+				'relative flex h-full min-h-full flex-col items-center justify-between gap-base-x3',
 				pathname === '/game'
 					? 'p-base-x3'
-					: 'overflow-auto py-base-x4 px-[10%]',
+					: 'overflow-auto px-[10%] py-base-x4',
 			)}
 		>
 			{/*{pathname !== '/game' && (*/}
@@ -83,14 +83,17 @@ export function Layout({
 			{/*		Beta версия*/}
 			{/*	</Typography>*/}
 			{/*)}*/}
-			<div className='flex flex-col justify-center items-center gap-base-x4 w-full flex-1'>
-				{!noLogo && <Logo />}
-				{header && (
-					<div className='flex items-center justify-center gap-base-x2 py-base-x2 relative z-50 bg-radial-gradient w-full'>
+
+			{header && (
+				<div>
+					{!noLogo && <Logo />}
+					<div className='relative z-50 flex w-full items-center justify-center gap-base-x2 bg-radial-gradient py-base-x2'>
 						<Icon icon={header.icon} size={30} />
 						<Typography variant='h1'>{header.title}</Typography>
 					</div>
-				)}
+				</div>
+			)}
+			<div className='flex w-full flex-1 flex-col items-center justify-center gap-base-x4'>
 				<div className={cn('w-full py-base-x1', className)}>
 					{children}
 				</div>

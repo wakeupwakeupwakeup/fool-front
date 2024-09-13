@@ -1,6 +1,6 @@
 export interface IUser {
 	username: string
-	photo_url: string
+	photo_path: string
 	last_claim: string
 	chat_id: string
 	balance_fool: number

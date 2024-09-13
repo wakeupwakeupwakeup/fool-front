@@ -62,16 +62,16 @@ export function ModalProvider({ children }) {
 				header={{ title: 'Приглашение в игру', icon: 'fan' }}
 			>
 				{!!info && (
-					<div className='flex flex-col items-center gap-base-x4 w-full'>
+					<div className='flex w-full flex-col items-center gap-base-x4'>
 						<img
 							src={info.photo_url ? info.photo_url : avatar}
 							alt=''
-							className='w-base-x7 h-base-x7 rounded-base-x1'
+							className='h-base-x7 w-base-x7 rounded-base-x1'
 						/>
 						<Typography variant='text'>
 							{info.username} приглашает Вас в игру
 						</Typography>
-						<div className='flex flex-col gap-base-x2 items-center'>
+						<div className='flex flex-col items-center gap-base-x2'>
 							<Typography variant='h1'>
 								Параметры игры:
 							</Typography>
@@ -90,7 +90,7 @@ export function ModalProvider({ children }) {
 							<Typography variant='text'>
 								Количество игроков:{' '}
 								<span className='font-bold'>
-									{info.game.num_players}
+									{info.game.playersNumber}
 								</span>
 							</Typography>
 						</div>

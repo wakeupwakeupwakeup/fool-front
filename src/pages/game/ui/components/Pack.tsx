@@ -1,6 +1,5 @@
 import { FC } from 'react'
-
-import { Typography } from '@/components/ui'
+import { Typography } from '@/shared/ui/typography'
 
 interface IProps {
 	trumpCard: string | null
@@ -15,7 +14,9 @@ const Pack: FC<IProps> = ({ trumpCard, remainingDeckLength }) => {
 				<div
 					className='w-[30px] h-[30px] bg-contain bg-no-repeat relative z-10'
 					style={{
-						backgroundImage: `url(/cards/${trumpCard.split('_').pop()}.svg)`
+						backgroundImage: `url(/cards/${trumpCard
+							.split('_')
+							.pop()}.svg)`,
 					}}
 				/>
 			</div>
@@ -31,13 +32,13 @@ const Pack: FC<IProps> = ({ trumpCard, remainingDeckLength }) => {
 			<div
 				className='w-[90px] h-[125px] bg-no-repeat rounded-base-x1 relative z-10'
 				style={{
-					backgroundImage: `url(/cards/cover.svg)`
+					backgroundImage: `url(/cards/cover.svg)`,
 				}}
 			/>
 			<div
 				className='w-[90px] h-[125px] relative transform bg-no-repeat rotate-90 translate-x-[50%] translate-y-[-100%] rounded-base-x1'
 				style={{
-					backgroundImage: `url(/cards/${trumpCard}.svg)`
+					backgroundImage: `url(/cards/${trumpCard}.svg)`,
 				}}
 			/>
 		</div>

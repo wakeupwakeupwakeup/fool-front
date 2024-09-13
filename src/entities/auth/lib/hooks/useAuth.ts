@@ -1,5 +1,4 @@
 import { useQuery } from '@tanstack/react-query'
-import { useNavigate } from 'react-router-dom'
 import { AuthContext } from '@/app'
 import { useContext, useEffect } from 'react'
 import { AuthService } from '@/entities/auth'
@@ -26,7 +25,7 @@ export function useAuth() {
 		if (isSuccess) {
 			setId(user.chat_id.toString())
 		}
-	}, [isSuccess])
+	}, [isSuccess, setId, user])
 
 	return { isSuccess, isLoading, user }
 }

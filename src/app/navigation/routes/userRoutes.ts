@@ -1,8 +1,9 @@
 import { ComponentType } from 'react'
 import { HomePage } from '@/pages/home'
-import { ReferralPage } from 'src/pages/referrals'
 import { BalancePage } from '@/pages/balance'
-import CreateGamePage from '@/pages/createGame/ui/create-game-page'
+import { CreateGamePage } from '@/pages/createGame'
+import { GamePage } from '@/pages/game'
+import { ReferralPage } from '@/pages/referrals'
 
 export interface IRoute {
 	path: string
@@ -18,10 +19,10 @@ export const userRoutes: IRoute[] = [
 	// 	path: '/onboarding',
 	// 	component: Onboarding,
 	// },
-	// {
-	// 	path: '/game',
-	// 	component: Game,
-	// },
+	{
+		path: '/game',
+		component: GamePage,
+	},
 	//
 	// {
 	// 	path: '/result-game',

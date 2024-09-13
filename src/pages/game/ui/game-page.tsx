@@ -1,5 +1,5 @@
 import { DragDropContext } from '@hello-pangea/dnd'
-import { FC, ReactNode, useEffect, useRef, useState } from 'react'
+import { ReactElement, ReactNode, useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
 import { getId } from '@/entities/auth/lib/auth.helper'
@@ -17,7 +17,7 @@ import { WS_URL } from '@/shared/api/api.config'
 import { getWebSocket } from '@/shared/api/websocket/websocket'
 
 import { Fall, Fan, FlyingCard, Pack, Rivals, Table } from './components'
-import { ICurrentPlayer, TPositionCard } from './game.interface'
+import { ICurrentPlayer, TPositionCard } from '../model/game.interface'
 import {
 	addRival,
 	beat,
@@ -27,7 +27,7 @@ import {
 	ready,
 	take,
 	throwInCard,
-} from './game.utils'
+} from '../lib/game.utils'
 import Layout from '@/app/layout/Layout'
 import Loader from '@/shared/ui/loader/Loader'
 import Icon from '@/shared/ui/icon/Icon'
@@ -35,12 +35,12 @@ import { Typography } from '@/shared/ui/typography'
 import Modal from '@/shared/ui/modal/ui/Modal'
 import { Button } from '@/shared/ui/button'
 
-const Game: FC = () => {
+export function GamePage(): ReactElement {
 	const navigate = useNavigate()
-	const game = getGame()
+	// const game = getGame()
 	const tg_id = getId()
-	const place = getPlace()
-	const [friends, setFriends] = useState<ICurrentPlayer[]>([])
+	// const place = getPlace()
+	// const [friends, setFriends] = useState<ICurrentPlayer[]>([])
 	const game_ws = useRef<WebSocket | null>(null)
 
 	const [player, setPlayer] = useState<ICurrentPlayer>()
@@ -690,11 +690,11 @@ const Game: FC = () => {
 			? newRivals.map(rival => ({
 					...rival,
 					countCards: 0,
-				}))
+			  }))
 			: newRivals.map((rival, index) => ({
 					...rival,
 					countCards: rival.countCards - numCards[index],
-				}))
+			  }))
 
 		// console.log('updateRivals', updateRivals)
 
@@ -817,13 +817,13 @@ const Game: FC = () => {
 		const numCards = isStart
 			? newRivals.map(rival => rival.countCards || 0)
 			: !!oldRivals?.length
-				? oldRivals?.map(
-						rival =>
-							newRivals.find(
-								newRival => newRival.tg_id === rival.tg_id,
-							).countCards - rival.countCards,
-					)
-				: []
+			? oldRivals?.map(
+					rival =>
+						newRivals.find(
+							newRival => newRival.tg_id === rival.tg_id,
+						).countCards - rival.countCards,
+			  )
+			: []
 
 		setTimeout(() => {
 			giveCardToRivals(numCards, newRivals, isStart)
@@ -988,5 +988,3 @@ const Game: FC = () => {
 		</DragDropContext>
 	)
 }
-
-export default Game

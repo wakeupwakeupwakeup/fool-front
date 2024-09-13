@@ -5,7 +5,7 @@ import {
 	TPositionCard,
 	TSizeCard,
 	cardSizeToDimensions,
-} from '@/pages/game/game.interface'
+} from '@/pages/game/model/game.interface'
 
 interface IProps {
 	size?: TSizeCard

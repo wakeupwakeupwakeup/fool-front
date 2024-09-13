@@ -2,9 +2,8 @@ import { Droppable } from '@hello-pangea/dnd'
 import cn from 'clsx'
 import { FC } from 'react'
 
-import { getId } from '@/entities/auth/lib/auth.helper'
-
 import Card from './Card'
+import { getId } from '@/entities/auth'
 
 interface ITable {
 	cardsOnTable: string[][]
@@ -34,13 +33,13 @@ const Table: FC<ITable> = ({ cardsOnTable, defendingPlayer }) => {
 									borderColor: cardPlace[1]
 										? 'transparent'
 										: snapshot.isDraggingOver
-											? '#00EF26'
-											: 'white',
+										? '#00EF26'
+										: 'white',
 									backgroundColor: cardPlace[1]
 										? 'transparent'
 										: snapshot.isDraggingOver
-											? '#ffffff30'
-											: 'transparent',
+										? '#ffffff30'
+										: 'transparent',
 								}}
 								className={cn(
 									'border border-dashed transition-colors w-[120px] h-[165px] rounded-base-x1 absolute z-[-1]',
