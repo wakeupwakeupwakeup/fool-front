@@ -1,6 +1,7 @@
 import { TSocketMessage } from '@/entities/socket/model/socket.types'
 
 export function sendAction(socket: WebSocket, message: TSocketMessage) {
+	console.log('DEV | SENDING SOCKET MESSAGE: ', message)
 	switch (message.type) {
 		case 'SET_READY':
 			socket.send(JSON.stringify({ action: 'Ready' }))

@@ -38,17 +38,8 @@ const gameSessionSlice = createSlice({
 		updateGameData(state, action: PayloadAction<IGameSession>) {
 			state.data = action.payload
 		},
-		removeCardFromHand(state, action: PayloadAction<TRemoveCardPayload>) {
-			state.data.players[action.payload.index].card_in_hand.filter(
-				card => card !== action.payload.card,
-			)
-		},
-		putAttackCardOnTable(state, action: PayloadAction<string>) {
-			state.data.game_board[action.payload] = ''
-		},
 	},
 })
 const { actions, reducer } = gameSessionSlice
-export const { updateGameData, putAttackCardOnTable, removeCardFromHand } =
-	actions
+export const { updateGameData } = actions
 export default reducer

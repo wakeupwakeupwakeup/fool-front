@@ -14,24 +14,11 @@ interface IProps {
 	gameInfo: IGameSession
 }
 
-export function Rivals({
-	rivals,
-
-	gameInfo,
-}: IProps) {
+export function Rivals({ rivals, gameInfo }: IProps) {
 	const maxRivalCardsAngleDegrees = 30
-	const placeRival =
-		rivals.length > 0 ? Math.max(...rivals.map(obj => obj.place)) + 1 : 2
 
 	return (
-		<div
-			className={cn(
-				'flex w-full items-end',
-				gameInfo.player_count && gameInfo.player_count > 2
-					? 'justify-between'
-					: 'justify-center',
-			)}
-		>
+		<div className='absolute left-0 top-0 -z-10 h-full w-full'>
 			{rivals.map((rival: TPlayer, rivalIndex) => (
 				<div
 					className='relative flex flex-col items-center gap-base-x1'
@@ -41,7 +28,7 @@ export function Rivals({
 						<Icon
 							size={25}
 							icon='defending'
-							className='absolute -bottom-base-x2 -left-base-x2 z-40'
+							className='absolute -bottom-base-x2 left-36 z-40 translate-x-1/2'
 						/>
 					)}
 					{rival.index === gameInfo.attacker_id && (
@@ -69,10 +56,7 @@ export function Rivals({
 					>
 						{rival.count_card_in_hand}
 					</Typography>
-					<div
-						id={'Cards' + rivalIndex}
-						className='absolute left-[10px] top-[60px] z-20 w-full'
-					>
+					<div className='absolute -left-8 top-[90px] z-20 w-full translate-x-1/2'>
 						{rival.count_card_in_hand ? (
 							rival.count_card_in_hand === 1 ? (
 								<Card

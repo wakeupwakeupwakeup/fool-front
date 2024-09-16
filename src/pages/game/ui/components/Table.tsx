@@ -1,19 +1,68 @@
-import { Droppable } from '@hello-pangea/dnd'
+import { Draggable, Droppable } from '@hello-pangea/dnd'
 import cn from 'clsx'
 import Card from './Card'
 import { IGameSession } from '@/entities/game/model/game.interface'
 import { TPlayer } from '@/entities/player/model/player.model'
+import { useState } from 'react'
 
 interface ITable {
-	cardsOnTable: Record<string, string>[]
+	gameBoard: Record<string, string>[]
 	gameInfo: IGameSession
 	currentPlayer: TPlayer
+	emptyTableCards: string[]
 }
 
-export function Table({ cardsOnTable, gameInfo, currentPlayer }: ITable) {
+export function Table({
+	gameBoard,
+	emptyTableCards,
+	gameInfo,
+	currentPlayer,
+}: ITable) {
+	const [tableCards, setTableCards] = useState(gameBoard)
 	return (
 		<div className='my-auto flex flex-wrap items-center justify-center gap-x-3 gap-y-6 p-0'>
-			{cardsOnTable.map((cardPlace, index) => (
+			{/* Пустая область всегда слева */}
+			<Droppable droppableId='droppable-empty-table'>
+				{(provided, snapshot) => (
+					<div
+						{...provided.droppableProps}
+						ref={provided.innerRef}
+						className={cn(
+							'flex h-[165px] w-[120px] flex-[25%] origin-bottom-left translate-x-[10%] scale-[78%] items-center justify-center',
+							snapshot.isDraggingOver
+								? 'border-green-500 bg-green-100 border-4'
+								: 'border-gray-500 bg-gray-100 border-4',
+						)}
+					>
+						{emptyTableCards.length === 0 ? (
+							<span>Drop new card here</span>
+						) : (
+							emptyTableCards.map((card, index) => (
+								<Draggable
+									key={index}
+									draggableId={`empty-card-${index}`}
+									index={index}
+								>
+									{(provided, snapshot) => (
+										<div
+											ref={provided.innerRef}
+											{...provided.draggableProps}
+											{...provided.dragHandleProps}
+											className='card'
+										>
+											{card}
+										</div>
+									)}
+								</Draggable>
+							))
+						)}
+						{provided.placeholder}
+					</div>
+				)}
+			</Droppable>
+
+			{/* Области для карт на столе */}
+			{tableCards.map((cardPlace, index) => (
 				<Droppable
 					key={index}
 					droppableId={`droppable-table-card-${index}`}
@@ -24,50 +73,36 @@ export function Table({ cardsOnTable, gameInfo, currentPlayer }: ITable) {
 							ref={provided.innerRef}
 							className={cn(
 								'flex h-[165px] w-[120px] flex-[25%] origin-bottom-left translate-x-[10%] scale-[78%] items-center justify-center',
+								snapshot.isDraggingOver
+									? 'border-green-500 bg-green-100 border-4'
+									: 'border-gray-500 bg-gray-100 border-4',
 							)}
 						>
-							<div
-								style={{
-									borderColor: cardPlace[1]
-										? 'transparent'
-										: snapshot.isDraggingOver
-											? '#00EF26'
-											: 'white',
-									backgroundColor: cardPlace[1]
-										? 'transparent'
-										: snapshot.isDraggingOver
-											? '#ffffff30'
-											: 'transparent',
-								}}
-								className={cn(
-									'absolute z-[-1] h-[165px] w-[120px] rounded-base-x1 border border-dashed transition-colors',
-									cardPlace[0]
-										? gameInfo.defender_id ===
-											currentPlayer.index
-											? 'rotate-12'
-											: 'hidden'
-										: '-rotate-6',
-								)}
-							/>
+							{Object.keys(cardPlace).length === 0 ? (
+								<span>Drop card here</span>
+							) : (
+								Object.entries(cardPlace).map(
+									(card, cardIndex) => (
+										<Draggable
+											key={cardIndex}
+											draggableId={`table-card-${index}-${cardIndex}`}
+											index={cardIndex}
+										>
+											{(provided, snapshot) => (
+												<div
+													ref={provided.innerRef}
+													{...provided.draggableProps}
+													{...provided.dragHandleProps}
+													className='card'
+												>
+													{card}
+												</div>
+											)}
+										</Draggable>
+									),
+								)
+							)}
 							{provided.placeholder}
-							<div id={'floating-card-magnet' + index}></div>
-							{cardPlace[0] && (
-								<Card
-									className={cn(
-										'-rotate-6 rounded-[6px]',
-										cardPlace[1] && 'brightness-75',
-									)}
-									size='big'
-									type={cardPlace[0]}
-								/>
-							)}
-							{cardPlace[1] && (
-								<Card
-									className='rotate-12 rounded-[6px]'
-									type={cardPlace[1]}
-									size='big'
-								/>
-							)}
 						</div>
 					)}
 				</Droppable>
@@ -75,5 +110,3 @@ export function Table({ cardsOnTable, gameInfo, currentPlayer }: ITable) {
 		</div>
 	)
 }
-
-export default Table

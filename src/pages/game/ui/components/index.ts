@@ -1,5 +1,3 @@
-export { default as Card } from './Card'
-export { default as Table } from './Table'
 export { default as Rivals } from './Rivals'
 export { default as Fall } from './Fall'
 export { default as Pack } from './Pack'

@@ -18,7 +18,7 @@ export function LobbyPage(): ReactElement {
 	const dispatch = useDispatch()
 	const navigate = useNavigate()
 	const { data: gameInfo } = useSelector(
-		(state: RootState) => state.gameSession,
+		(state: RootState) => state.remoteGameData,
 	)
 	const path = useSelector((state: RootState) => state.navigation.path)
 	const initData = useInitData()

@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom'
 
 import { getId } from '@/entities/auth/lib/auth.helper'
 
-import { Fall, FlyingCard, Pack, Rivals, Table } from './components'
+import { Fall, FlyingCard, Pack, Rivals } from './components'
 import { ICurrentPlayer, TPositionCard } from '../model/game.interface'
 import {
 	attack,
@@ -29,54 +29,66 @@ import {
 	removeCardFromHand,
 } from '@/entities/game/model/game-session.slice'
 import { Fan } from '@/pages/game/ui/components/Fan'
+import { Table } from '@/pages/game/ui/components/Table'
+import { DndProvider, useDragDropManager } from 'react-dnd'
+import { TouchBackend } from 'react-dnd-touch-backend'
+import { GameTable } from '@/widgets/game/table/ui/game-table'
+import { Hand } from '@/widgets/game/hand/ui/hand'
+import { HTML5Backend } from 'react-dnd-html5-backend'
 
 export function GamePage(): ReactElement {
-	const gameInfo = useSelector((state: RootState) => state.gameSession.data)
+	// Информация о состоянии игры от сервера
+	const gameData = useSelector(
+		(state: RootState) => state.remoteGameData.data,
+	)
+
+	// Информация о состоянии игры на фронте
+	const localGameData = useSelector((state: RootState) => state.localGameData)
+
+	// Инстанс WebSocket
 	const socket = SocketConnection.getInstance()
+
+	// ID игрока
 	const chat_id = getId()
-	const currentPlayer: TPlayer = gameInfo.players
+
+	// Информация о состоянии игрока
+	const currentPlayer: TPlayer = gameData.players
 		.map((player, index) => ({ ...player, index }))
 		.find((player: TPlayer) => player.chat_id === chat_id)
-
 	console.log('DEV | CURRENT PLAYER: ', currentPlayer)
 
-	const rivals: TPlayer[] = gameInfo.players
+	// Информация о состоянии соперников
+	const rivals: TPlayer[] = gameData.players
 		.map((player, index) => ({ ...player, index })) // Добавляем индекс в объект
 		.filter(player => player.chat_id !== currentPlayer?.chat_id)
-
 	console.log('DEV | RIVALS: ', rivals)
 
-	const [currentFlyingCards, setCurrentFlyingCards] = useState<ReactNode[]>(
-		[],
-	)
-	const flyingCardsRef = useRef<HTMLDivElement>(null)
-
-	const onSubmit = () => {
-		switch (button.action) {
-			case 'take': {
-				setButton(null)
-				take(game_ws.current)
-				if (defendingPlayer === tg_id) {
-					spawnCardWithCords(
-						'cover',
-						[window.innerHeight / 2, 0],
-						[window.innerHeight + 50, -50],
-					)
-				}
-				return
-			}
-			case 'beat': {
-				setButton(null)
-				beat(game_ws.current)
-				return
-			}
-			case 'next_throw': {
-				setButton(null)
-				nextThrow(game_ws.current)
-				return
-			}
-		}
-	}
+	// const onSubmit = () => {
+	// 	switch (button.action) {
+	// 		case 'take': {
+	// 			setButton(null)
+	// 			take(game_ws.current)
+	// 			if (defendingPlayer === tg_id) {
+	// 				spawnCardWithCords(
+	// 					'cover',
+	// 					[window.innerHeight / 2, 0],
+	// 					[window.innerHeight + 50, -50],
+	// 				)
+	// 			}
+	// 			return
+	// 		}
+	// 		case 'beat': {
+	// 			setButton(null)
+	// 			beat(game_ws.current)
+	// 			return
+	// 		}
+	// 		case 'next_throw': {
+	// 			setButton(null)
+	// 			nextThrow(game_ws.current)
+	// 			return
+	// 		}
+	// 	}
+	// }
 
 	// useEffect(() => {
 	// 	if (
@@ -331,132 +343,92 @@ export function GamePage(): ReactElement {
 	// }
 	//
 	// Положить карту на стол
-	function onDragEnd(result: DropResult) {
-		console.log(result)
-		const destinationName = result.destination?.droppableId || ''
-		if (destinationName.startsWith('droppable-table-card')) {
-			const destinationIndex = +destinationName.replace(
-				'droppable-table-card-',
-				'',
-			)
-
-			// подкинуть карту
-			const currentRivalCountCards = rivals.find(
-				rival => rival.index === gameInfo.defender_id,
-			)?.count_card_in_hand
-			if (
-				!cardsOnTable[destinationIndex].length &&
-				currentRivalCountCards !== 0
-			) {
-				// if (cardsOnTable.length === 1) {
-				attack(socket, currentPlayer.card_in_hand[result.source.index])
-				removeCardFromHand({
-					index: currentPlayer.index,
-					card: currentPlayer.card_in_hand[result.source.index],
-				})
-				putAttackCardOnTable(
-					currentPlayer.card_in_hand[result.source.index],
-				)
-				console.log(cardsOnTable)
-				// } else {
-				// 	setOldCardsOnTable(cardsOnTable)
-				// 	setOldCards(cards)
-				// 	throwInCard(game_ws.current, cards[result.source.index])
-				// 	setCardsOnTable([
-				// 		...cardsOnTable.slice(0, -1),
-				// 		[cards[result.source.index]],
-				// 	])
-				// 	setCards([
-				// 		...cards.slice(0, result.source.index),
-				// 		...cards.slice(result.source.index + 1),
-				// 	])
-				// }
-			} else {
-				attack(socket, currentPlayer.card_in_hand[result.source.index])
-				removeCardFromHand({
-					index: currentPlayer.index,
-					card: currentPlayer.card_in_hand[result.source.index],
-				})
-				putAttackCardOnTable(
-					currentPlayer.card_in_hand[result.source.index],
-				)
-				console.log('RESULT 2', result)
-			}
-			// побить карту
-			// else {
-			// 	if (
-			// 		cardsOnTable[destinationIndex].filter(item => item !== null)
-			// 			.length === 1 &&
-			// 		defendingPlayer === tg_id
-			// 	) {
-			// 		setOldCardsOnTable(cardsOnTable)
-			// 		setOldCards(cards)
-			// 		setCardsOnTable([
-			// 			...cardsOnTable.slice(0, destinationIndex),
-			// 			[
-			// 				...cardsOnTable[destinationIndex],
-			// 				cards[result.source.index],
-			// 			],
-			// 			...cardsOnTable.slice(destinationIndex + 1),
-			// 		])
-			// 		setCards([
-			// 			...cards.slice(0, result.source.index),
-			// 			...cards.slice(result.source.index + 1),
-			// 		])
-			// 		defendCard(
-			// 			game_ws.current,
-			// 			cards[result.source.index],
-			// 			cardsOnTable[destinationIndex][0],
-			// 		)
-			// 	}
-			// }
-		}
-	}
+	// function onDragEnd(result: DropResult) {
+	// 	const { source, destination } = result
+	// 	if (!destination) return
+	//
+	// 	if (
+	// 		source.droppableId === destination.droppableId &&
+	// 		source.index === destination.index
+	// 	) {
+	// 		return
+	// 	}
+	//
+	// 	let sourceList =
+	// 		source.droppableId === 'droppable-empty-table'
+	// 			? emptyTableCards
+	// 			: gameData.game_board[
+	// 					+source.droppableId.replace('droppable-table-card-', '')
+	// 				]
+	// 	let destinationList =
+	// 		destination.droppableId === 'droppable-empty-table'
+	// 			? emptyTableCards
+	// 			: gameData.game_board[
+	// 					+destination.droppableId.replace(
+	// 						'droppable-table-card-',
+	// 						'',
+	// 					)
+	// 				]
+	//
+	// 	const [movedCard] = sourceList.splice(source.index, 1)
+	//
+	// 	if (destination.droppableId === 'droppable-empty-table') {
+	// 		setEmptyTableCards([...emptyTableCards, movedCard])
+	// 	} else {
+	// 		gameData.game_board[
+	// 			+destination.droppableId.replace('droppable-table-card-', '')
+	// 		].push(movedCard)
+	// 		gameData.game_board.push([...gameData.game_board])
+	// 	}
+	// }
 
 	// if (!isConnected) return <Loader />
 
 	return (
-		gameInfo && (
-			<DragDropContext onDragEnd={onDragEnd}>
+		gameData && (
+			<DndProvider backend={HTML5Backend}>
 				<Layout
 					noLogo
-					className='relative flex h-full select-none flex-col items-center justify-between'
+					className='absolute left-0 top-0 flex h-full select-none flex-col items-center justify-between'
 				>
-					<div
-						ref={flyingCardsRef}
-						className='floating-cards relative z-10 h-0 w-0 overflow-visible'
-					>
-						{currentFlyingCards}
-					</div>
-					{gameInfo.player_count && (
-						<Rivals rivals={rivals} gameInfo={gameInfo} />
-					)}
-					<div className='absolute top-40 flex gap-base-x2'>
-						{gameInfo.currency && (
-							<Icon size={26} icon={gameInfo.currency} />
-						)}
-						<Typography variant='h1'>{gameInfo.bet}</Typography>
-					</div>
-					{/*<Fall beatDeckLength={beatDeckLength} />*/}
+					<GameTable />
+					<Hand
+						playerCards={currentPlayer.card_in_hand}
+						gameData={gameData}
+						playerData={currentPlayer}
+					/>
+					{/*<div*/}
+					{/*	ref={flyingCardsRef}*/}
+					{/*	className='floating-cards relative z-10 h-0 w-0 overflow-visible'*/}
+					{/*>*/}
+					{/*	{currentFlyingCards}*/}
+					{/*</div>*/}
+					<Rivals rivals={rivals} gameInfo={gameData} />
+					{/*<div className='absolute top-40 flex gap-base-x2'>*/}
+					{/*	{gameData.currency && (*/}
+					{/*		<Icon size={26} icon={gameData.currency} />*/}
+					{/*	)}*/}
+					{/*	<Typography variant='h1'>{gameData.bet}</Typography>*/}
+					{/*</div>*/}
+					{/*/!*<Fall beatDeckLength={beatDeckLength} />*!/*/}
 					<Pack
-						trumpCard={gameInfo.trump}
-						remainingDeckLength={gameInfo.count_card_in_deck}
+						trumpCard={gameData.trump}
+						remainingDeckLength={gameData.count_card_in_deck}
 					/>
-					<Table
-						cardsOnTable={gameInfo.game_board}
-						gameInfo={gameInfo}
-						currentPlayer={currentPlayer}
-					/>
-					{currentPlayer && (
-						<Fan
-							gameInfo={gameInfo}
-							player={currentPlayer}
-							// onSubmit={onSubmit}
-							buttonText={''}
-						/>
-					)}
+					{/*<Table*/}
+					{/*	gameBoard={gameData.game_board}*/}
+					{/*	gameData={gameData}*/}
+					{/*	currentPlayer={currentPlayer}*/}
+					{/*	emptyTableCards={}*/}
+					{/*/>*/}
+					{/*<Fan*/}
+					{/*	gameData={gameData}*/}
+					{/*	player={currentPlayer}*/}
+					{/*	// onSubmit={onSubmit}*/}
+					{/*	buttonText={''}*/}
+					{/*/>*/}
 				</Layout>
-			</DragDropContext>
+			</DndProvider>
 		)
 	)
 }
