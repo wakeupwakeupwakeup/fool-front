@@ -7,15 +7,15 @@ interface IProps {
 const Fall: FC<IProps> = ({ beatDeckLength }) => {
 	if (!beatDeckLength) return null
 	return (
-		<div className='absolute transform rotate-[40deg] top-[140px] -right-[70px]'>
+		<div className='absolute -right-[70px] top-[140px] rotate-[40deg] transform'>
 			<Typography
 				variant='text'
-				className='absolute flex items-center bg-white -rotate-[70deg] justify-center left-base-x1 bottom-base-x1 w-base-x6 h-base-x6 rounded-full text-blue font-bold border border-2 border-blue'
+				className='absolute bottom-base-x1 left-base-x1 flex h-base-x6 w-base-x6 -rotate-[70deg] items-center justify-center rounded-full border-2 border-blue bg-white font-bold text-blue'
 			>
 				{beatDeckLength}
 			</Typography>
 			<div
-				className='w-[90px] h-[125px] bg-white text-[#000] rounded-base-x1'
+				className='h-[125px] w-[90px] rounded-base-x1 bg-white text-[#000]'
 				style={{
 					backgroundImage: `url(/cards/cover.svg)`,
 				}}

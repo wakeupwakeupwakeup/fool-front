@@ -1,31 +1,31 @@
 import cn from 'clsx'
-import { FC } from 'react'
 import { Typography } from '@/shared/ui/typography'
+import { ReactElement } from 'react'
 
 interface IProps {
 	selectedCountRivals: number
 	setSelectedCountRivals: (value: number) => void
 }
 
-const Rivals: FC<IProps> = ({
+export function Rivals({
 	selectedCountRivals,
 	setSelectedCountRivals,
-}) => {
-	const countRivals = [1, 2, 3]
+}: IProps): ReactElement {
+	const countRivals = [2, 3, 4]
 
 	return (
 		<div className='flex flex-col items-center gap-base-x2'>
-			<div className='flex flex-col items-center gap-base-x2 w-full'>
-				<Typography variant='text'>Количество соперников</Typography>
-				<div className='flex justify-between w-full gap-base-x5'>
+			<div className='flex w-full flex-col items-center gap-base-x2'>
+				<Typography variant='text'>Количество игроков</Typography>
+				<div className='flex w-full justify-between gap-base-x5'>
 					{countRivals.map(item => (
 						<button
 							onClick={() => setSelectedCountRivals(item)}
 							key={item}
 							className={cn(
-								'w-full rounded-base-x1 py-base-x1 px-base-x3 border border-white relative',
+								'relative w-full rounded-base-x1 border border-white px-base-x3 py-base-x1',
 								selectedCountRivals === item
-									? 'border-solid bg-radial-gradient bg-gradient'
+									? 'border-solid bg-gradient bg-radial-gradient'
 									: 'border-dashed',
 							)}
 						>
@@ -37,5 +37,3 @@ const Rivals: FC<IProps> = ({
 		</div>
 	)
 }
-
-export default Rivals

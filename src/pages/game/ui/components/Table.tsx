@@ -1,20 +1,18 @@
 import { Droppable } from '@hello-pangea/dnd'
 import cn from 'clsx'
-import { FC } from 'react'
-
 import Card from './Card'
-import { getId } from '@/entities/auth'
+import { IGameSession } from '@/entities/game/model/game.interface'
+import { TPlayer } from '@/entities/player/model/player.model'
 
 interface ITable {
-	cardsOnTable: string[][]
-	defendingPlayer: string
+	cardsOnTable: Record<string, string>[]
+	gameInfo: IGameSession
+	currentPlayer: TPlayer
 }
 
-const Table: FC<ITable> = ({ cardsOnTable, defendingPlayer }) => {
-	const tg_id = String(getId())
-
+export function Table({ cardsOnTable, gameInfo, currentPlayer }: ITable) {
 	return (
-		<div className='flex flex-wrap items-center p-0 gap-y-6 gap-x-3 justify-center my-auto'>
+		<div className='my-auto flex flex-wrap items-center justify-center gap-x-3 gap-y-6 p-0'>
 			{cardsOnTable.map((cardPlace, index) => (
 				<Droppable
 					key={index}
@@ -25,7 +23,7 @@ const Table: FC<ITable> = ({ cardsOnTable, defendingPlayer }) => {
 							{...provided.droppableProps}
 							ref={provided.innerRef}
 							className={cn(
-								'flex justify-center flex-[25%] items-center w-[120px] h-[165px] origin-bottom-left scale-[78%] translate-x-[10%]',
+								'flex h-[165px] w-[120px] flex-[25%] origin-bottom-left translate-x-[10%] scale-[78%] items-center justify-center',
 							)}
 						>
 							<div
@@ -33,18 +31,19 @@ const Table: FC<ITable> = ({ cardsOnTable, defendingPlayer }) => {
 									borderColor: cardPlace[1]
 										? 'transparent'
 										: snapshot.isDraggingOver
-										? '#00EF26'
-										: 'white',
+											? '#00EF26'
+											: 'white',
 									backgroundColor: cardPlace[1]
 										? 'transparent'
 										: snapshot.isDraggingOver
-										? '#ffffff30'
-										: 'transparent',
+											? '#ffffff30'
+											: 'transparent',
 								}}
 								className={cn(
-									'border border-dashed transition-colors w-[120px] h-[165px] rounded-base-x1 absolute z-[-1]',
+									'absolute z-[-1] h-[165px] w-[120px] rounded-base-x1 border border-dashed transition-colors',
 									cardPlace[0]
-										? defendingPlayer === tg_id
+										? gameInfo.defender_id ===
+											currentPlayer.index
 											? 'rotate-12'
 											: 'hidden'
 										: '-rotate-6',

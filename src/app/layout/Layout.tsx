@@ -6,10 +6,13 @@ import Icon from '@/shared/ui/icon/Icon'
 // import { getFriendId, getId } from '@/entities/auth'
 // import { useAddFriend } from 'src/entities/referral'
 // import { getWebSocket, initWebSocket } from '@/shared/api'
-// import { IWebSocketResponse } from '@/entities/game'
 // import { ModalContext } from '@/app'
 import { Typography } from '@/shared/ui/typography'
-import { initBackButton, useMiniApp } from '@telegram-apps/sdk-react'
+import {
+	initBackButton,
+	useLaunchParams,
+	useMiniApp,
+} from '@telegram-apps/sdk-react'
 
 interface ILayout {
 	children: ReactNode
@@ -51,8 +54,6 @@ export function Layout({
 		// initWebSocket()
 		// const socketInstance = getWebSocket().then(socket => {
 		// 	socket.onmessage = event => {
-		// 		const message: { action: string; data: IWebSocketResponse } =
-		// 			JSON.parse(event.data)
 		// 		if (message.action === 'invite') {
 		// 			setInfo(message.data)
 		// 			setVisible(true)

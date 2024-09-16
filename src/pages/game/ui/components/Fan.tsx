@@ -1,82 +1,80 @@
 import { Draggable, Droppable } from '@hello-pangea/dnd'
-import { FC, useEffect, useState } from 'react'
-
-import { getId } from '@/entities/auth/lib/auth.helper'
-
+import { useEffect, useState } from 'react'
 import avatar from '@/shared/assets/tapps.png'
-
-import { ICurrentPlayer } from '../../model/game.interface'
-
 import DraggableCard from './DraggableCard'
 import Icon from '@/shared/ui/icon/Icon'
 import { Button } from '@/shared/ui/button'
+import { TPlayer } from '@/entities/player/model/player.model'
+import { formatPhotoUrl } from '@/shared/lib/format-photo-url'
+import { IGameSession } from '@/entities/game/model/game.interface'
 
 interface IProps {
-	cards: string[]
-	onSubmit: () => void
+	onSubmit?: () => void
 	buttonText: string
-	defendingPlayer: string
-	player: ICurrentPlayer
-	attackPlayer: string
+	player: TPlayer
+	gameInfo: IGameSession
 }
 
-const Fan: FC<IProps> = ({
-	cards,
-	onSubmit,
-	buttonText,
-	player,
-	defendingPlayer,
-	attackPlayer,
-}) => {
-	const tg_id = getId()
+export function Fan({ onSubmit, buttonText, player, gameInfo }: IProps) {
 	const [draggableCard, setDraggableCard] = useState<string>()
-	const [newCards, setNewCards] = useState<string[]>(cards)
-	const calculatorCardsLength = (isDragging, card) => {
+	const [newCards, setNewCards] = useState<string[]>(player.card_in_hand)
+
+	const calculatorCardsLength = (isDragging: boolean, card: string) => {
 		if (isDragging && draggableCard !== card) {
 			setDraggableCard(card)
-			setNewCards(cards.filter(item => item !== card))
+			setNewCards(player.card_in_hand.filter(item => item !== card))
 		} else {
 			setDraggableCard('')
-			setNewCards(cards)
+			setNewCards(player.card_in_hand)
 		}
 	}
 
 	const calc = index => {
 		return draggableCard
-			? cards.findIndex(card => card === draggableCard) + 1 ===
-			  cards.length
+			? player.card_in_hand.findIndex(card => card === draggableCard) +
+					1 ===
+				player.card_in_hand.length
 				? index
-				: cards.findIndex(card => card === draggableCard) === 0
-				? index - 1
-				: cards.findIndex(card => card === draggableCard) > index
-				? index
-				: index - 1
+				: player.card_in_hand.findIndex(
+							card => card === draggableCard,
+					  ) === 0
+					? index - 1
+					: player.card_in_hand.findIndex(
+								card => card === draggableCard,
+						  ) > index
+						? index
+						: index - 1
 			: index
 	}
 	useEffect(() => {
-		setNewCards(cards)
-	}, [cards])
+		setNewCards(player.card_in_hand)
+	}, [player.card_in_hand])
+
 	return (
 		<div className='relative w-full'>
-			<div className='relative w-full bottom-[90px] flex justify-between'>
-				{Number(defendingPlayer) === Number(tg_id) && (
+			<div className='relative bottom-[90px] flex w-full justify-between'>
+				{player.index === gameInfo.defender_id && (
 					<Icon
 						size={25}
 						icon='defending'
-						className='absolute -top-base-x2 -left-base-x2 z-40'
+						className='absolute -left-base-x2 -top-base-x2 z-40'
 					/>
 				)}
-				{Number(attackPlayer) === Number(tg_id) && (
+				{player.index === gameInfo.attacker_id && (
 					<Icon
 						size={25}
 						icon='attack'
-						className='absolute -top-base-x2 -left-base-x2 z-40'
+						className='absolute -left-base-x2 -top-base-x2 z-40'
 					/>
 				)}
 				<img
-					src={player?.photo_url ? player.photo_url : avatar}
+					src={
+						player.photo_path
+							? formatPhotoUrl(player.photo_path)
+							: avatar
+					}
 					alt=''
-					className='w-base-x7 h-base-x7 rounded-base-x1'
+					className='h-base-x7 w-base-x7 rounded-base-x1'
 				/>
 				{!!buttonText && (
 					<Button
@@ -92,7 +90,7 @@ const Fan: FC<IProps> = ({
 				)}
 			</div>
 			<div className='absolute bottom-[70px] left-[50%] flex flex-row items-center justify-center'>
-				{cards.map((card, index) => (
+				{player.card_in_hand.map((card: string, index) => (
 					<Droppable
 						direction='horizontal'
 						key={index}
@@ -100,7 +98,7 @@ const Fan: FC<IProps> = ({
 					>
 						{(provided, _) => (
 							<div
-								className='absolute ease-linear transition-all'
+								className='absolute transition-all ease-linear'
 								style={{
 									zIndex: index + 1,
 									left: `${
@@ -131,7 +129,9 @@ const Fan: FC<IProps> = ({
 												provided={DraggableProvided}
 												draggableCard={draggableCard}
 												snapshot={DraggableSnapshot}
-												total={cards.length}
+												total={
+													player.count_card_in_hand
+												}
 											/>
 										)}
 									</Draggable>
@@ -144,5 +144,3 @@ const Fan: FC<IProps> = ({
 		</div>
 	)
 }
-
-export default Fan

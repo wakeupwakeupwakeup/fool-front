@@ -1,7 +1,6 @@
 import { ReactNode } from 'react'
 import avatar from '@/shared/assets/tapps.png'
 import Loader from '@/shared/ui/loader/Loader'
-import Icon from '@/shared/ui/icon/Icon'
 import { Typography } from '@/shared/ui/typography'
 import { useProfile } from '@/entities/user'
 import { API_URL } from '@/shared/api/api.config'
@@ -25,14 +24,14 @@ export function Profile(): ReactNode {
 							: avatar
 					}
 					alt=''
-					className='w-base-x7 h-base-x7 rounded-base-x1'
+					className='h-base-x7 w-base-x7 rounded-base-x1'
 				/>
-				<div className='flex flex-col justify-between w-full'>
+				<div className='flex w-full flex-col justify-between'>
 					<div className='flex justify-between'>
 						<Typography className='text-xl' variant='text'>
 							{user.username}
 						</Typography>
-						<div className='flex gap-base-x1 items-center'>
+						<div className='flex items-center gap-base-x1'>
 							<Typography variant='text'>🏆</Typography>
 							<Typography variant='text'>{user.cups}</Typography>
 						</div>

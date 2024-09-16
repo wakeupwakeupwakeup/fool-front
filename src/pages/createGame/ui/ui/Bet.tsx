@@ -7,7 +7,7 @@ import { Typography } from '@/shared/ui/typography'
 interface IProps {
 	selectedBet: number
 	selectedCurrency: TCurrency
-	currentBalance?: number
+	currentBalance: number
 	setSelectedBet: (value: number) => void
 }
 
@@ -18,7 +18,7 @@ export function Bet({
 	currentBalance,
 }: IProps): ReactElement {
 	const [error, setError] = useState(false)
-	const [bet, setBet] = useState(7)
+	const [bet, setBet] = useState(selectedBet)
 	const [multiplierRate, setMultiplierRate] = useState('')
 
 	const bets = [1, 2, 3, 4, 5, 6, 7, 8, 9]
@@ -50,7 +50,6 @@ export function Bet({
 	const changeMultiplierRate = (value: string) => {
 		setError(false)
 
-		// @ts-ignore
 		if (bet * value.split('x')[1] > currentBalance) {
 			return setError(true)
 		}
@@ -58,7 +57,6 @@ export function Bet({
 		setMultiplierRate(value)
 
 		if (value) {
-			// @ts-ignore
 			setSelectedBet(bet * value.split('x')[1])
 		}
 	}
@@ -67,8 +65,8 @@ export function Bet({
 		if (currentBalance >= bet) {
 			setError(false)
 		}
-		setSelectedBet(7)
-		setBet(7)
+		setSelectedBet(1)
+		setBet(1)
 		setMultiplierRate('')
 	}
 
@@ -77,15 +75,15 @@ export function Bet({
 	return (
 		<div className='flex flex-col items-center gap-base-x2'>
 			<Typography variant='text'>Ставка</Typography>
-			<div className='flex flex-col gap-base-x2 w-full'>
-				<div className='grid grid-rows-1 grid-cols-9 gap-base-x1'>
+			<div className='flex w-full flex-col gap-base-x2'>
+				<div className='grid grid-cols-9 grid-rows-1 gap-base-x1'>
 					{bets.map((item, index) => (
 						<button
 							onClick={() => changeBet(item)}
 							className={cn(
-								'flex items-center h-base-x6 justify-center w-full border border-white rounded-base-x1',
+								'flex h-base-x6 w-full items-center justify-center rounded-base-x1 border border-white',
 								item === bet
-									? 'border-solid bg-radial-gradient bg-gradient'
+									? 'border-solid bg-gradient bg-radial-gradient'
 									: 'border-dashed',
 							)}
 							key={index}
@@ -94,14 +92,14 @@ export function Bet({
 						</button>
 					))}
 				</div>
-				<div className='grid grid-rows-1 grid-cols-7 gap-base-x1'>
+				<div className='grid grid-cols-7 grid-rows-1 gap-base-x1'>
 					{multiplierRates.map((item, index) => (
 						<button
 							onClick={() => changeMultiplierRate(item)}
 							className={cn(
-								'flex items-center h-base-x6 justify-center w-full border border-white rounded-base-x1',
+								'flex h-base-x6 w-full items-center justify-center rounded-base-x1 border border-white',
 								item === multiplierRate
-									? 'border-solid bg-radial-gradient bg-gradient'
+									? 'border-solid bg-gradient bg-radial-gradient'
 									: 'border-dashed',
 							)}
 							key={index}
@@ -111,7 +109,7 @@ export function Bet({
 					))}
 					<button
 						onClick={() => clearBet()}
-						className='flex items-center h-base-x6 justify-center w-full border border-white border-dashed rounded-base-x1'
+						className='flex h-base-x6 w-full items-center justify-center rounded-base-x1 border border-dashed border-white'
 					>
 						<Typography variant='text' className='font-bold'>
 							C
@@ -128,7 +126,7 @@ export function Bet({
 				)}
 				<Typography
 					variant='button'
-					className='text-center py-base-x1 uppercase'
+					className='py-base-x1 text-center uppercase'
 				>
 					{selectedBet} {selectedCurrency}
 				</Typography>
@@ -136,5 +134,3 @@ export function Bet({
 		</div>
 	)
 }
-
-export default Bet

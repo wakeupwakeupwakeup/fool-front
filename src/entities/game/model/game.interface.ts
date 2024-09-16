@@ -1,5 +1,8 @@
+import { TPlayer } from '@/entities/player/model/player.model'
+
 export type TCurrency = 'Usdt' | 'Fool' | 'Notcoin' | 'Ton'
-export type TTypeGame = 'flip_up' | 'translated'
+export type TTypeGame = 'Throw-in' | 'Passing'
+export type TGameStatus = 'Created' | 'In-Progress' | 'Finished' | 'Abandoned'
 
 export interface IGameRequest {
 	bet: number
@@ -8,19 +11,30 @@ export interface IGameRequest {
 	player_count: number
 }
 
-export interface IGame {
-	id: string
-	host: string
-	bet: number
-	currency: TCurrency
-	type: TTypeGame
-	playersNumber: number
+export interface IGameResponse extends IGameRequest {
+	game_uuid: string
+	game_status: string
+	player_count: number
+	created_by_id: string
+	create_at: string
 }
 
-export interface IWebSocketResponse {
-	game: IGame
-	photo_url: string
-	username: string
-	id: string
-	place: number
+export interface IGameConfig {
+	bet: number | null
+	currency: TCurrency | null
+	game_type: TTypeGame | null
+	player_count: number | null
+}
+
+export interface IGameSession extends IGameConfig {
+	game_status: TGameStatus | null
+	created_by_id: string | null
+	is_first_card_beaten: boolean | null
+	deck: []
+	count_card_in_deck: number | null
+	trump: string | null
+	game_board: Record<string, string>[]
+	attacker_id: number | null
+	defender_id: number | null
+	players: TPlayer[] | []
 }

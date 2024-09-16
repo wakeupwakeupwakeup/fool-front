@@ -1,66 +1,50 @@
 import cn from 'clsx'
-import { FC } from 'react'
 
 import Card from '@/pages/game/ui/components/Card'
-import { ICurrentPlayer } from '@/pages/game/model/game.interface'
-
-import { getGame } from '@/entities/game/lib/game.helper'
 
 import avatar from '@/shared/assets/tapps.png'
 import Icon from '@/shared/ui/icon/Icon'
 import { Typography } from '@/shared/ui/typography'
+import { IGameSession } from '@/entities/game/model/game.interface'
+import { TPlayer } from '@/entities/player/model/player.model'
+import { formatPhotoUrl } from '@/shared/lib/format-photo-url'
 
 interface IProps {
-	rivals: ICurrentPlayer[]
-	handlerShowModal: (place: number) => void
-	defendingPlayer: string
-	attackPlayer: string
+	rivals: TPlayer[]
+	gameInfo: IGameSession
 }
 
-const Rivals: FC<IProps> = ({
+export function Rivals({
 	rivals,
-	handlerShowModal,
-	defendingPlayer,
-	attackPlayer,
-}) => {
-	const game = getGame()
-	const countRivals: number[] =
-		rivals.length > 0
-			? Array(game.playersNumber - 1 - rivals.length).fill(1)
-			: Array(game.playersNumber - 1).fill(1)
+
+	gameInfo,
+}: IProps) {
 	const maxRivalCardsAngleDegrees = 30
 	const placeRival =
 		rivals.length > 0 ? Math.max(...rivals.map(obj => obj.place)) + 1 : 2
+
 	return (
 		<div
 			className={cn(
 				'flex w-full items-end',
-				game.playersNumber > 2 ? 'justify-between' : 'justify-center',
+				gameInfo.player_count && gameInfo.player_count > 2
+					? 'justify-between'
+					: 'justify-center',
 			)}
 		>
-			{countRivals.length > 0 &&
-				countRivals.map((item, index) => (
-					<button
-						key={index}
-						onClick={() => handlerShowModal(index + 2)}
-						className='flex h-base-x7 w-base-x7 items-center justify-center rounded-base-x1 border border-dashed'
-					>
-						<Icon size={24} icon='plus' color='white' />
-					</button>
-				))}
-			{rivals.map((rival, rivalIndex) => (
+			{rivals.map((rival: TPlayer, rivalIndex) => (
 				<div
 					className='relative flex flex-col items-center gap-base-x1'
 					key={rival.username}
 				>
-					{defendingPlayer === rival.tg_id && (
+					{rival.index === gameInfo.defender_id && (
 						<Icon
 							size={25}
 							icon='defending'
 							className='absolute -bottom-base-x2 -left-base-x2 z-40'
 						/>
 					)}
-					{attackPlayer === rival.tg_id && (
+					{rival.index === gameInfo.attacker_id && (
 						<Icon
 							size={25}
 							icon='attack'
@@ -70,25 +54,27 @@ const Rivals: FC<IProps> = ({
 					<Typography variant='text'>{rival.username}</Typography>
 					<div className='relative z-30'>
 						<img
-							src={rival?.photo_url ? rival.photo_url : avatar}
+							src={
+								rival.photo_path
+									? formatPhotoUrl(rival.photo_path)
+									: avatar
+							}
 							alt=''
 							className='h-base-x7 w-base-x7 rounded-base-x1'
 						/>
 					</div>
-					{typeof rival?.countCards === 'number' && (
-						<Typography
-							variant='text'
-							className='absolute -bottom-[40px] left-[50%] z-50 flex h-base-x6 w-base-x6 -translate-x-[50%] items-center justify-center rounded-full border-2 border-blue bg-white font-bold text-blue'
-						>
-							{rival.countCards}
-						</Typography>
-					)}
+					<Typography
+						variant='text'
+						className='absolute -bottom-[40px] left-[50%] z-50 flex h-base-x6 w-base-x6 -translate-x-[50%] items-center justify-center rounded-full border-2 border-blue bg-white font-bold text-blue'
+					>
+						{rival.count_card_in_hand}
+					</Typography>
 					<div
 						id={'Cards' + rivalIndex}
 						className='absolute left-[10px] top-[60px] z-20 w-full'
 					>
-						{rival.countCards ? (
-							rival.countCards === 1 ? (
+						{rival.count_card_in_hand ? (
+							rival.count_card_in_hand === 1 ? (
 								<Card
 									size='small'
 									position='bottom'
@@ -96,7 +82,7 @@ const Rivals: FC<IProps> = ({
 									style={{ rotate: '0deg', zIndex: 20 }}
 								/>
 							) : (
-								Array(rival.countCards)
+								Array(rival.count_card_in_hand)
 									.fill(1)
 									.map((item, index) => (
 										<Card
@@ -106,7 +92,8 @@ const Rivals: FC<IProps> = ({
 											className={`card-index-${index}`}
 											style={{
 												rotate: `${
-													(90 / rival.countCards) *
+													(90 /
+														rival.count_card_in_hand) *
 														index -
 													maxRivalCardsAngleDegrees
 												}deg`,

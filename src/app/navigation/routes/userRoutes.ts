@@ -4,6 +4,7 @@ import { BalancePage } from '@/pages/balance'
 import { CreateGamePage } from '@/pages/createGame'
 import { GamePage } from '@/pages/game'
 import { ReferralPage } from '@/pages/referrals'
+import { LobbyPage } from '@/pages/lobby/ui/lobby-page'
 
 export interface IRoute {
 	path: string
@@ -14,6 +15,10 @@ export const userRoutes: IRoute[] = [
 	{
 		path: '/home',
 		component: HomePage,
+	},
+	{
+		path: '/lobby',
+		component: LobbyPage,
 	},
 	// {
 	// 	path: '/onboarding',
