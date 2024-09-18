@@ -6,12 +6,12 @@ import { Typography } from '@/shared/ui/typography'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '@/app'
 import { useSessionData } from '@/entities/socket/lib/hooks/use-session-data'
-import { initSocket } from '@/entities/socket/model/socket.slice'
+import { initSocket } from '@/entities/socket/model/store/socket.slice'
 import { API_URL } from '@/shared/api/api.config'
 import { TPlayer } from '@/entities/player/model/player.model'
-import { SocketConnection } from '@/entities/socket/model/socket-factory'
+import { SocketConnection } from '@/entities/socket/model/store/socket-factory'
 import cn from 'clsx'
-import { sendAction } from '@/entities/player/lib/player.actions'
+import { sendAction } from '@/entities/player/api/player.actions'
 import { useInitData, useUtils } from '@telegram-apps/sdk-react'
 
 export function LobbyPage(): ReactElement {
@@ -109,8 +109,11 @@ export function LobbyPage(): ReactElement {
 						{gameInfo.players.length < gameInfo.player_count ? (
 							<div
 								onClick={() => {
-									utils.openTelegramLink(
-										`https://t.me/share/url?url=https://t.me/tonfool_dev_bot/app?startapp=invite_${chatId}_game_${local_uuid}`,
+									utils.shareURL(
+										`https://t.me/tonfool_dev_bot/app?startapp=invite_${chatId}_game_${local_uuid}`,
+										`\nСтавка: ${gameInfo.bet} FOOL\n` +
+											`Игроков: ${gameInfo.player_count}\n` +
+											'Тип игры: Подкидной\n',
 									)
 								}}
 								className='flex aspect-square w-base-x7 items-center justify-center rounded-xl border-2 border-dotted border-white'

@@ -2,29 +2,27 @@
 @tailwind components;
 @tailwind utilities;
 @tailwind variants;
-
 @font-face {
-  font-family: 'Montserrat';
+  font-family: "Montserrat";
   font-style: normal;
   font-weight: 700;
   font-display: swap;
-  src: url('../../shared/assets/fonts/Montserrat-Bold.ttf') format('truetype');
+  src: url("../../shared/assets/fonts/Montserrat-Bold.ttf") format("truetype");
 }
 @font-face {
-  font-family: 'Montserrat';
+  font-family: "Montserrat";
   font-style: normal;
   font-weight: 500;
   font-display: swap;
-  src: url('../../shared/assets/fonts/Montserrat-Medium.ttf') format('truetype');
+  src: url("../../shared/assets/fonts/Montserrat-Medium.ttf") format("truetype");
 }
 @font-face {
-  font-family: 'Montserrat';
+  font-family: "Montserrat";
   font-style: normal;
   font-weight: 400;
   font-display: swap;
-  src: url('../../shared/assets/fonts/Montserrat-Regular.ttf') format('truetype');
+  src: url("../../shared/assets/fonts/Montserrat-Regular.ttf") format("truetype");
 }
-
 *::-webkit-scrollbar {
   background: none;
   width: 0;
@@ -44,8 +42,7 @@ body {
   max-width: 450px;
   margin: 0 auto;
   font-family: Montserrat, sans-serif;
-  //background: linear-gradient(0deg, rgb(30, 1, 89) 0%, rgb(22, 0, 30) 100%);
-  background: url('../../shared/assets/bg-pattern.png') repeat;
+  background: url("../../shared/assets/bg-pattern.png") repeat;
   color: #fff;
   position: relative;
 }
@@ -56,10 +53,11 @@ html, body, #root {
 }
 
 .bg-filter {
-  backdrop-filter: blur(20px)
+  backdrop-filter: blur(20px);
 }
 
 .dragging {
   opacity: 1 !important;
 }
 
+/*# sourceMappingURL=index.css.map */

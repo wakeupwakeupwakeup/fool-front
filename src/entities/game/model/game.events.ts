@@ -4,6 +4,7 @@ export enum GameEvents {
 	USER_READY = 'user_ready',
 	USER_CONNECT = 'user_connect',
 	USER_DISCONNECT = 'user_disconnect',
+	FULL_DATA = 'full_data',
 
 	START_GAME = 'start_game',
 	FINISH_GAME = 'finish_game',

@@ -1,4 +1,10 @@
-type TMessageType = 'SET_READY' | 'ATTACK' | 'DEFEND'
+type TMessageType =
+	| 'SET_READY'
+	| 'ATTACK'
+	| 'DEFEND'
+	| 'TAKE'
+	| 'PASS'
+	| 'TIMEOUT'
 type TDefendPayload = {
 	attacking_card: string
 	card?: string

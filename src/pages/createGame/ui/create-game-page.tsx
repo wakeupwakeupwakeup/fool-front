@@ -67,7 +67,7 @@ export function CreateGamePage(): ReactNode {
 					<div className='flex w-full gap-base-x2'>
 						<Button onClick={onSubmit}>Играть</Button>
 						<Button
-							onClick={() => navigate('/menu')}
+							onClick={() => navigate('/home')}
 							icon='back'
 							style={{ width: 63 }}
 						/>

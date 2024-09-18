@@ -1,9 +1,12 @@
 import { Middleware } from '@reduxjs/toolkit'
-import { SocketConnection } from '@/entities/socket/model/socket-factory'
-import { initSocket, socketError } from '@/entities/socket/model/socket.slice'
+import { SocketConnection } from '@/entities/socket/model/store/socket-factory'
+import {
+	initSocket,
+	socketError,
+} from '@/entities/socket/model/store/socket.slice'
 import { updateGameData } from '@/entities/game/model/game-session.slice'
 import { IGameSession } from '@/entities/game/model/game.interface'
-import { eventDispatcher } from '@/entities/socket/lib/event-dispatcher'
+import { eventDispatcher } from '@/entities/socket/api/event-dispatcher'
 
 // types.ts
 export interface InitSocketPayload {
@@ -52,11 +55,12 @@ const socketMiddleware: Middleware = store => {
 				}
 
 				socketInstance.onmessage = (event: MessageEvent<string>) => {
+					console.log(event)
 					const message: TMessageEvent = JSON.parse(event.data)
 					console.log('Received message:', message)
 					console.log('Received data:', message.data)
 					if (socketInstance) {
-						eventDispatcher(store, socketInstance, event)
+						eventDispatcher(store, event)
 					}
 				}
 			} catch (error) {

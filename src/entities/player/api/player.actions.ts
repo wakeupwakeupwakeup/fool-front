@@ -1,4 +1,4 @@
-import { TSocketMessage } from '@/entities/socket/model/socket.types'
+import { TSocketMessage } from '@/entities/socket/model/store/socket.types'
 
 export function sendAction(socket: WebSocket, message: TSocketMessage) {
 	console.log('DEV | SENDING SOCKET MESSAGE: ', message)
@@ -22,5 +22,27 @@ export function sendAction(socket: WebSocket, message: TSocketMessage) {
 					card: message.payload!.card,
 				}),
 			)
+			break
+		case 'TAKE':
+			socket.send(
+				JSON.stringify({
+					action: 'Get',
+				}),
+			)
+			break
+		case 'PASS':
+			socket.send(
+				JSON.stringify({
+					action: 'Pass',
+				}),
+			)
+			break
+		case 'TIMEOUT':
+			socket.send(
+				JSON.stringify({
+					action: 'Timeout',
+				}),
+			)
+			break
 	}
 }

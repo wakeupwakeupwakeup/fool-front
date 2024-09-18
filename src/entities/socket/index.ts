@@ -2,4 +2,4 @@ export {
 	default as socketReducer,
 	connectionEstablished,
 	connectionLost,
-} from './model/socket.slice'
+} from './model/store/socket.slice'

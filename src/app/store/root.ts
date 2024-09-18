@@ -3,7 +3,7 @@ import { remoteGameDataReducer, localGameDataReducer } from '@/entities/game'
 import { socketReducer } from '@/entities/socket'
 // import { socketMiddleware } from '@/entities/socket/lib/socket-middleware'
 import { useDispatch } from 'react-redux'
-import socketMiddleware from '@/entities/socket/lib/socket-middleware'
+import socketMiddleware from '@/entities/socket/api/socket-middleware'
 import { navigationReducer } from '@/shared/model'
 
 export const store = configureStore({

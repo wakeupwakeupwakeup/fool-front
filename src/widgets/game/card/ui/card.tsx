@@ -3,31 +3,30 @@ import { useEffect } from 'react'
 import { useDispatch } from 'react-redux'
 import { setDraggingCard } from '@/entities/game/model/local-game-data.slice'
 import cn from 'clsx'
+import { cardSizes, TSizeType } from '@/widgets/game/card/model/card.config'
 
 type TCardPosition = 'hand' | 'table'
-
-type TCardSize = {
-	height: string
-	width: string
-} | null
 
 interface ICardProps {
 	suit: string
 	index: number
 	totalCards?: number
 	position: TCardPosition
-	size?: 's' | 'm' | 'l'
+	size?: TSizeType
 }
 
-export function Card({ suit, index, position, size }: ICardProps) {
+export function Card({ suit, index, position, totalCards, size }: ICardProps) {
 	const dispatch = useDispatch()
-	const [{ isDragging }, drag, dragPreview] = useDrag(() => ({
-		type: 'card',
-		item: { index, suit },
-		collect: monitor => ({
-			isDragging: monitor.isDragging(),
+	const [{ isDragging }, drag] = useDrag(
+		() => ({
+			type: 'card',
+			item: { index, suit },
+			collect: monitor => ({
+				isDragging: monitor.isDragging(),
+			}),
 		}),
-	}))
+		[suit],
+	)
 
 	useEffect(() => {
 		console.log(suit)
@@ -36,61 +35,32 @@ export function Card({ suit, index, position, size }: ICardProps) {
 		}
 	}, [isDragging, index, dispatch, suit])
 
-	const cardSize: TCardSize = {
-		height: '165px',
-		width: '120px',
-	}
-
-	switch (position) {
-		case 'table':
-			switch (size) {
-				case 's':
-					cardSize.height = '82px'
-					cardSize.width = '57px'
-					break
-				case 'm':
-					cardSize.height = '135px'
-					cardSize.width = '95px'
-					break
-				case 'l':
-					cardSize.height = '165px'
-					cardSize.width = '120px'
-			}
-	}
+	const rotation =
+		position === 'hand' && totalCards
+			? (index - (totalCards + 1) / 2) * 5
+			: 0
 
 	return (
-		!isDragging && (
-			<>
-				<DragPreviewImage
-					connect={dragPreview}
-					src={`/cards/${suit}.svg`}
-				/>
-				<div
-					ref={drag}
-					className={cn(
-						position === 'hand'
-							? isDragging
-								? ''
-								: 'absolute hover:-translate-y-5'
-							: '',
-						`transition-transform duration-200`,
-						{ dragging: isDragging },
-					)}
-					style={{
-						// rotate:
-						// 	position === 'table'
-						// 		? `${Math.floor(Math.random() * 11) - 5}deg`
-						// 		: 'none',
-						width: cardSize.width,
-						height: cardSize.height,
-						backgroundImage: `url(/cards/${suit}.svg)`,
-						backgroundRepeat: 'no-repeat',
-						// transform: `rotate(${index * 10 - (totalCards - 1) * 5}deg`,
-						left: position === 'hand' ? `${index * 40}px` : '',
-						opacity: isDragging ? 1 : 1,
-					}}
-				></div>
-			</>
-		)
+		<>
+			<div
+				ref={drag}
+				className={cn(
+					`z-50 transition-transform duration-200 hover:-translate-y-5`,
+					{ dragging: isDragging },
+				)}
+				style={{
+					transform: `rotate(${rotation}deg)`,
+					position: position === 'hand' ? 'absolute' : 'static',
+					transformOrigin: '0% 100%',
+					width: size ? cardSizes[size].width : '120px',
+					height: size ? cardSizes[size].height : '165px',
+					backgroundImage: `url(/cards/${suit}.svg)`,
+					backgroundRepeat: 'no-repeat',
+					// transform: `rotate(${index * 10 - (totalCards - 1) * 5}deg`,
+					left: position === 'hand' ? `${index * 35}px` : '',
+					opacity: isDragging ? 0 : 1,
+				}}
+			></div>
+		</>
 	)
 }

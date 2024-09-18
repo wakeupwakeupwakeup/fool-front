@@ -1,5 +1,5 @@
-import { sendAction } from '@/entities/player/lib/player.actions'
-import { TSocketMessage } from '@/entities/socket/model/socket.types'
+import { sendAction } from '@/entities/player/api/player.actions'
+import { TSocketMessage } from '@/entities/socket/model/store/socket.types'
 
 export const addRival = (global_ws, tg_id, game_id, place) => {
 	const data = {

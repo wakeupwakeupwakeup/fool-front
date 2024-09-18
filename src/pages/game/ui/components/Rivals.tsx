@@ -1,62 +1,36 @@
-import cn from 'clsx'
-
 import Card from '@/pages/game/ui/components/Card'
-
-import avatar from '@/shared/assets/tapps.png'
-import Icon from '@/shared/ui/icon/Icon'
 import { Typography } from '@/shared/ui/typography'
 import { IGameSession } from '@/entities/game/model/game.interface'
 import { TPlayer } from '@/entities/player/model/player.model'
 import { formatPhotoUrl } from '@/shared/lib/format-photo-url'
+import { PlayerIcon } from '@/widgets/game/player-icon/ui/player-icon'
 
 interface IProps {
 	rivals: TPlayer[]
-	gameInfo: IGameSession
+	gameData: IGameSession
 }
 
-export function Rivals({ rivals, gameInfo }: IProps) {
+export function Rivals({ rivals, gameData }: IProps) {
 	const maxRivalCardsAngleDegrees = 30
 
 	return (
 		<div className='absolute left-0 top-0 -z-10 h-full w-full'>
-			{rivals.map((rival: TPlayer, rivalIndex) => (
+			{rivals.map((rival: TPlayer) => (
 				<div
 					className='relative flex flex-col items-center gap-base-x1'
 					key={rival.username}
 				>
-					{rival.index === gameInfo.defender_id && (
-						<Icon
-							size={25}
-							icon='defending'
-							className='absolute -bottom-base-x2 left-36 z-40 translate-x-1/2'
-						/>
-					)}
-					{rival.index === gameInfo.attacker_id && (
-						<Icon
-							size={25}
-							icon='attack'
-							className='absolute -bottom-base-x2 -left-base-x2 z-40'
-						/>
-					)}
-					<Typography variant='text'>{rival.username}</Typography>
-					<div className='relative z-30'>
-						<img
-							src={
-								rival.photo_path
-									? formatPhotoUrl(rival.photo_path)
-									: avatar
-							}
-							alt=''
-							className='h-base-x7 w-base-x7 rounded-base-x1'
-						/>
-					</div>
+					<PlayerIcon playerData={rival} gameData={gameData} />
+					<Typography variant='text' className='relative top-6'>
+						{rival.username}
+					</Typography>
 					<Typography
 						variant='text'
-						className='absolute -bottom-[40px] left-[50%] z-50 flex h-base-x6 w-base-x6 -translate-x-[50%] items-center justify-center rounded-full border-2 border-blue bg-white font-bold text-blue'
+						className='absolute left-[60%] top-[40px] z-50 flex h-base-x6 w-base-x6 -translate-x-[50%] items-center justify-center rounded-full border-2 border-blue bg-white font-bold text-blue'
 					>
 						{rival.count_card_in_hand}
 					</Typography>
-					<div className='absolute -left-8 top-[90px] z-20 w-full translate-x-1/2'>
+					<div className='absolute -left-6 top-[14px] z-20 w-full translate-x-1/2'>
 						{rival.count_card_in_hand ? (
 							rival.count_card_in_hand === 1 ? (
 								<Card

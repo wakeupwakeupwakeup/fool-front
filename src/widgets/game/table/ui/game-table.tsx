@@ -1,54 +1,55 @@
-import { useDrop } from 'react-dnd'
-import { useDispatch, useSelector } from 'react-redux'
+import { useSelector } from 'react-redux'
 import { RootState } from '@/app'
 import { Card } from '@/widgets/game/card/ui/card'
-import { addCardToBoard } from '@/entities/game/model/local-game-data.slice'
-import { useEffect } from 'react'
+
 import cn from 'clsx'
+import { CardPlace } from '@/widgets/game/table/ui/card-place'
+import { useEffect } from 'react'
 
 export function GameTable() {
-	const dispatch = useDispatch()
-	const gameBoard = useSelector(
-		(state: RootState) => state.localGameData.gameBoard,
-	)
-	const droppedCard = useSelector(
-		(state: RootState) => state.localGameData.draggingCard,
-	)
-	const [, drop] = useDrop(
-		() => ({
-			accept: 'card',
-			drop: () => {
-				if (droppedCard) {
-					dispatch(addCardToBoard({ [droppedCard]: '' }))
-				}
-			},
-		}),
-		[droppedCard],
+	const { game_board } = useSelector(
+		(state: RootState) => state.remoteGameData.data,
 	)
 
 	useEffect(() => {
-		console.log(gameBoard, droppedCard)
-	}, [gameBoard, droppedCard])
+		console.log(game_board)
+	}, [game_board])
+
 	return (
 		<div
 			className={cn(
-				gameBoard.length < 3
-					? 'grid-cols-3 grid-rows-1'
-					: 'grid-cols-3 grid-rows-2',
-				'grid h-1/2 w-full translate-y-1/2 place-items-center',
+				{
+					'grid-cols-2': game_board.length === 1,
+					'grid-cols-3': game_board.length >= 2,
+					'grid-rows-1': game_board.length < 5,
+					'grid-rows-2': game_board.length >= 3,
+				},
+				'absolute z-10 grid h-1/3 w-full translate-y-48 place-items-center pl-8 pr-4',
 			)}
-			ref={drop}
 		>
-			{gameBoard.length > 0 &&
-				gameBoard.map((card, index) => (
-					<Card
-						size={gameBoard.length < 3 ? 'l' : 'm'}
-						position='table'
-						key={index}
-						suit={Object.keys(card)[0]}
-						index={index}
-					/>
-				))}
+			{game_board.length === 0 && <CardPlace />}
+			{game_board.map((card, index) => (
+				<CardPlace
+					attackingCard={
+						<Card
+							index={index}
+							position='table'
+							size='s'
+							suit={Object.keys(card)[0]}
+						/>
+					}
+					defendingCard={
+						<Card
+							index={index}
+							position='table'
+							size='s'
+							suit={Object.values(card)[0]}
+						/>
+					}
+					key={index}
+				/>
+			))}
+			{game_board.length > 0 && <CardPlace />}
 		</div>
 	)
 }

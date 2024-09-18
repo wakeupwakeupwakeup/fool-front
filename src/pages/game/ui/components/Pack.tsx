@@ -20,10 +20,10 @@ const Pack: FC<IProps> = ({ trumpCard, remainingDeckLength }) => {
 			</div>
 		)
 	return (
-		<div className='absolute -left-[90px] top-[140px] rotate-[20deg] transform'>
+		<div className='absolute -left-[110px] top-[90px] rotate-[45deg] transform'>
 			<Typography
 				variant='text'
-				className='absolute right-base-x1 top-base-x1 z-20 flex h-base-x6 w-base-x6 -rotate-[20deg] items-center justify-center rounded-full border-2 border-blue bg-white font-bold text-blue'
+				className='absolute right-base-x1 top-base-x1 z-20 flex h-base-x6 w-base-x6 -rotate-[45deg] items-center justify-center rounded-full border-2 border-blue bg-white font-bold text-blue'
 			>
 				{remainingDeckLength}
 			</Typography>
@@ -34,7 +34,7 @@ const Pack: FC<IProps> = ({ trumpCard, remainingDeckLength }) => {
 				}}
 			/>
 			<div
-				className='relative h-[125px] w-[90px] translate-x-[50%] translate-y-[-100%] rotate-90 transform rounded-base-x1 bg-no-repeat'
+				className='relative h-[125px] w-[90px] translate-x-[30%] translate-y-[-100%] rotate-90 transform rounded-base-x1 bg-no-repeat'
 				style={{
 					backgroundImage: `url(/cards/${trumpCard}.svg)`,
 				}}

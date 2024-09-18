@@ -2,12 +2,12 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 
 type TLocalGameDataState = {
 	draggingCard: string | null
-	gameBoard: Record<string, string>[]
+	playerTimerId: number | null
 }
 
 const initialState: TLocalGameDataState = {
 	draggingCard: null,
-	gameBoard: [],
+	playerTimerId: null,
 }
 
 const localGameDataSlice = createSlice({
@@ -17,12 +17,12 @@ const localGameDataSlice = createSlice({
 		setDraggingCard(state, action: PayloadAction<string>) {
 			state.draggingCard = action.payload
 		},
-		addCardToBoard(state, action: PayloadAction<Record<string, string>>) {
-			state.gameBoard.push(action.payload)
+		setPlayerTimer(state, action: PayloadAction<number>) {
+			state.playerTimerId = action.payload
 		},
 	},
 })
 
 const { actions, reducer } = localGameDataSlice
-export const { setDraggingCard, addCardToBoard } = actions
+export const { setDraggingCard, setPlayerTimer } = actions
 export default reducer

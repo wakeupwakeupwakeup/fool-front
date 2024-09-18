@@ -36,7 +36,7 @@ const Card: FC<IProps> = ({
 			className={cn('absolute overflow-hidden', className)}
 			style={{
 				...style,
-				borderRadius: cardSizeToDimensions[size].radius,
+				// borderRadius: cardSizeToDimensions[size].radius,
 			}}
 		>
 			<div

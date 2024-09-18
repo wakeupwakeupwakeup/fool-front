@@ -8,10 +8,4 @@ export const ReferralService = {
 			method: 'GET',
 		})
 	},
-	async addFriend(tg_id: string, friend_id: string) {
-		return request<IUser[]>({
-			url: `/friends/${tg_id}/${friend_id}`,
-			method: 'POST',
-		})
-	},
 }
