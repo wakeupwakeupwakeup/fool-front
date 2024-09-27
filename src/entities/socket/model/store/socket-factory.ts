@@ -1,6 +1,6 @@
-import { WS_URL } from '@/shared/api/api.config'
-import { store } from '@/app'
 import { connectionEstablished, connectionLost } from '@/entities/socket'
+import { WS_URL } from '@/shared/consts/url'
+import { store } from '@/app/store'
 
 export class SocketConnection {
 	private static socketInstance: WebSocket | null = null
@@ -16,7 +16,7 @@ export class SocketConnection {
 	public static setInstance(
 		gameUuid: string,
 		initData: string,
-		chatId: number,
+		chatId: string,
 	): WebSocket {
 		if (!this.socketInstance) {
 			this.connect(gameUuid, initData, chatId)
@@ -40,7 +40,7 @@ export class SocketConnection {
 	private static connect(
 		gameUuid: string,
 		initData: string,
-		chatId: number,
+		chatId: string,
 	): void {
 		const socketUrl =
 			this.socketEndpoint +
@@ -65,7 +65,7 @@ export class SocketConnection {
 	private static reconnect(
 		gameUuid: string,
 		initData: string,
-		chatId: number,
+		chatId: string,
 	): void {
 		if (this.reconnectAttempts < this.maxReconnectAttempts) {
 			this.reconnectTimeout = window.setTimeout(() => {

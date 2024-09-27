@@ -1,14 +1,12 @@
 export interface IUser {
 	username: string
 	photo_path: string
-	last_claim: string
 	chat_id: string
 	balance_fool: number
 	balance_ton: number
 	balance_usdt: number
 	balance_notcoin: number
-	cups: number
-	is_free: true
+	rating: number
 }
 
 export interface ICurrency {

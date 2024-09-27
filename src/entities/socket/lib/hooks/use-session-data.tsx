@@ -4,7 +4,7 @@ export function useSessionData() {
 	const uuid = localStorage.getItem('game_uuid')
 	const { initDataRaw } = retrieveLaunchParams()
 	const initData = useInitData()
-	const chatId = initData?.user?.id
+	const chatId = initData?.user?.id.toString()
 
 	return { uuid, initDataRaw, chatId }
 }

@@ -15,7 +15,7 @@ export const menu: IMenuItem[] = [
 	{
 		icon: 'friends',
 		path: '/referrals',
-		title: 'Рефералы',
+		title: 'Друзья',
 		soon: false,
 	},
 	{

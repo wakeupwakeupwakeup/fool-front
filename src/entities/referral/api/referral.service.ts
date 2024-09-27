@@ -1,5 +1,5 @@
 import { IUser } from '@/entities/user/model/types'
-import { request } from '@/shared/api'
+import { request } from '@/shared/api/request.api'
 
 export const ReferralService = {
 	async getReferrals() {

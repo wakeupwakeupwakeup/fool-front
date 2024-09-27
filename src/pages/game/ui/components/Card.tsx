@@ -6,7 +6,6 @@ import {
 	TSizeCard,
 	cardSizeToDimensions,
 } from '@/pages/game/model/game.interface'
-import { useDrag } from 'react-dnd'
 
 interface IProps {
 	size?: TSizeCard
@@ -23,16 +22,8 @@ const Card: FC<IProps> = ({
 	position = 'top',
 	size = 'normal',
 }) => {
-	const [{ isDragging }, drag] = useDrag(() => ({
-		type: 'card',
-		collect: monitor => ({
-			isDragging: monitor.isDragging(),
-		}),
-	}))
-
 	return (
 		<div
-			ref={drag}
 			className={cn('absolute overflow-hidden', className)}
 			style={{
 				...style,
@@ -44,6 +35,7 @@ const Card: FC<IProps> = ({
 				style={{
 					width: cardSizeToDimensions[size].width,
 					height: cardSizeToDimensions[size].height,
+					backgroundRepeat: 'no-repeat',
 					backgroundImage:
 						position === 'bottom'
 							? `url(/cards/cover.svg)`

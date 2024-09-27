@@ -1,16 +1,22 @@
 import {
 	IGameRequest,
 	IGameResponse,
-} from '@/entities/game/model/game.interface'
-
-import { request } from '@/shared/api/axios/request.api'
+	IGameResultsResponse,
+} from '../model/types/game.model'
+import { request } from '@/shared/api/request.api'
 
 export const GameService = {
-	async createGame(info: IGameRequest) {
+	createGame(info: IGameRequest) {
 		return request<IGameResponse>({
 			url: `/create`,
 			method: 'POST',
 			data: info,
+		})
+	},
+	getGameResults(gameUuid: string) {
+		return request<IGameResultsResponse>({
+			url: `/game_result/${gameUuid}`,
+			method: 'GET',
 		})
 	},
 }

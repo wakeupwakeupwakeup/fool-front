@@ -1,29 +1,17 @@
-// import { useAtom } from 'jotai'
-import { ReactElement, useEffect } from 'react'
+import { ReactElement } from 'react'
 import { useNavigate } from 'react-router-dom'
-// import { deleteId } from '@/entities/auth/lib/auth.helper'
 import { menu } from '../model/menu.data'
-import { useProfile } from '@/entities/user'
-import Layout from '@/app/layout/Layout'
 import Button from '@/shared/ui/button/ui/Button'
-import Profile from '@/widgets/profile/ui/Profile'
+import Layout from '@/shared/ui/layout/Layout'
+import { Profile } from '@/widgets/user-profile'
 
 export function HomePage(): ReactElement {
 	const navigate = useNavigate()
 
-	// const { user, isUserLoading } = useProfile()
-
-	// const [ setPlayer] = useAtom(playerAtom)
-	// const logout = async () => {
-	// 	await deleteId()
-	// 	setPlayer(null)
-	// 	navigate(0)
-	// }
-
 	return (
-		<Layout className='flex flex-col gap-base-x6 '>
+		<Layout className='flex flex-col gap-base-x6'>
 			<Profile />
-			<div className='flex flex-col gap-5 w-full'>
+			<div className='flex w-full flex-col gap-5'>
 				{menu.map(item => (
 					<Button
 						onClick={() => navigate(item.path)}
@@ -33,7 +21,7 @@ export function HomePage(): ReactElement {
 						variant='h1'
 					>
 						{item.soon && (
-							<span className='text-yellow font-bold absolute right-4 transform -rotate-[20deg]'>
+							<span className='absolute right-4 -rotate-[20deg] transform font-bold text-yellow'>
 								soon
 							</span>
 						)}
@@ -44,5 +32,3 @@ export function HomePage(): ReactElement {
 		</Layout>
 	)
 }
-
-export default HomePage

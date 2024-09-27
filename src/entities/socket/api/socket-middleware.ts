@@ -1,22 +1,21 @@
 import { Middleware } from '@reduxjs/toolkit'
 import { SocketConnection } from '@/entities/socket/model/store/socket-factory'
 import {
+	connectionEstablished,
 	initSocket,
 	socketError,
 } from '@/entities/socket/model/store/socket.slice'
-import { updateGameData } from '@/entities/game/model/game-session.slice'
-import { IGameSession } from '@/entities/game/model/game.interface'
+import { IGameSession } from '@/entities/game/model/types/game.model'
 import { eventDispatcher } from '@/entities/socket/api/event-dispatcher'
 
-// types.ts
 export interface InitSocketPayload {
 	gameUuid: string
 	initData: string
-	chatId: number
+	chatId: string
 }
 
 export interface SendMessagePayload {
-	message: string // или другой тип для сообщений
+	message: string
 }
 
 export type SocketAction =
@@ -30,7 +29,7 @@ type TMessageEvent = {
 	data: IGameSession
 }
 
-const socketMiddleware: Middleware = store => {
+export const socketMiddleware: Middleware = store => {
 	let socketInstance: WebSocket | null = null
 
 	return next => (action: SocketAction) => {
@@ -47,11 +46,16 @@ const socketMiddleware: Middleware = store => {
 
 				socketInstance.onopen = (event: MessageEvent<string>) => {
 					console.log('EVENT', event)
+					store.dispatch(connectionEstablished())
 				}
 
 				socketInstance.onerror = error => {
 					store.dispatch(socketError('WebSocket error occurred'))
 					console.error('WebSocket error:', error)
+				}
+
+				socketInstance.onclose = event => {
+					console.log('DEV | CLOSE WS EVENT:', event)
 				}
 
 				socketInstance.onmessage = (event: MessageEvent<string>) => {
@@ -70,39 +74,7 @@ const socketMiddleware: Middleware = store => {
 				console.error('Error initializing WebSocket:', error)
 			}
 		}
-		// switch (action.type) {
-
-		//
-		// 	case 'socket/sendMessage': {
-		// 		if (
-		// 			socketInstance &&
-		// 			socketInstance.readyState === WebSocket.OPEN
-		// 		) {
-		// 			socketInstance.send(action.payload)
-		// 			console.log('Message sent:', action.payload)
-		// 		} else {
-		// 			console.error(
-		// 				'WebSocket is not open, message cannot be sent',
-		// 			)
-		// 		}
-		// 		break
-		// 	}
-		//
-		// 	case 'socket/closeSocket': {
-		// 		if (socketInstance) {
-		// 			socketInstance.close()
-		// 			socketInstance = null
-		// 			console.log('WebSocket connection closed manually')
-		// 		}
-		// 		break
-		// 	}
-		//
-		// 	default:
-		// 		break
-		// }
 
 		return next(action)
 	}
 }
-
-export default socketMiddleware

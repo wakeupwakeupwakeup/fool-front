@@ -1,10 +1,11 @@
 import { ComponentType } from 'react'
 import { HomePage } from '@/pages/home'
 import { BalancePage } from '@/pages/balance'
-import { CreateGamePage } from '@/pages/createGame'
 import { GamePage } from '@/pages/game'
 import { ReferralPage } from '@/pages/referrals'
-import { LobbyPage } from '@/pages/lobby/ui/lobby-page'
+import { LobbyPage } from '@/pages/lobby'
+import { CreateGamePage } from '@/pages/create-game'
+import { ResultPage } from '@/pages/results/result-page'
 
 export interface IRoute {
 	path: string
@@ -29,11 +30,10 @@ export const userRoutes: IRoute[] = [
 		component: GamePage,
 	},
 	//
-	// {
-	// 	path: '/result-game',
-	// 	component: ResultGame,
-	// },
-	//
+	{
+		path: '/results',
+		component: ResultPage,
+	},
 	{
 		path: '/create-game',
 		component: CreateGamePage,

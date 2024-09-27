@@ -40,13 +40,13 @@ const FlyingCard: FC<IProps> = ({
 			)}
 			style={{ display: visible }}
 		>
-			<animated.div style={{ ...(springs as any) }}>
+			<animated.div style={{ ...springs }}>
 				<div
 					className={cn(
 						'rounded-base-x2 text-black',
 						animation
-							? 'scale-[90%] w-[110px] h-[140px]'
-							: 'w-[93px] h-[130px]',
+							? 'h-[140px] w-[110px] scale-[90%]'
+							: 'h-[130px] w-[93px]',
 					)}
 				>
 					<Card type={type} position={position} />

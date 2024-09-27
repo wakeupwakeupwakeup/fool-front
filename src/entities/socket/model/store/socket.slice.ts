@@ -5,7 +5,7 @@ export type TSocketState = {
 	error: string | null
 	gameUuid: string | null
 	initData: string | null
-	chatId: number | null
+	chatId: string | null
 }
 
 const initialState: TSocketState = {
@@ -25,7 +25,7 @@ const socketSlice = createSlice({
 			action: PayloadAction<{
 				gameUuid: string
 				initData: string
-				chatId: number
+				chatId: string
 			}>,
 		) {
 			state.gameUuid = action.payload.gameUuid

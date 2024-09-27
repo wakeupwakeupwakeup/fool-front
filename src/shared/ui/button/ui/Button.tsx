@@ -17,7 +17,7 @@ export function Button({
 		<button
 			className={cn(
 				className,
-				'flex items-center relative justify-center w-full gap-base-x2 rounded-base-x1 bg-gradient',
+				'relative flex w-full items-center justify-center gap-base-x2 rounded-base-x1 bg-gradient',
 				[config.classes[size]],
 			)}
 			{...props}

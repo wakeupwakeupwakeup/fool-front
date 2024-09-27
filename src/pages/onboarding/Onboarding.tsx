@@ -1,6 +1,5 @@
 import { FC } from 'react'
-
-import { Layout } from '@/components/ui'
+import Layout from '@/shared/ui/layout/Layout'
 
 const Onboarding: FC = () => {
 	return <Layout>Onboarding</Layout>

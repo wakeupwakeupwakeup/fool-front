@@ -1,7 +1,8 @@
 import { FC } from 'react'
 import { useNavigate } from 'react-router-dom'
-
-import { Button, Layout, Soon } from '@/components/ui'
+import { Button } from '@/shared/ui/button'
+import Soon from '@/shared/ui/soon/Soon'
+import Layout from '@/shared/ui/layout/Layout'
 
 const Settings: FC = () => {
 	const navigate = useNavigate()

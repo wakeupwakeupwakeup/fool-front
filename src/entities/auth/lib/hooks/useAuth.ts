@@ -1,31 +1,27 @@
 import { useQuery } from '@tanstack/react-query'
-import { AuthContext } from '@/app'
-import { useContext, useEffect } from 'react'
+import { useEffect } from 'react'
 import { AuthService } from '@/entities/auth'
 import { retrieveLaunchParams } from '@telegram-apps/sdk-react'
 
 export function useAuth() {
-	const authContext = useContext(AuthContext)
-	if (!authContext) {
-		throw new Error('AuthContext must be used within an AuthProvider')
-	}
 	const { initDataRaw, startParam } = retrieveLaunchParams()
 	const payload = {
 		value: initDataRaw,
-		referralId: startParam || null,
+		referralId: startParam ?? null,
 	}
-	const { setId } = authContext
 	const {
-		isLoading,
 		isSuccess,
+		isLoading,
 		data: user,
-	} = useQuery(['login'], () => AuthService.login(payload))
+	} = useQuery({
+		queryKey: ['login'],
+		queryFn: () => AuthService.login(payload),
+	})
 
 	useEffect(() => {
 		if (isSuccess) {
-			setId(user.chat_id.toString())
+			localStorage.setItem('chat_id', user.chat_id)
 		}
-	}, [isSuccess, setId, user])
-
+	}, [isSuccess, user])
 	return { isSuccess, isLoading, user }
 }

@@ -1,10 +1,8 @@
 import { configureStore } from '@reduxjs/toolkit'
 import { remoteGameDataReducer, localGameDataReducer } from '@/entities/game'
-import { socketReducer } from '@/entities/socket'
-// import { socketMiddleware } from '@/entities/socket/lib/socket-middleware'
+import { socketMiddleware, socketReducer } from '@/entities/socket'
 import { useDispatch } from 'react-redux'
-import socketMiddleware from '@/entities/socket/api/socket-middleware'
-import { navigationReducer } from '@/shared/model'
+import { navigationReducer } from '@/app/navigation/store'
 
 export const store = configureStore({
 	middleware: getDefaultMiddleware =>

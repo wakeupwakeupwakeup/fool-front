@@ -1,5 +1,5 @@
 import { IUser } from '@/entities/auth'
-import { request } from '@/shared/api'
+import { request } from '@/shared/api/request.api'
 
 export const AuthService = {
 	async login(data) {

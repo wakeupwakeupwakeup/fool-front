@@ -1,18 +1,18 @@
 import { ReactElement, useEffect } from 'react'
-import Layout from '@/app/layout/Layout'
 import { Button } from '@/shared/ui/button'
 import { useNavigate } from 'react-router-dom'
 import { Typography } from '@/shared/ui/typography'
 import { useDispatch, useSelector } from 'react-redux'
-import { RootState } from '@/app'
 import { useSessionData } from '@/entities/socket/lib/hooks/use-session-data'
 import { initSocket } from '@/entities/socket/model/store/socket.slice'
-import { API_URL } from '@/shared/api/api.config'
-import { TPlayer } from '@/entities/player/model/player.model'
+import { TPlayer } from '@/entities/player/model/types/player.model'
 import { SocketConnection } from '@/entities/socket/model/store/socket-factory'
 import cn from 'clsx'
-import { sendAction } from '@/entities/player/api/player.actions'
 import { useInitData, useUtils } from '@telegram-apps/sdk-react'
+import { API_URL } from '@/shared/consts/url'
+import Layout from '@/shared/ui/layout/Layout'
+import { RootState } from '@/app/store'
+import { sendAction } from '@/entities/socket/api/player.actions'
 
 export function LobbyPage(): ReactElement {
 	const dispatch = useDispatch()
@@ -23,13 +23,14 @@ export function LobbyPage(): ReactElement {
 	const path = useSelector((state: RootState) => state.navigation.path)
 	const initData = useInitData()
 	const { uuid, chatId, initDataRaw } = useSessionData()
-	const local_uuid = uuid || localStorage.getItem('game_uuid')
+	const local_uuid = localStorage.getItem('game_uuid')
 	const utils = useUtils()
 
 	useEffect(() => {
 		console.log(local_uuid)
 		if (initDataRaw && chatId) {
 			if (local_uuid) {
+				SocketConnection.closeConnection()
 				dispatch(
 					initSocket({
 						gameUuid: local_uuid,
@@ -102,12 +103,16 @@ export function LobbyPage(): ReactElement {
 								<img
 									src={API_URL + 'files/' + player.photo_path}
 									alt={player.username}
-									className='w-base-x7 rounded-3xl'
+									className='w-base-x7 rounded-xl'
 								/>
 							</div>
 						))}
-						{gameInfo.players.length < gameInfo.player_count ? (
+						{Array.from({
+							length:
+								gameInfo.player_count - gameInfo.players.length,
+						}).map((_, index) => (
 							<div
+								key={index}
 								onClick={() => {
 									utils.shareURL(
 										`https://t.me/tonfool_dev_bot/app?startapp=invite_${chatId}_game_${local_uuid}`,
@@ -124,7 +129,7 @@ export function LobbyPage(): ReactElement {
 									alt='Add player'
 								/>
 							</div>
-						) : null}
+						))}
 					</div>
 				)}
 			</div>

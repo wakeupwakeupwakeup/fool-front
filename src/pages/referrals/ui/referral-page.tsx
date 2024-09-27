@@ -2,20 +2,22 @@ import { ReactElement } from 'react'
 import { useNavigate } from 'react-router-dom'
 import avatar from '@/shared/assets/tapps.png'
 import { useReferrals } from '../lib/useReferrals'
-import { getId } from '@/entities/auth'
-import Layout from '@/app/layout/Layout'
 import Button from '@/shared/ui/button/ui/Button'
 import Loader from '@/shared/ui/loader/Loader'
 import { Typography } from '@/shared/ui/typography'
 import { useUtils } from '@telegram-apps/sdk-react'
+import { formatPhotoUrl } from '@/entities/user/lib/format-photo-url'
+import Layout from '@/shared/ui/layout/Layout'
 
 export function ReferralPage(): ReactElement {
 	const { friends, isFriendsLoading } = useReferrals()
-	const tgId = getId()
+	const tgId = localStorage.getItem('chat_id')
 	const navigate = useNavigate()
 	const tgUtils = useUtils()
 
-	return (
+	return isFriendsLoading ? (
+		<Loader />
+	) : (
 		<Layout
 			header={{ icon: 'friends', title: 'Друзья' }}
 			footer={
@@ -31,7 +33,7 @@ export function ReferralPage(): ReactElement {
 						Пригласить
 					</Button>
 					<Button
-						onClick={() => navigate('/menu')}
+						onClick={() => navigate('/home')}
 						icon='back'
 						style={{ width: 63 }}
 					/>
@@ -39,21 +41,23 @@ export function ReferralPage(): ReactElement {
 			}
 		>
 			<div className='flex flex-col gap-base-x6'>
-				{isFriendsLoading ? (
-					<Loader />
-				) : friends && friends.length > 0 ? (
+				{friends && friends.length > 0 ? (
 					friends.map(item => (
 						<div
-							className='flex items-center gap-base-x5 pr-base-x2 w-full rounded-base-x1 bg-[linear-gradient(90deg,rgba(255,255,255,0)_0%,rgba(255,255,255,0.29)_100%)]'
+							className='flex w-full items-center gap-base-x5 rounded-base-x1 bg-[linear-gradient(90deg,rgba(255,255,255,0)_0%,rgba(255,255,255,0.29)_100%)] pr-base-x2'
 							key={item.chat_id}
 						>
 							<img
-								src={item.photo_path ? item.photo_path : avatar}
+								src={
+									item.photo_path
+										? formatPhotoUrl(item.photo_path)
+										: avatar
+								}
 								alt=''
-								className='w-base-x7 h-base-x7 rounded-base-x1'
+								className='h-base-x7 w-base-x7 rounded-base-x1'
 							/>
 							<div className='flex flex-col'>
-								<div className='flex gap-base-x1 items-center'>
+								<div className='flex items-center gap-base-x1'>
 									<Typography variant='text'>
 										{item.username}
 									</Typography>
@@ -62,7 +66,7 @@ export function ReferralPage(): ReactElement {
 									variant='text'
 									className='text-left'
 								>
-									🏆 {item.cups}
+									🏆 {item.rating}
 								</Typography>
 							</div>
 						</div>
